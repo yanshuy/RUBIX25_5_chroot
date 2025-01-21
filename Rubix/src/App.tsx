@@ -1,25 +1,17 @@
-import { useState } from 'react'
+import { Route, Routes } from "react-router-dom";
+import useAuth from "./hook/useAuth"
+import MainLayout from "./layout/MainLayout";
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-    
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <Routes>
+      <Route path="/" element={<MainLayout />}>
+        <Route path="/" element={<h1>Home</h1>} />
+        <Route path="/chat" element={<h1>chat</h1>} />
+      </Route>
+    </Routes>
+  );
 }
 
 export default App
