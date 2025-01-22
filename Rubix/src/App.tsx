@@ -1,11 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import useAuth from "./hook/useAuth"
 import MainLayout from "./layout/MainLayout";
-import HackathonInfo from "./Pages/HackathonInfo/HackathonInfo";
-import UserLogin from "./Pages/Auth/UserLogin";
-import UserRegister from "./Pages/Auth/UserRegister";
-
-export const baseUrl = "https://live-merely-drum.ngrok-free.app"
 
 function App() {
 
@@ -18,6 +13,8 @@ function App() {
         <Route path="/userLogin" element={<UserLogin/>} />
         <Route path="/userRegister" element={<UserRegister/>} />
 
+        <Route path="/Register" element={<HackathonRegister />} />
+        <Route path="/hackathon-info" element={<HackathonInfo/>} />
       </Route>
     </Routes>
   );
