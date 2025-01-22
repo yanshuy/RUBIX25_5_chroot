@@ -27,7 +27,6 @@ export default function HackathonInfo() {
               <PrizesSection /></section>
             <section id="faqs" className="rounded-lg bg-white">
               <FAQSection /></section>
-
           </div>
           <EventSidebar />
         </div>
