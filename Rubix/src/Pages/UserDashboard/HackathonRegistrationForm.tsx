@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { useForm, Controller } from "react-hook-form"
 import { endOfDay, format, formatISO, getISODay } from "date-fns"
 import { CalendarIcon, X } from "lucide-react"
-import useAuth from "../../hook/useAuth"
+import useAuth from "../../hooks/useAuth"
 import { baseUrl } from "../../App"
 
 
@@ -365,7 +365,7 @@ export function HackathonRegistrationForm() {
   ]
 
   return (
-    <div className="max-w-[80vw] mx-auto">
+    <div className="p-10">
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
           <div className="px-4 py-5 sm:px-6">
