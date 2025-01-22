@@ -60,7 +60,7 @@ export default function UserProfile() {
                 <h2 className="font-medium mb-1">Your Photo</h2>
                 <p className="text-sm text-muted-foreground mb-4">This will be displayed on your profile</p>
                 <div className="flex gap-2">
-                    <Input type="file" variant="outline">Upload New</Input>
+                    <Input type="file" variant="outline" />
                     <Button>Save</Button>
                 </div>
                 </div>
