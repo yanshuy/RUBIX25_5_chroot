@@ -1,6 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import useAuth from "./hook/useAuth"
 import MainLayout from "./layout/MainLayout";
+import HackathonInfo from "./Pages/HackathonInfo/HackathonInfo";
+import UserLogin from "./Pages/Auth/UserLogin";
+import UserRegister from "./Pages/Auth/UserRegister";
+import HackathonRegister from "./Pages/Register/Register";
 
 function App() {
 
