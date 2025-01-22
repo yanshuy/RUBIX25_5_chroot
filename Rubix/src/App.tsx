@@ -3,6 +3,9 @@ import useAuth from "./hook/useAuth"
 import MainLayout from "./layout/MainLayout";
 import HackathonRegister from "./Pages/Register/Register";
 import HackathonInfo from "./Pages/HackathonInfo/HackathonInfo";
+import DashboardLayout from "./layout/DashboardLayout";
+import UserProfile from "./Pages/UserDashboard/UserProfile";
+import Hackathons from "./Pages/UserDashboard/Hackathons";
 
 function App() {
 
@@ -14,6 +17,11 @@ function App() {
         <Route path="/Register" element={<HackathonRegister />} />
         <Route path="/hackathon-info" element={<HackathonInfo/>} />
       </Route>
+      <Route path="dashboard" element={<DashboardLayout />}>
+          <Route index element={<UserProfile />} />
+          <Route path="/dashboard/profile" element={<UserProfile />} />
+          <Route path="/dashboard/hackathons" element={<Hackathons />} />
+        </Route>
     </Routes>
   );
 }
