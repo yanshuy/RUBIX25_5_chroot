@@ -91,6 +91,7 @@ const LeaderForm = () => {
                             value={formData.email}
                             onChange={handleChange}
                             className={errors.email ? "border-red-500" : ""}
+                            placeholder="Email"
                         />
                         {errors.email && (
                             <p className="text-sm text-red-500">
@@ -111,10 +112,10 @@ const LeaderForm = () => {
                                 type="tel"
                                 value={formData.mobile}
                                 onChange={handleChange}
-                                placeholder="+91 9082474842"
                                 className={
                                     errors.mobile ? "border-red-500" : ""
                                 }
+                                placeholder="+91 9XXXXXXXXX"
                             />
                         </div>
                         {errors.mobile && (
@@ -136,6 +137,7 @@ const LeaderForm = () => {
                             value={formData.firstName}
                             onChange={handleChange}
                             className={errors.firstName ? "border-red-500" : ""}
+                            placeholder="First Name"
                         />
                         {errors.firstName && (
                             <p className="text-sm text-red-500">
@@ -155,6 +157,7 @@ const LeaderForm = () => {
                             type="text"
                             value={formData.lastName}
                             onChange={handleChange}
+                            placeholder="Last Name"
                         />
                     </div>
 
