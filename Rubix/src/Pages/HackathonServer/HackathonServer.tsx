@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Announcements from "./channels/Announcement";
-import Challenges from "./channels/challenges";
 import Documentation from "./channels/Documentation";
 import Mentorship from "./channels/Mentorship";
 import GeneralChat from "./channels/GeneralChat";
@@ -13,6 +12,7 @@ import Sidebar from "./sections/sidebar";
 import TopBar from "./sections/TopBar";
 import MembersList from "./sections/MembersList";
 import Submissions from "./channels/Submissions";
+import Challenges from "./channels/Challenges";
 
 export type Channel = {
     id: string;

@@ -8,33 +8,20 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Calendar, Filter, MapPin } from "lucide-react";
+import { Calendar, Filter } from "lucide-react";
+import { Hackathon } from "../DiscoverHackathon";
 
-export function Filters() {
+export function Filters({
+    hackathons,
+    setHackathons,
+}: {
+    hackathons: Hackathon[];
+    setHackathons: React.Dispatch<
+        React.SetStateAction<Hackathon[] | undefined>
+    >;
+}) {
     return (
         <div className="flex items-center gap-4 border-b px-12 py-4">
-            <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                    <Button variant="outline" className="gap-2">
-                        <MapPin className="h-4 w-4" />
-                        Location
-                    </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                    <DropdownMenuRadioGroup value="all">
-                        <DropdownMenuRadioItem value="all">
-                            All Locations
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="online">
-                            Online
-                        </DropdownMenuRadioItem>
-                        <DropdownMenuRadioItem value="offline">
-                            Offline
-                        </DropdownMenuRadioItem>
-                    </DropdownMenuRadioGroup>
-                </DropdownMenuContent>
-            </DropdownMenu>
-
             <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                     <Button variant="outline" className="gap-2">
@@ -43,7 +30,18 @@ export function Filters() {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuRadioGroup value="all">
+                    <DropdownMenuRadioGroup
+                        value="all"
+                        onValueChange={(value) => {
+                            console.log(value);
+                            setHackathons(() => {
+                                return hackathons.filter(
+                                    (hackathon) =>
+                                        hackathon.start_date === value,
+                                );
+                            });
+                        }}
+                    >
                         <DropdownMenuRadioItem value="all">
                             All Time
                         </DropdownMenuRadioItem>
@@ -69,7 +67,19 @@ export function Filters() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>Theme</DropdownMenuLabel>
-                    <DropdownMenuRadioGroup value="all">
+                    <DropdownMenuRadioGroup
+                        value="all"
+                        onValueChange={(val) => {
+                            console.log(val);
+                            setHackathons(() => {
+                                return hackathons.filter((hackathon) => {
+                                    if (hackathon.theme === undefined)
+                                        return val === "no-restriction";
+                                    return hackathon.theme === val;
+                                });
+                            });
+                        }}
+                    >
                         <DropdownMenuRadioItem value="all">
                             All Themes
                         </DropdownMenuRadioItem>
@@ -85,7 +95,18 @@ export function Filters() {
                     </DropdownMenuRadioGroup>
                     <DropdownMenuSeparator />
                     <DropdownMenuLabel>Registration</DropdownMenuLabel>
-                    <DropdownMenuRadioGroup value="all">
+                    <DropdownMenuRadioGroup
+                        value="all"
+                        onValueChange={(value) => {
+                            console.log(value);
+                            setHackathons(() => {
+                                return hackathons.filter(
+                                    (hackathon) =>
+                                        hackathon.registration_status === value,
+                                );
+                            });
+                        }}
+                    >
                         <DropdownMenuRadioItem value="all">
                             All Status
                         </DropdownMenuRadioItem>
