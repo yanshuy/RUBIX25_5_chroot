@@ -2,7 +2,7 @@ import { FormEvent, useState } from "react";
 // import imgSrc from "../../assets/freelancer-working-laptop-her-house.png";
 import loginImg from "../../assets/login.jpg"
 import { Link, useNavigate } from "react-router-dom";
-import useAuth from "../../hook/useAuth";
+import useAuth from "../../hooks/useAuth";
 // import loadingAnimation from "../../assets/Animation - 1726660821372.webm";
 // import { useLogin } from "../../context/LoginContext";
 // import { baseURL } from "../../App";

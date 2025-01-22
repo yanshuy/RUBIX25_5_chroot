@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import loadingAnimation from "../../assets/Animation - 1726660821372.webm";
 import { baseUrl } from "../../App";
 import registerImage from "../../assets/authImage.png"
-import useAuth from "../../hook/useAuth";
+import useAuth from "../../hooks/useAuth";
 
 
 const UserRegister: React.FC = () => {
