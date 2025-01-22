@@ -10,21 +10,23 @@ import UserRegister from "./Pages/Auth/UserRegister";
 import HackathonRegister from "./Pages/Register/Register";
 import DiscoverHackathon from "./Pages/DiscoverHackathon/DiscoverHackathon";
 import HackathonServer from "./Pages/HackathonServer/HackathonServer";
+import { HackathonRegistrationForm } from "./Pages/OrganizerDashboard/HackathonRegistrationForm";
 
 export const baseUrl = "https://live-merely-drum.ngrok-free.app/";
 
 function App() {
-
+const {auth}=useAuth();
     return (
         <Routes>
           <Route path="/" element={<MainLayout />}>
-              <Route path="/" element={<h1>Home</h1>} />
+              <Route path="/" element={<h1>{auth.accessToken}</h1>} />
               <Route path="/userLogin" element={<UserLogin />} />
               <Route path="/userRegister" element={<UserRegister />} />
               <Route path="/chat" element={<h1>chat</h1>} />
               <Route path="/discover" element={<DiscoverHackathon />} />
               <Route path="/hackathon/register" element={<HackathonRegister />} />
               <Route path="/hackathon/info" element={<HackathonInfo />} />
+              <Route path="/HackathonRegistrationForm" element={<HackathonRegistrationForm />} />
               <Route path="/hackathon/server" element={<HackathonServer />}></Route>
           </Route>
           <Route path="dashboard" element={<DashboardLayout />}>

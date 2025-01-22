@@ -30,7 +30,7 @@ const UserRegister: React.FC = () => {
     setError("");
 
     try {
-      const response = await fetch(`${baseUrl}/api/register/`, {
+      const response = await fetch(`${baseUrl}api/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,6 +44,8 @@ const UserRegister: React.FC = () => {
             accessToken: data.access,
             refreshToken: data.refresh,
         });
+        console.log(auth);
+        
         navigate("/");
       } else {
         const errorData = await response.json();

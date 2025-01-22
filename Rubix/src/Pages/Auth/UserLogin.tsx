@@ -37,17 +37,23 @@ const UserLogin = () => {
     }); 
     const data = await response.json();
     
-    if (response.status==200) {
-        setLoading(false);
-        console.log(data);
-        
-        setAuth({
-            accessToken: data.access,
-            refreshToken: data.refresh,
-        });
-        navigate("/");
+    if (response.status == 200) {
+  setLoading(false);
 
-    }
+  console.log(data);
+
+  setAuth({
+    accessToken: data.access,
+    refreshToken: data.refresh,
+  });
+
+
+  localStorage.setItem("accessToken", data.access);
+  localStorage.setItem("refreshToken", data.refresh);
+
+  navigate("/");
+}
+
   }
 
 
