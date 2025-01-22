@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/ui/select"
-import { Separator } from "../../components/ui/separator"
 import Sigmaimg from "../../assets/sigma.png"
 import useAuth from "../../hook/useAuth"
 
@@ -18,16 +17,15 @@ interface skill{
 }
 
 export default function UserProfile() {
-  const [skills, setskills] = useState<skill[]>([
+  const [skills, setSkills] = useState<skill[]>([
     { id: "1", name: "UI Design" },
     { id: "2", name: "Framer" },
     { id: "4", name: "UX" },
     { id: "6", name: "Mobile Apps" },
   ])
   
-
   const removeskill = (id: string) => {
-    setskills(skills.filter((skill) => skill.id !== id))
+    setSkills(skills.filter((skill) => skill.id !== id))
   }
 
   const {auth} = useAuth()
@@ -35,23 +33,10 @@ export default function UserProfile() {
   return (
     <div className="container py-6 px-10">
       <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-2">
-          <h1 className="text-2xl font-semibold">Edit User Profile</h1>
-          <Button variant="link" className="text-blue-500 font-normal">
-            Preview →
-          </Button>
-        </div>
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon">
-            <Moon className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon">
-            <User2 className="h-5 w-5" />
-          </Button>
-          <Button variant="ghost" size="icon">
+        <h1 className="text-2xl font-semibold">User Profile</h1>
+        <Button variant="ghost" size="icon">
             <Bell className="h-5 w-5" />
-          </Button>
-        </div>
+        </Button>
       </div>
 
       <div className="space-y-6 grid grid-cols-2 gap-6">
@@ -75,7 +60,7 @@ export default function UserProfile() {
                 <h2 className="font-medium mb-1">Your Photo</h2>
                 <p className="text-sm text-muted-foreground mb-4">This will be displayed on your profile</p>
                 <div className="flex gap-2">
-                    <Button variant="outline">Upload New</Button>
+                    <Input type="file" variant="outline">Upload New</Input>
                     <Button>Save</Button>
                 </div>
                 </div>
@@ -140,9 +125,9 @@ export default function UserProfile() {
                 <div className="flex">
                     <label className="w-full flex justify-center items-center pr-1 relative">
                         <Search className="absolute left-3" size={20} color="grey"/>
-                        <Input placeholder="Enter your skills" className="pl-11 w-full" onChange={(e:Input)=>{setskills(e.currentTarget.value)}}/>
+                        <Input placeholder="Enter your skills" className="pl-11 w-full" onChange={(e:Input)=>{setSkills(e.currentTarget.value)}}/>
                     </label>
-                    <button onClick={() => setskills([...skills, { id: Date.now().toString(), name: "New Skill" }])}>
+                    <button onClick={() => setSkills([...skills, { id: Date.now().toString(), name: "New Skill" }])}>
                         <Plus className="h-8 w-8 p-1 rounded-lg bg-blue-700 text-white" />
                     </button>
                 </div>

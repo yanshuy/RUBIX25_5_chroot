@@ -1,5 +1,4 @@
 import { TeamHeader } from "./sections/TeamHeader";
-
 import { TeamForm } from "./sections/TeamForm";
 import { TeammateSuggestions } from "./sections/TeamSuggestions";
 import { useState } from "react";
@@ -12,7 +11,6 @@ export interface TeamMember {
     phone?: string;
     college: string;
     skills: string[];
-    role?: string;
     avatar?: string;
     status: "verified" | "pending" | "not_added";
 }
