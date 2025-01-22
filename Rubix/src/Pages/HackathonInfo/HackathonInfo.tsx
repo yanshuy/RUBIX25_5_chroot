@@ -5,33 +5,80 @@ import { EventTimeline } from "./sections/EventTimeline";
 import { PrizesSection } from "./sections/PrizeSection";
 import { FAQSection } from "./sections/Faqs";
 import { ContactSection } from "./sections/ContactSection";
+import { baseUrl } from "../../App";
+import { useQuery } from "@tanstack/react-query";
+import { useParams } from "react-router-dom";
+
+async function getHackathonData(id: string) {
+    const response = await fetch(`${baseUrl}/api/core/hackathons/${id}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            // Authorization: `Bearer ${TOKEN}`,
+            "ngrok-skip-browser-warning": "true",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error(response.statusText);
+    }
+
+    return response.json();
+}
+
+function useHackathonData(id: string) {
+    return useQuery({
+        queryFn: () => getHackathonData(id),
+        queryKey: ["hackathon", id],
+        refetchOnWindowFocus: false,
+    });
+}
 
 export default function HackathonInfo() {
-  return (
-    <div className="scroll-smooth">
-      <figure className=" w-full h-[60vh]">
-        <img className="object-cover size-full" src="https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/banner/677756597a0f5_hackathon-technotronics.webp?d=1920x557" alt="hackathon banner" />
-      </figure>
-      <div className="min-h-screen bg-slate-100">
-      <div className="max-w-7xl mx-auto bg-white ">
-        <EventHeader />
-        <EventTabs />
-        <div className="flex">
-          <div className="flex-1 border-r grid grid-cols-1 gap-6 bg-slate-100 pr-4">
-            <section id="timeline" className="rounded-lg bg-white mt-6">
-              <EventTimeline />
-            </section>
-            <section id="contacts" className="rounded-lg bg-white">
-              <ContactSection /></section>
-            <section id="prizes" className="rounded-lg bg-white">
-              <PrizesSection /></section>
-            <section id="faqs" className="rounded-lg bg-white">
-              <FAQSection /></section>
-          </div>
-          <EventSidebar />
+    const { id } = useParams();
+    const { data } = useHackathonData(id ?? "1");
+    console.log(data);
+    return (
+        <div className="scroll-smooth">
+            <figure className="h-[60vh] w-full">
+                <img
+                    className="size-full object-cover"
+                    src="https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/banner/677756597a0f5_hackathon-technotronics.webp?d=1920x557"
+                    alt="hackathon banner"
+                />
+            </figure>
+            <div className="min-h-screen bg-slate-100">
+                <div className="mx-auto max-w-7xl bg-white">
+                    <EventHeader />
+                    <EventTabs />
+                    <div className="flex">
+                        <div className="grid flex-1 grid-cols-1 gap-6 border-r bg-slate-100 pr-4">
+                            <section
+                                id="timeline"
+                                className="mt-6 rounded-lg bg-white"
+                            >
+                                <EventTimeline />
+                            </section>
+                            <section
+                                id="contacts"
+                                className="rounded-lg bg-white"
+                            >
+                                <ContactSection />
+                            </section>
+                            <section
+                                id="prizes"
+                                className="rounded-lg bg-white"
+                            >
+                                <PrizesSection />
+                            </section>
+                            <section id="faqs" className="rounded-lg bg-white">
+                                <FAQSection />
+                            </section>
+                        </div>
+                        <EventSidebar />
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    </div>
-  )
+    );
 }

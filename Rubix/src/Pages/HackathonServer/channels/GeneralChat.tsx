@@ -1,68 +1,114 @@
+import React, { useEffect, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Smile, PlusCircle, Send } from "lucide-react";
+import useAuth from "../../../hooks/useAuth";
+import { Content } from "@radix-ui/react-tabs";
 
-const messages = [
-    {
-        id: 1,
-        user: { name: "Sarah Chen", avatar: "/placeholder.svg" },
-        content: "Hey everyone! How's the hackathon going for you all?",
-        timestamp: "2:30 PM",
-    },
-    {
-        id: 2,
-        user: { name: "Alex Kumar", avatar: "/placeholder.svg" },
-        content:
-            "It's been great! Our team just had a breakthrough with our ML model.",
-        timestamp: "2:32 PM",
-    },
-    {
-        id: 3,
-        user: { name: "Lisa Park", avatar: "/placeholder.svg" },
-        content:
-            "That's awesome, Alex! We're still brainstorming ideas. Any tips?",
-        timestamp: "2:35 PM",
-    },
-];
+interface Message {
+    id: number;
+    user: string;
+    message: string;
+    timestamp: string;
+}
 
 export default function GeneralChat() {
+    const { auth } = useAuth();
+    console.log(auth);
+    const [messages, setMessages] = useState<Message[]>([]);
+    const [newMessage, setNewMessage] = useState("");
+    const [socket, setSocket] = useState<WebSocket | null>(null);
+
+    useEffect(() => {
+        const ws = new WebSocket(
+            `ws://live-merely-drum.ngrok-free.app/ws/hackathons/1/general/`,
+        );
+
+        ws.onopen = () => {
+            console.log("Connected to WebSocket");
+        };
+
+        ws.onmessage = (event) => {
+            const message = JSON.parse(event.data);
+            if (message.history) {
+                setMessages(message.history);
+                return;
+            }
+            console.log(message);
+            setMessages((prev) => [...prev, message]);
+        };
+
+        ws.onclose = () => {
+            console.log("Disconnected from WebSocket");
+        };
+
+        ws.onerror = (error) => {
+            console.error("WebSocket error:", error);
+        };
+
+        setSocket(ws);
+
+        return () => {
+            ws.close();
+        };
+    }, [auth.accessToken]);
+
+    const sendMessage = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!newMessage.trim() || !socket) return;
+
+        const messageData = {
+            message: newMessage,
+            timestamp: new Date().toLocaleTimeString("en-US", {
+                hour: "numeric",
+                minute: "2-digit",
+            }),
+        };
+
+        socket.send(JSON.stringify(messageData));
+        setNewMessage("");
+    };
+
     return (
-        <div className="flex flex-1 flex-col bg-[#313338]">
+        <div className="flex flex-1 flex-col bg-slate-50">
             <ScrollArea className="flex-1 p-4">
                 <div className="space-y-4">
-                    {messages.map((message) => (
-                        <div
-                            key={message.id}
-                            className="flex items-start gap-4"
-                        >
-                            <Avatar>
-                                <AvatarImage src={message.user.avatar} />
-                                <AvatarFallback>
-                                    {message.user.name[0]}
-                                </AvatarFallback>
-                            </Avatar>
-                            <div className="flex-1">
-                                <div className="flex items-center gap-2">
-                                    <span className="font-semibold text-primary">
-                                        {message.user.name}
-                                    </span>
-                                    <span className="text-xs text-muted-foreground">
-                                        {message.timestamp}
-                                    </span>
+                    {messages.map((message, index) => {
+                        console.log(message);
+                        return (
+                            <div key={index} className="flex items-start gap-4">
+                                <Avatar>
+                                    <AvatarFallback className="bg-slate-100">
+                                        {message?.message.substring(0, 2)}
+                                    </AvatarFallback>
+                                </Avatar>
+                                <div className="flex-1">
+                                    <div className="flex items-center gap-2">
+                                        <span className="font-semibold text-primary">
+                                            {message.user}
+                                        </span>
+                                        <span className="text-xs text-muted-foreground">
+                                            {message.timestamp}
+                                        </span>
+                                    </div>
+                                    <p className="mt-1 text-primary/90">
+                                        {message.message}
+                                    </p>
                                 </div>
-                                <p className="mt-1 text-primary/90">
-                                    {message.content}
-                                </p>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
             </ScrollArea>
-            <div className="border-t border-[#1E1F22] p-4">
-                <div className="flex items-center gap-2">
+            <div className="border-t p-4">
+                <form
+                    onSubmit={sendMessage}
+                    className="flex items-center gap-2"
+                >
                     <Button
+                        type="button"
                         size="icon"
                         variant="ghost"
                         className="text-muted-foreground"
@@ -70,20 +116,23 @@ export default function GeneralChat() {
                         <PlusCircle className="h-5 w-5" />
                     </Button>
                     <Input
+                        value={newMessage}
+                        onChange={(e) => setNewMessage(e.target.value)}
                         placeholder="Message #general"
-                        className="border-0 bg-[#383A40]"
+                        className="border-0 bg-slate-200"
                     />
                     <Button
+                        type="button"
                         size="icon"
                         variant="ghost"
                         className="text-muted-foreground"
                     >
                         <Smile className="h-5 w-5" />
                     </Button>
-                    <Button size="icon">
+                    <Button type="submit" size="icon">
                         <Send className="h-5 w-5" />
                     </Button>
-                </div>
+                </form>
             </div>
         </div>
     );

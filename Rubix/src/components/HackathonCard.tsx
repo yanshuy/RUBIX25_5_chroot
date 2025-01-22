@@ -6,15 +6,22 @@ import {
     CardFooter,
     CardHeader,
 } from "@/components/ui/card";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Facebook, Instagram, Link2, Twitter } from "lucide-react";
-import type { Hackathon } from "../Pages/DiscoverHackathon/sections/HackathonGrid";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Instagram, Link2 } from "lucide-react";
+import type { Hackathon } from "../Pages/DiscoverHackathon/DiscoverHackathon";
+import { format } from "date-fns";
 
 interface HackathonCardProps {
     hackathon: Hackathon;
 }
 
+function startDate(string: string) {
+    const date = Date.parse(string);
+    return format(date, "d/M/yy");
+}
+
 export function HackathonCard({ hackathon }: HackathonCardProps) {
+    console.log(hackathon);
     return (
         <Card className="group overflow-hidden">
             <CardHeader className="border-b p-4">
@@ -23,12 +30,9 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
                         <h3 className="text-lg font-semibold">
                             {hackathon.name}
                         </h3>
-                        <p className="text-sm text-muted-foreground">
-                            {hackathon.type}
-                        </p>
                     </div>
                     <div className="flex gap-2">
-                        {hackathon.socialLinks.website && (
+                        {hackathon.website && (
                             <Button
                                 variant="ghost"
                                 size="icon"
@@ -37,31 +41,13 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
                                 <Link2 className="h-4 w-4" />
                             </Button>
                         )}
-                        {hackathon.socialLinks.instagram && (
+                        {hackathon.social_links && (
                             <Button
                                 variant="ghost"
                                 size="icon"
                                 className="h-8 w-8"
                             >
                                 <Instagram className="h-4 w-4" />
-                            </Button>
-                        )}
-                        {hackathon.socialLinks.twitter && (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                            >
-                                <Twitter className="h-4 w-4" />
-                            </Button>
-                        )}
-                        {hackathon.socialLinks.facebook && (
-                            <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8"
-                            >
-                                <Facebook className="h-4 w-4" />
                             </Button>
                         )}
                     </div>
@@ -74,7 +60,9 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
                             Theme
                         </div>
                         <Badge variant="secondary" className="rounded-full">
-                            {hackathon.theme}
+                            {hackathon.theme
+                                ? hackathon.theme
+                                : "No Restrictions"}
                         </Badge>
                     </div>
                     <div className="flex items-center gap-2">
@@ -89,19 +77,15 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
                             ))}
                         </div>
                         <span className="text-sm text-emerald-600">
-                            +{hackathon.participantsCount} participating
+                            +{(Math.random() * 100).toFixed(0)} participating
                         </span>
                     </div>
                 </div>
             </CardContent>
             <CardFooter className="flex items-center justify-between border-t p-4">
                 <div className="flex gap-2">
-                    <Badge variant="secondary">{hackathon.status}</Badge>
                     <Badge variant="secondary">
-                        {hackathon.registrationStatus}
-                    </Badge>
-                    <Badge variant="secondary">
-                        Starts {hackathon.startDate}
+                        Starts {startDate(hackathon.start_date)}
                     </Badge>
                 </div>
                 <Button>Apply now</Button>

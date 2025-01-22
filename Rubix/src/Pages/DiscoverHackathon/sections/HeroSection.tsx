@@ -1,8 +1,17 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { Hackathon } from "../DiscoverHackathon";
 
-export function HeroSection() {
+export function HeroSection({
+    hackathons,
+    setHackathons,
+}: {
+    hackathons: Hackathon[];
+    setHackathons: React.Dispatch<
+        React.SetStateAction<Hackathon[] | undefined>
+    >;
+}) {
     return (
         <section className="border-b bg-gradient-to-b from-background to-muted/50">
             <div className="space-y-8 px-12 py-16">
@@ -22,6 +31,17 @@ export function HeroSection() {
                         <Input
                             placeholder="Search hackathons..."
                             className="pl-9"
+                            onChange={(e) => {
+                                const searchQuery =
+                                    e.target.value.toLowerCase();
+                                setHackathons(() =>
+                                    hackathons.filter((hackathon) =>
+                                        hackathon.name
+                                            .toLowerCase()
+                                            .includes(searchQuery),
+                                    ),
+                                );
+                            }}
                         />
                     </div>
                     <Button>Search</Button>

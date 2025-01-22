@@ -98,15 +98,21 @@ export default function UserProfile() {
   })
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+    const file = event.target.files?.[0];
     if (file) {
-      const url = URL.createObjectURL(file)
-      setProfileInfo((prev) => ({
-        ...prev,
-        profilePhoto: url,
-      }))
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result) {
+          setProfileInfo((prev) => ({
+            ...prev,
+            profilePhoto: reader.result as string, // Use base64-encoded image
+          }));
+        }
+      };
+      reader.readAsDataURL(file); // Read the file as a DataURL (base64-encoded string)
     }
-  }
+  };
+  
 
   const handleInputChange = (section: keyof typeof profileInfo, field: string, value: string, index?: number) => {
     setProfileInfo((prev) => {
@@ -207,7 +213,7 @@ export default function UserProfile() {
   }
 
   async function fetchProfile() {
-    const response = await fetch(`${baseUrl}/api/profile`)
+    const response = await fetch(`${baseUrl}/api/profile/`)
     if (!response.ok) {
       throw new Error("Failed to fetch profile")
     }
@@ -215,7 +221,7 @@ export default function UserProfile() {
   }
   
   async function updateProfile(data: FormData) {
-    const response = await fetch(`${baseUrl}/api/profile`, {
+    const response = await fetch(`${baseUrl}/api/profile/`, {
       method: "POST",
       body: data,
     })
