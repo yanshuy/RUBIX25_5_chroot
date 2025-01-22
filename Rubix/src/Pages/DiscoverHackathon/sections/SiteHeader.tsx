@@ -1,6 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function SiteHeader() {
