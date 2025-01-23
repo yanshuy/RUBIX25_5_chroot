@@ -80,7 +80,7 @@ export function TeamForm({
                                                     <p className="text-sm text-muted-foreground">
                                                         {member.email}
                                                     </p>
-                                                    {member.phone && (
+                                                    {member.mobile && (
                                                         <p className="text-sm text-muted-foreground">
                                                             {member.mobile}
                                                         </p>

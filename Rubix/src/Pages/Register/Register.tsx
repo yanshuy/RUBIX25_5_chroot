@@ -9,9 +9,9 @@ import { baseUrl } from "../../App";
 
 export interface TeamMember {
     id: string;
-    name: string;
+    fullName: string;
     email: string;
-    phone?: string;
+    mobile?: string;
     college: string;
     skills: string[];
     avatar?: string;
