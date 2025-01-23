@@ -1,5 +1,5 @@
 import { IconBaseProps } from "react-icons";
-import { GoHome } from "react-icons/go";
+import { GoHome, GoOrganization } from "react-icons/go";
 import { IoCalendarClearOutline } from "react-icons/io5";
 import { MdOutlineReviews } from "react-icons/md";
 import { PiPhoneCall } from "react-icons/pi";
@@ -7,7 +7,8 @@ import { TbBrandGoogleAnalytics, TbClockCheck } from "react-icons/tb";
 import { Link, NavLink} from "react-router-dom";
 // import {useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { CodeXml, User } from "lucide-react";
+import { CodeXml, List, ListTodo, LucideSquareBottomDashedScissors, User } from "lucide-react";
+import { LuListTodo, LuOrigami } from "react-icons/lu";
 // import Logo1 from "../assets/Logo1.png"
 
 const navItems = [
@@ -24,7 +25,7 @@ const navItems = [
   {
     path: "/dashboard/organizehackathons",
     label: "Organize a Hackathon",  
-    icon: (props: IconBaseProps) => <CodeXml {...props} />,
+    icon: (props: IconBaseProps) => <ListTodo {...props} />,
   },
 ];
 

@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Pencil, Plus } from "lucide-react";
 import { Team } from "../Register";
+import { useParams } from "react-router-dom";
+import { useHackathonData } from "../../HackathonInfo/HackathonInfo";
 
 export function TeamForm({
     team,
@@ -18,6 +20,8 @@ export function TeamForm({
     setTeam: (team: Team) => void;
 }) {
     const [error, setError] = useState("");
+    const { id } = useParams();
+    const { data, isLoading } = useHackathonData(id ?? "1");
 
     return (
         <div className="space-y-6">
@@ -50,7 +54,7 @@ export function TeamForm({
                         <div className="flex items-center justify-between">
                             <Label>
                                 Team Members ({team.members.length}/
-                                {team.maxSize})
+                                {data?.maxMembers})
                             </Label>
                             <span className="text-sm text-muted-foreground">
                                 You can add up to{" "}

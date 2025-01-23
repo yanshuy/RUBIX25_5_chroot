@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Calendar, Filter } from "lucide-react";
 import { Hackathon } from "../DiscoverHackathon";
+import { isAfter } from "date-fns";
 
 export function Filters({
     hackathons,
@@ -70,10 +71,20 @@ export function Filters({
                     <DropdownMenuRadioGroup
                         value="all"
                         onValueChange={(val) => {
-                            console.log(val);
+                            console.log(
+                                val,
+                                hackathons.filter((hackathon) => {
+                                    if (val == "all") return true;
+                                    if (hackathon.theme == undefined)
+                                        return val === "no-restriction";
+                                    return hackathon.theme === val;
+                                }),
+                            );
                             setHackathons(() => {
+                                console.log(hackathons);
                                 return hackathons.filter((hackathon) => {
-                                    if (hackathon.theme === undefined)
+                                    if (val === "all") return true;
+                                    if (hackathon.theme == undefined)
                                         return val === "no-restriction";
                                     return hackathon.theme === val;
                                 });
@@ -97,13 +108,26 @@ export function Filters({
                     <DropdownMenuLabel>Registration</DropdownMenuLabel>
                     <DropdownMenuRadioGroup
                         value="all"
-                        onValueChange={(value) => {
-                            console.log(value);
+                        onValueChange={(val) => {
+                            console.log(val);
                             setHackathons(() => {
-                                return hackathons.filter(
-                                    (hackathon) =>
-                                        hackathon.registration_status === value,
-                                );
+                                return hackathons.filter((hackathon) => {
+                                    if (val == "all") return true;
+                                    if (val == "open") {
+                                        return isAfter(
+                                            Date.parse(
+                                                hackathon.applicationCloseDate,
+                                            ),
+                                            new Date(),
+                                        );
+                                    }
+                                    return !isAfter(
+                                        Date.parse(
+                                            hackathon.applicationCloseDate,
+                                        ),
+                                        new Date(),
+                                    );
+                                });
                             });
                         }}
                     >

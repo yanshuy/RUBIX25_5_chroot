@@ -8,6 +8,7 @@ import { ContactSection } from "./sections/ContactSection";
 import { baseUrl } from "../../App";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import Loader from "../../components/Loader";
 
 async function getHackathonData(id: string) {
     const response = await fetch(`${baseUrl}/api/core/hackathons/${id}`, {
@@ -26,7 +27,7 @@ async function getHackathonData(id: string) {
     return response.json();
 }
 
-function useHackathonData(id: string) {
+export function useHackathonData(id: string) {
     return useQuery({
         queryFn: () => getHackathonData(id),
         queryKey: ["hackathon", id],
@@ -36,20 +37,24 @@ function useHackathonData(id: string) {
 
 export default function HackathonInfo() {
     const { id } = useParams();
-    const { data } = useHackathonData(id ?? "1");
-    console.log(data);
+    const { data, isLoading } = useHackathonData(id ?? "1");
+
+    if (isLoading) {
+        return <Loader />;
+    }
+
     return (
         <div className="scroll-smooth">
             <figure className="h-[60vh] w-full">
                 <img
                     className="size-full object-cover"
-                    src="https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/banner/677756597a0f5_hackathon-technotronics.webp?d=1920x557"
+                    src={data?.coverPhoto}
                     alt="hackathon banner"
                 />
             </figure>
             <div className="min-h-screen bg-slate-100">
                 <div className="mx-auto max-w-7xl bg-white">
-                    <EventHeader />
+                    <EventHeader data={data} />
                     <EventTabs />
                     <div className="flex">
                         <div className="grid flex-1 grid-cols-1 gap-6 border-r bg-slate-100 pr-4">
@@ -57,25 +62,25 @@ export default function HackathonInfo() {
                                 id="timeline"
                                 className="mt-6 rounded-lg bg-white"
                             >
-                                <EventTimeline />
+                                <EventTimeline data={data} />
                             </section>
                             <section
                                 id="contacts"
                                 className="rounded-lg bg-white"
                             >
-                                <ContactSection />
+                                <ContactSection data={data} />
                             </section>
                             <section
                                 id="prizes"
                                 className="rounded-lg bg-white"
                             >
-                                <PrizesSection />
+                                <PrizesSection data={data} />
                             </section>
                             <section id="faqs" className="rounded-lg bg-white">
                                 <FAQSection />
                             </section>
                         </div>
-                        <EventSidebar />
+                        <EventSidebar data={data} />
                     </div>
                 </div>
             </div>

@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast"
 import useAuth from "@/hooks/useAuth"
 import Sigmaimg from "@/assets/sigma.png"
 import { baseUrl } from "../../App"
+import { log } from "console"
 
 export default function UserProfile() {
   const { auth } = useAuth()
@@ -48,7 +49,7 @@ export default function UserProfile() {
   interface ProfileInfo {
     profilePhoto: string
     personalInfo: {
-      fullName: string
+      full_name: string | null
       email: string
       mobile: string
       role: string
@@ -58,13 +59,14 @@ export default function UserProfile() {
     socialMedia: SocialMedia
     education: Education[]
     experience: Experience[]
-    resume: string | null
+    resume: File | null
+    resumelink?: string | null
   }
   
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>({
     profilePhoto: Sigmaimg,
     personalInfo: {
-      fullName: "",
+      full_name: "",
       email: "",
       mobile: "",
       role: "",
@@ -95,6 +97,7 @@ export default function UserProfile() {
       },
     ],
     resume: null,
+    resumelink: ""
   })
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -142,6 +145,23 @@ export default function UserProfile() {
       }
     })
   }
+
+  const handleResumeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    console.log(file)
+    if (file) {
+      setProfileInfo((prev) => ({
+        ...prev,
+        resume: file, 
+      }));
+
+      toast({
+        title: "Resume Uploaded",
+        description: `${file.name} has been uploaded successfully.`,
+      });
+    }
+  };
+  
 
   const addSkill = () => {
     if (!newSkill.trim()) return
@@ -192,28 +212,42 @@ export default function UserProfile() {
   }
 
   const handleSubmit = async () => {
-    setLoading(true)
+    setLoading(true);
     try {
-      const formData = new FormData()
-      formData.append("profile", JSON.stringify(profileInfo))
-      await updateProfile(formData)
+      const formData = new FormData();
+
+      const { resume, ...otherProfileInfo } = profileInfo;
+      formData.append("profile", JSON.stringify(otherProfileInfo));
+      if (resume) {
+        formData.append("resume", resume); // Resume is a File object
+      }
+      await updateProfile(formData);
+  
       toast({
         title: "Success",
         description: "Profile updated successfully",
-      })
+      });
     } catch (error) {
       toast({
         title: "Error",
         description: "Failed to update profile",
         variant: "destructive",
-      })
+      });
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
+  
 
   async function fetchProfile() {
-    const response = await fetch(`${baseUrl}/api/profile/`)
+    const accessToken = localStorage.getItem("accessToken")
+    const response = await fetch(`${baseUrl}/api/users/me/get`, {
+      method: "GET",
+      headers:{
+        "ngrok-skip-browser-warning": "69420",
+        authorization: `Bearer ${accessToken}`, 
+      }
+    })
     if (!response.ok) {
       throw new Error("Failed to fetch profile")
     }
@@ -221,8 +255,13 @@ export default function UserProfile() {
   }
   
   async function updateProfile(data: FormData) {
-    const response = await fetch(`${baseUrl}/api/profile/`, {
-      method: "POST",
+    console.log(data)
+    const accessToken = localStorage.getItem("accessToken")
+    const response = await fetch(`${baseUrl}/api/users/me/`, {
+      method: "PATCH",
+      headers:{
+        authorization: `Bearer ${accessToken}`, 
+      },
       body: data,
     })
     if (!response.ok) {
@@ -231,21 +270,47 @@ export default function UserProfile() {
     return response.json()
   }
   
-  useEffect(() => {
-    const loadProfile = async () => {
-      try {
-        const data = await fetchProfile()
-        setProfileInfo(data)
-      } catch (error) {
-        toast({
-          title: "Error",
-          description: "Failed to load profile data",
-          variant: "destructive",
-        })
-      }
-    }
-    loadProfile()
-  }, [])
+  useEffect(() => { 
+    const loadProfile = async () => { 
+      try { 
+        const data = await fetchProfile(); 
+  
+        setProfileInfo((prev) => {
+          // Create a deep copy of the previous state
+          const updatedProfileInfo = JSON.parse(JSON.stringify(prev));
+  
+          // Merge the fetched data into the copied state
+          for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+              if (typeof data[key] === 'object' && !Array.isArray(data[key]) && data[key] !== null) {
+                // If the property is an object, merge it recursively
+                updatedProfileInfo[key] = { ...updatedProfileInfo[key], ...data[key] };
+              } else {
+                // Otherwise, overwrite the property
+                updatedProfileInfo[key] = data[key];
+              }
+            }
+          }
+  
+          // Handle the resumelink separately if needed
+          if (data.resume) {
+            updatedProfileInfo.resumelink = data.resume;
+            updatedProfileInfo.resume = null;
+          }
+  
+          return updatedProfileInfo;
+        });
+      } catch (error) { 
+        toast({ 
+          title: "Error", 
+          description: "Failed to load profile data", 
+          variant: "destructive", 
+        }); 
+      } 
+    }; 
+  
+    loadProfile(); 
+  }, []);
 
   return (
     <div className="container py-6 px-10">
@@ -260,11 +325,11 @@ export default function UserProfile() {
           <Card>
             <CardContent className="p-0">
               <div className="relative">
-                <div className="h-32 bg-gradient-to-r from-pink-300 via-purple-400 to-orange-400" />
+                <div className="h-32 bg-gradient-to-r from-[#2566E7] to-[#38C871]" />
                 <div className="absolute left-6 -bottom-12">
                   <div className="relative w-24 h-24">
                     <img
-                      src={profileInfo.profilePhoto || "/placeholder.svg"}
+                      src={profileInfo.profilePhoto || Sigmaimg}
                       alt="Profile photo"
                       className="rounded-full border-4 border-white object-cover h-full w-full"
                     />
@@ -290,12 +355,12 @@ export default function UserProfile() {
               <h2 className="font-medium mb-4">Personal Information</h2>
               <div className="space-y-4">
                 <div>
-                  <Label htmlFor="fullName">Full Name</Label>
+                  <Label htmlFor="full_name">Full Name</Label>
                   <Input
-                    id="fullName"
+                    id="full_name"
                     className="mt-1.5"
-                    value={profileInfo.personalInfo.fullName}
-                    onChange={(e) => handleInputChange("personalInfo", "fullName", e.target.value)}
+                    value={profileInfo.personalInfo?.full_name || ""}
+                    onChange={(e) => handleInputChange("personalInfo", "full_name", e.target.value)}
                   />
                 </div>
                 <div>
@@ -303,7 +368,7 @@ export default function UserProfile() {
                   <Input
                     id="email"
                     className="mt-1.5"
-                    value={profileInfo.personalInfo.email}
+                    value={profileInfo.personalInfo?.email || ""}
                     onChange={(e) => handleInputChange("personalInfo", "email", e.target.value)}
                   />
                 </div>
@@ -312,7 +377,7 @@ export default function UserProfile() {
                   <Input
                     id="mobile"
                     className="mt-1.5"
-                    value={profileInfo.personalInfo.mobile}
+                    value={profileInfo.personalInfo?.mobile || ""}
                     onChange={(e) => handleInputChange("personalInfo", "mobile", e.target.value)}
                   />
                 </div>
@@ -321,7 +386,7 @@ export default function UserProfile() {
                   <Input
                     id="role"
                     className="mt-1.5"
-                    value={profileInfo.personalInfo.role}
+                    value={profileInfo.personalInfo?.role || ""}
                     onChange={(e) => handleInputChange("personalInfo", "role", e.target.value)}
                   />
                 </div>
@@ -349,17 +414,21 @@ export default function UserProfile() {
               <h2 className="font-medium mb-4">Skills</h2>
               <div className="space-y-4">
                 <div className="flex flex-wrap gap-2">
-                  {profileInfo.skills.map((skill) => (
-                    <div
-                      key={skill.id}
-                      className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-sm"
-                    >
-                      {skill.name}
-                      <button onClick={() => removeSkill(skill.id)} className="hover:text-blue-900">
-                        <X className="h-3 w-3" />
-                      </button>
-                    </div>
-                  ))}
+                  {Array.isArray(profileInfo.skills) && profileInfo.skills.length > 0 ? (
+                    profileInfo.skills.map((skill) => (
+                      <div
+                        key={skill.id}
+                        className="flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-sm"
+                      >
+                        {skill.name}
+                        <button onClick={() => removeSkill(skill.id)} className="hover:text-blue-900">
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
+                    ))
+                  ) : (
+                    <div className="text-gray-500">No skills added yet.</div>
+                  )}
                 </div>
                 <div className="flex">
                   <label className="w-full flex justify-center items-center pr-1 relative">
@@ -388,22 +457,25 @@ export default function UserProfile() {
                 <div className="flex items-center justify-center relative">
                   <IoLogoLinkedin size={20} className="absolute left-2" />
                   <Input
-                    value={profileInfo.socialMedia.linkedin}
+                    value={profileInfo.socialMedia?.linkedin || ""}
                     onChange={(e) => handleInputChange("socialMedia", "linkedin", e.target.value)}
+                    className="p"
                   />
                 </div>
                 <div className="flex items-center justify-center relative">
                   <LuGithub size={20} className="absolute left-2" />
                   <Input
-                    value={profileInfo.socialMedia.github}
+                    value={profileInfo.socialMedia?.github || ""}
                     onChange={(e) => handleInputChange("socialMedia", "github", e.target.value)}
+                    className="p"
                   />
                 </div>
                 <div className="flex items-center justify-center relative">
                   <LuInstagram size={20} className="absolute left-2" />
                   <Input
-                    value={profileInfo.socialMedia.instagram}
+                    value={profileInfo.socialMedia?.instagram || ""}
                     onChange={(e) => handleInputChange("socialMedia", "instagram", e.target.value)}
+                    className="p"
                   />
                 </div>
               </div>
@@ -416,47 +488,51 @@ export default function UserProfile() {
           <CardContent className="p-6">
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Education</h2>
-              {profileInfo.education.map((edu, index) => (
-                <div key={edu.id} className="grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor={`school-${edu.id}`}>School/University</Label>
-                    <Input
-                      id={`school-${edu.id}`}
-                      placeholder="Enter school name"
-                      value={edu.school}
-                      onChange={(e) => handleInputChange("education", "school", e.target.value, index)}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
+              {Array.isArray(profileInfo.education) && profileInfo.education.length > 0 ? (
+                profileInfo.education.map((edu, index) => (
+                  <div key={edu.id} className="grid gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor={`degree-${edu.id}`}>Degree</Label>
-                      <Select
-                        value={edu.degree}
-                        onValueChange={(value) => handleInputChange("education", "degree", value, index)}
-                      >
-                        <SelectTrigger id={`degree-${edu.id}`}>
-                          <SelectValue placeholder="Select degree" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="bachelors">Bachelor's</SelectItem>
-                          <SelectItem value="masters">Master's</SelectItem>
-                          <SelectItem value="phd">Ph.D.</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor={`gradYear-${edu.id}`}>Graduation Year</Label>
+                      <Label htmlFor={`school-${edu.id}`}>School/University</Label>
                       <Input
-                        id={`gradYear-${edu.id}`}
-                        type="number"
-                        placeholder="YYYY"
-                        value={edu.graduationYear}
-                        onChange={(e) => handleInputChange("education", "graduationYear", e.target.value, index)}
+                        id={`school-${edu.id}`}
+                        placeholder="Enter school name"
+                        value={edu.school}
+                        onChange={(e) => handleInputChange("education", "school", e.target.value, index)}
                       />
                     </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor={`degree-${edu.id}`}>Degree</Label>
+                        <Select
+                          value={edu.degree}
+                          onValueChange={(value) => handleInputChange("education", "degree", value, index)}
+                        >
+                          <SelectTrigger id={`degree-${edu.id}`}>
+                            <SelectValue placeholder="Select degree" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="bachelors">Bachelor's</SelectItem>
+                            <SelectItem value="masters">Master's</SelectItem>
+                            <SelectItem value="phd">Ph.D.</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor={`gradYear-${edu.id}`}>Graduation Year</Label>
+                        <Input
+                          id={`gradYear-${edu.id}`}
+                          type="number"
+                          placeholder="YYYY"
+                          value={edu.graduationYear}
+                          onChange={(e) => handleInputChange("education", "graduationYear", e.target.value, index)}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <div className="text-gray-500">No education added yet.</div>
+              )}
               <Button variant="outline" className="w-full" onClick={addEducation}>
                 + Add more education
               </Button>
@@ -469,57 +545,61 @@ export default function UserProfile() {
           <CardContent className="p-6">
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Experience</h2>
-              {profileInfo.experience.map((exp, index) => (
-                <div key={exp.id} className="grid gap-4">
-                  <div className="grid gap-2">
-                    <Label htmlFor={`company-${exp.id}`}>Company</Label>
-                    <Input
-                      id={`company-${exp.id}`}
-                      placeholder="Enter company name"
-                      value={exp.company}
-                      onChange={(e) => handleInputChange("experience", "company", e.target.value, index)}
-                    />
-                  </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor={`position-${exp.id}`}>Position</Label>
-                    <Input
-                      id={`position-${exp.id}`}
-                      placeholder="Enter your position"
-                      value={exp.position}
-                      onChange={(e) => handleInputChange("experience", "position", e.target.value, index)}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
+              {Array.isArray(profileInfo.education) && profileInfo.education.length > 0 ? (
+                profileInfo.experience.map((exp, index) => (
+                  <div key={exp.id} className="grid gap-4">
                     <div className="grid gap-2">
-                      <Label htmlFor={`startDate-${exp.id}`}>Start Date</Label>
+                      <Label htmlFor={`company-${exp.id}`}>Company</Label>
                       <Input
-                        id={`startDate-${exp.id}`}
-                        type="month"
-                        value={exp.startDate}
-                        onChange={(e) => handleInputChange("experience", "startDate", e.target.value, index)}
+                        id={`company-${exp.id}`}
+                        placeholder="Enter company name"
+                        value={exp.company}
+                        onChange={(e) => handleInputChange("experience", "company", e.target.value, index)}
                       />
                     </div>
                     <div className="grid gap-2">
-                      <Label htmlFor={`endDate-${exp.id}`}>End Date</Label>
+                      <Label htmlFor={`position-${exp.id}`}>Position</Label>
                       <Input
-                        id={`endDate-${exp.id}`}
-                        type="month"
-                        value={exp.endDate}
-                        onChange={(e) => handleInputChange("experience", "endDate", e.target.value, index)}
+                        id={`position-${exp.id}`}
+                        placeholder="Enter your position"
+                        value={exp.position}
+                        onChange={(e) => handleInputChange("experience", "position", e.target.value, index)}
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="grid gap-2">
+                        <Label htmlFor={`startDate-${exp.id}`}>Start Date</Label>
+                        <Input
+                          id={`startDate-${exp.id}`}
+                          type="month"
+                          value={exp.startDate}
+                          onChange={(e) => handleInputChange("experience", "startDate", e.target.value, index)}
+                        />
+                      </div>
+                      <div className="grid gap-2">
+                        <Label htmlFor={`endDate-${exp.id}`}>End Date</Label>
+                        <Input
+                          id={`endDate-${exp.id}`}
+                          type="month"
+                          value={exp.endDate}
+                          onChange={(e) => handleInputChange("experience", "endDate", e.target.value, index)}
+                        />
+                      </div>
+                    </div>
+                    <div className="grid gap-2">
+                      <Label htmlFor={`description-${exp.id}`}>Description</Label>
+                      <Textarea
+                        id={`description-${exp.id}`}
+                        placeholder="Describe your role and achievements..."
+                        value={exp.description}
+                        onChange={(e) => handleInputChange("experience", "description", e.target.value, index)}
                       />
                     </div>
                   </div>
-                  <div className="grid gap-2">
-                    <Label htmlFor={`description-${exp.id}`}>Description</Label>
-                    <Textarea
-                      id={`description-${exp.id}`}
-                      placeholder="Describe your role and achievements..."
-                      value={exp.description}
-                      onChange={(e) => handleInputChange("experience", "description", e.target.value, index)}
-                    />
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <div className="text-gray-500">No education added yet.</div>
+              )}
               <Button variant="outline" className="w-full" onClick={addExperience}>
                 + Add more experience
               </Button>
@@ -547,14 +627,33 @@ export default function UserProfile() {
                           if (file) {
                             setProfileInfo((prev) => ({
                               ...prev,
-                              resume: URL.createObjectURL(file),
+                              resume: file,
                             }))
                           }
+                          handleResumeUpload(e)
                         }}
                       />
                       Upload Resume
                     </label>
                   </Button>
+                  {(profileInfo.resume) && (
+                    <p className="text-sm text-muted-foreground mt-2 text-green-500">
+                      Uploaded: <span className="font-medium">{profileInfo.resume.name}</span>
+                    </p>
+                  )}
+                  {(profileInfo.resumelink && !profileInfo.resume) && (
+                      <p className="text-sm text-muted-foreground mt-2 text-green-500">
+                        Uploaded: 
+                        <a 
+                          href={profileInfo.resumelink} 
+                          target="_blank" 
+                          rel="noopener noreferrer" 
+                          className="font-medium text-blue-500 hover:underline"
+                        >
+                          {profileInfo.resumelink}
+                        </a>
+                      </p>
+                  )}
                 </div>
               </div>
             </div>

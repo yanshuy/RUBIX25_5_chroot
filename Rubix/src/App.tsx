@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import useAuth from "./hooks/useAuth";
+
 import MainLayout from "./layout/MainLayout";
 import HackathonInfo from "./Pages/HackathonInfo/HackathonInfo";
 import DashboardLayout from "./layout/DashboardLayout";
@@ -11,18 +11,17 @@ import HackathonRegister from "./Pages/Register/Register";
 import DiscoverHackathon from "./Pages/DiscoverHackathon/DiscoverHackathon";
 import HackathonServer from "./Pages/HackathonServer/HackathonServer";
 import HackathonStatus from "./Pages/UserDashboard/HackathonStatus";
-// import Interview from "./Pages/Interview/Interview";
-
-
-export const baseUrl = "https://live-merely-drum.ngrok-free.app";
-
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HackathonRegistrationForm } from "./Pages/UserDashboard/HackathonRegistrationForm";
+import { OrganizeHackathonForm } from "./Pages/UserDashboard/OrganizeHackathonForm";
+import Interview from "./Pages/Interview/Interview";
+import FindTeammates from "./Pages/FindTeammate/TeammateFinder";
+import MyOrganizedHackathons from "./Pages/UserDashboard/MyOrganizedHackathons";
 import OrganizerDashboardLayout from "./layout/OrganizerDashboardLayout";
 import Teams from "./Pages/OrganizerDashboard/Teams";
 import SubmittedProjects from "./Pages/OrganizerDashboard/SubmittedProjects";
 const queryClient = new QueryClient();
+
+export const baseUrl = "https://live-merely-drum.ngrok-free.app";
 
 function App() {
     return (
@@ -43,7 +42,7 @@ function App() {
                     <Route path="/userRegister" element={<UserRegister />} />
                     <Route path="/discover" element={<DiscoverHackathon />} />
                     <Route
-                        path="/hackathon/register"
+                        path="/hackathon/:id/register"
                         element={<HackathonRegister />}
                     />
                     <Route
@@ -53,8 +52,9 @@ function App() {
                     <Route
                         path="/hackathon/server"
                         element={<HackathonServer />}
-                    ></Route>
-                    {/* <Route path="/interview" element={<Interview />}></Route> */}
+                    />
+                    <Route path="/interview" element={<Interview />}></Route>
+                    <Route path="/find-teammates" element={<FindTeammates />} />
                 </Route>
                 <Route path="dashboard" element={<DashboardLayout />}>
                     <Route index element={<UserProfile />} />
@@ -72,7 +72,11 @@ function App() {
                     />
                     <Route
                         path="/dashboard/organizehackathons"
-                        element={<HackathonRegistrationForm />}
+                        element={<MyOrganizedHackathons />}
+                    />
+                    <Route
+                        path="/dashboard/organizehackathons/new"
+                        element={<OrganizeHackathonForm />}
                     />
                 </Route>
                 <Route
@@ -95,10 +99,9 @@ function App() {
                     />
                     <Route
                         path="/organizer-dashboard/organizehackathons"
-                        element={<HackathonRegistrationForm />}
+                        element={<OrganizeHackathonForm />}
                     />
                 </Route>
-                
             </Routes>
         </QueryClientProvider>
     );

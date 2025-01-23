@@ -3,6 +3,8 @@ import { TeamForm } from "./sections/TeamForm";
 import { TeammateSuggestions } from "./sections/TeamSuggestions";
 import { useState } from "react";
 import LeaderForm from "./sections/LeaderForm";
+import { useHackathonData } from "../HackathonInfo/HackathonInfo";
+import { useParams } from "react-router-dom";
 
 export interface TeamMember {
     id: string;
@@ -37,7 +39,22 @@ const initialTeam: Team = {
     maxSize: 5,
 };
 
+export type formData = {
+    email: string;
+    mobile: string;
+    fullName: string;
+
+    gender: string;
+};
+
 export default function HackathonRegister() {
+    const [formData, setFormData] = useState<formData>({
+        email: "",
+        mobile: "",
+        fullName: "",
+        gender: "",
+    });
+
     const [activeTab, setActiveTab] = useState("LDetails");
     const [team, setTeam] = useState<Team>(initialTeam);
     function addMember(member: TeamMember) {
@@ -47,7 +64,11 @@ export default function HackathonRegister() {
         <div className="min-h-screen bg-slate-100">
             <TeamHeader activeTab={activeTab} setActiveTab={setActiveTab} />
             {activeTab == "LDetails" ? (
-                <LeaderForm />
+                <LeaderForm
+                    formData={formData}
+                    setFormData={setFormData}
+                    setActiveTab={setActiveTab}
+                />
             ) : (
                 <div className="mx-auto max-w-[1350px] py-6">
                     <div className="grid gap-12 lg:grid-cols-2">
