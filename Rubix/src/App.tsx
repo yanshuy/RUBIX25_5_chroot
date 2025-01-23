@@ -14,13 +14,14 @@ import HackathonStatus from "./Pages/UserDashboard/HackathonStatus";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { OrganizeHackathonForm } from "./Pages/UserDashboard/OrganizeHackathonForm";
 import Interview from "./Pages/Interview/Interview";
-import FindTeammates from "./Pages/FindTeammate/TeammateFinder";
+
 import MyOrganizedHackathons from "./Pages/UserDashboard/MyOrganizedHackathons";
 import OrganizerDashboardLayout from "./layout/OrganizerDashboardLayout";
 import Teams from "./Pages/OrganizerDashboard/Teams";
 import SubmittedProjects from "./Pages/OrganizerDashboard/SubmittedProjects";
 import Result from "./Pages/OrganizerDashboard/Result";
 import RoomPage from "./Pages/Videocalling/RoomPage";
+import FindTeammates from "./Pages/FindTeammate/FindTeammate";
 const queryClient = new QueryClient();
 
 export const baseUrl = "https://live-merely-drum.ngrok-free.app";
@@ -52,7 +53,7 @@ function App() {
                         element={<HackathonInfo />}
                     />
                     <Route
-                        path="/hackathon/server"
+                        path="/hackathon/:id/server"
                         element={<HackathonServer />}
                     />
                     <Route

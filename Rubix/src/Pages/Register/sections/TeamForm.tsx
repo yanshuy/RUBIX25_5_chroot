@@ -119,14 +119,14 @@ export function TeamForm({
                                 </Card>
                             ))}
 
-                            <Button
+                            {/* <Button
                                 variant="outline"
                                 className="w-full"
                                 disabled={team.members.length >= team.maxSize}
                             >
                                 <Plus className="mr-2 h-4 w-4" />
                                 Add Team Member
-                            </Button>
+                            </Button> */}
                         </div>
                     </div>
                 </CardContent>
