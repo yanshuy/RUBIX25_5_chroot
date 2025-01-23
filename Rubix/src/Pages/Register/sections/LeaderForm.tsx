@@ -5,6 +5,7 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect, useState } from "react";
 import { baseUrl } from "../../../App";
+import { m } from "framer-motion";
 
 // Define a more robust interface for form data
 interface FormData {
@@ -22,7 +23,7 @@ interface FormErrors {
     gender?: string;
 }
 
-const LeaderForm = ({ formData, setFormData, setActiveTab }) => {
+const LeaderForm = ({ formData, setFormData, setActiveTab, setTeam }) => {
     const [errors, setErrors] = useState<FormErrors>({});
 
     const validateForm = (): boolean => {
@@ -66,11 +67,15 @@ const LeaderForm = ({ formData, setFormData, setActiveTab }) => {
         if (validateForm()) {
             try {
                 // Attempt to submit form or move to next tab
+                setTeam((prev) => ({
+                    team: "",
+                    members: [{ ...formData, status: "verified" }],
+                }));
                 console.log("Form submitted:", formData);
+
                 setActiveTab("TDetails");
             } catch (error) {
                 console.error("Submission error:", error);
-                // Handle submission error
             }
         }
     };
