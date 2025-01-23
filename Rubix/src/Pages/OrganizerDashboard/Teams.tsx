@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronRight, Github, Check, X, Clock } from "lucide-react";
 import {
     Dialog,
@@ -27,9 +27,8 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Notification from "../../components/Notification";
-// import { Notification } from "../../components/Notification";
-
-
+import { baseUrl } from "../../App";
+import { useParams } from "react-router-dom";
 
 // Types
 interface TeamMember {
@@ -46,7 +45,7 @@ interface Team {
     teamLead: TeamMember;
     members: TeamMember[];
     domainPreference: string;
-    status: "shortlisted" | "pending" | "not_shortlisted";
+    status: "shortlisted" | "pending" | "Rejected";
 }
 
 // Mock Data
@@ -109,58 +108,103 @@ export default function Teams() {
     const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
     const [activeTab, setActiveTab] = useState("all");
     const [notification, setNotification] = useState<string | null>(null);
+    const params = useParams();
+    const id = params.id;
 
     const filteredTeams = teams.filter((team) => {
         if (activeTab === "all") return true;
         if (activeTab === "shortlisted") return team.status === "shortlisted";
-        if (activeTab === "not_shortlisted")
-            return team.status === "not_shortlisted";
+        if (activeTab === "Rejected") return team.status === "Rejected";
         if (activeTab === "pending") return team.status === "pending";
         return true;
     });
-    
 
-    
-
-
-    const updateTeamStatus = async (teamId: number, newStatus: Team["status"]) => {
-        setTeams((prevTeams) =>
-            prevTeams.map((team) =>
-                team.id === teamId ? { ...team, status: newStatus } : team,
-            ),
+    const fetchData = async () => {
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await fetch(
+            `${baseUrl}/api/core/hackathons/${id}/teams`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                    "ngrok-skip-browser-warning": "true",
+                },
+            },
         );
+        const data = await response.json();
+        console.log(data);
 
-        const formData = teams.map((team) => (
-          team.id === teamId ? { ...team, status: newStatus } : team
-        ))
+        setTeams(data);
+    };
 
-        console.log(formData);
-        
+    useEffect(() => {
+        fetchData();
+    }, [id]);
 
+    const updateTeamStatus = async (
+        teamId: number,
+        newStatus: Team["status"],
+    ) => {
+        const accessToken = localStorage.getItem("accessToken");
 
+        if (newStatus === "shortlisted") {
+            try {
+                const response = await fetch(
+                    `${baseUrl}/api/core/teams/${teamId}/shortlist/`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            Authorization: `Bearer ${accessToken}`,
+                        },
+                    },
+                );
 
+                if (!response.ok) {
+                    throw new Error("Failed to shortlist team");
+                }
 
+                setTeams((prevTeams) =>
+                    prevTeams.map((team) =>
+                        team.id === teamId
+                            ? { ...team, status: newStatus }
+                            : team,
+                    ),
+                );
 
+                setNotification("Team has been shortlisted");
+            } catch (error) {
+                console.error("Error shortlisting team:", error);
+                setNotification("Failed to shortlist team");
+            }
+        } else {
+            setTeams((prevTeams) =>
+                prevTeams.map((team) =>
+                    team.id === teamId ? { ...team, status: newStatus } : team,
+                ),
+            );
 
-        const statusMessages = {
-            shortlisted: "Team has been shortlisted",
-            not_shortlisted: "Team has been marked as not shortlisted",
-            pending: "Team has been marked as pending review",
-        };
+            const statusMessages = {
+                shortlisted: "Team has been shortlisted",
+                Rejected: "Team has been marked as rejected",
+                pending: "Team has been marked as pending review",
+            };
 
-        setNotification(statusMessages[newStatus]);
+            setNotification(statusMessages[newStatus]);
+        }
     };
 
     const getStatusBadge = (status: Team["status"]) => {
         const variants = {
             shortlisted: "bg-green-100 text-green-800 hover:bg-green-100",
             pending: "bg-yellow-100 text-yellow-800 hover:bg-yellow-100",
-            not_shortlisted: "bg-red-100 text-red-800 hover:bg-red-100",
+            Rejected: "bg-red-100 text-red-800 hover:bg-red-100",
         };
         const labels = {
             shortlisted: "Shortlisted",
             pending: "Pending Review",
-            not_shortlisted: "Not Shortlisted",
+            Rejected: "Rejected",
         };
         return (
             <Badge className={variants[status]} variant="secondary">
@@ -173,11 +217,11 @@ export default function Teams() {
         const icons = {
             shortlisted: <Check className="h-4 w-4 text-green-600" />,
             pending: <Clock className="h-4 w-4 text-yellow-600" />,
-            not_shortlisted: <X className="h-4 w-4 text-red-600" />,
+            Rejected: <X className="h-4 w-4 text-red-600" />,
         };
         return icons[status];
     };
-    
+
     return (
         <div className="container mx-auto bg-slate-50 px-8 py-5">
             <h1 className="mb-10 text-center text-4xl font-bold text-slate-900">
@@ -191,9 +235,7 @@ export default function Teams() {
                 <TabsList className="mb-3 grid w-full grid-cols-4">
                     <TabsTrigger value="all">All Teams</TabsTrigger>
                     <TabsTrigger value="shortlisted">Shortlisted</TabsTrigger>
-                    <TabsTrigger value="not_shortlisted">
-                        Not Shortlisted
-                    </TabsTrigger>
+                    <TabsTrigger value="Rejected">Not Rejected</TabsTrigger>
                     <TabsTrigger value="pending">Pending Review</TabsTrigger>
                 </TabsList>
 
@@ -266,16 +308,13 @@ export default function Teams() {
                                                         onClick={() =>
                                                             updateTeamStatus(
                                                                 team.id,
-                                                                "not_shortlisted",
+                                                                "Rejected",
                                                             )
                                                         }
                                                         className="flex items-center gap-2"
                                                     >
                                                         <X className="h-4 w-4" />
-                                                        <span>
-                                                            Mark as Not
-                                                            Shortlisted
-                                                        </span>
+                                                        <span>Reject</span>
                                                     </DropdownMenuItem>
                                                     <DropdownMenuItem
                                                         onClick={() =>
