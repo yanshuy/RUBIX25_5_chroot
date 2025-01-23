@@ -39,7 +39,7 @@ const questions = [
 
 export default function TechnicalHelp() {
     return (
-        <ScrollArea className="flex-1 bg-[#313338] p-6">
+        <ScrollArea className="flex-1 bg-slate-50 p-6">
             <div className="mb-6 flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-primary">
                     Technical Help

@@ -49,7 +49,7 @@ const events = [
 
 export default function Schedule() {
     return (
-        <ScrollArea className="flex-1 bg-[#313338] p-6">
+        <ScrollArea className="flex-1 bg-slate-50 p-6">
             <h2 className="mb-6 text-2xl font-bold text-primary">
                 Event Schedule
             </h2>
