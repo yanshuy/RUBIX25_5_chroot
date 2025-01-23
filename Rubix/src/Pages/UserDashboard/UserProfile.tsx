@@ -143,6 +143,23 @@ export default function UserProfile() {
     })
   }
 
+  const handleResumeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setProfileInfo((prev) => ({
+        ...prev,
+        resume: file.name, // Store the file name
+      }));
+  
+      // Show confirmation toast
+      toast({
+        title: "Resume Uploaded",
+        description: `${file.name} has been uploaded successfully.`,
+      });
+    }
+  };
+  
+
   const addSkill = () => {
     if (!newSkill.trim()) return
     setProfileInfo((prev) => ({
@@ -221,6 +238,7 @@ export default function UserProfile() {
   }
   
   async function updateProfile(data: FormData) {
+    console.log(data)
     const response = await fetch(`${baseUrl}/api/profile/`, {
       method: "POST",
       body: data,
@@ -390,6 +408,7 @@ export default function UserProfile() {
                   <Input
                     value={profileInfo.socialMedia.linkedin}
                     onChange={(e) => handleInputChange("socialMedia", "linkedin", e.target.value)}
+                    className="pl-10"
                   />
                 </div>
                 <div className="flex items-center justify-center relative">
@@ -397,6 +416,7 @@ export default function UserProfile() {
                   <Input
                     value={profileInfo.socialMedia.github}
                     onChange={(e) => handleInputChange("socialMedia", "github", e.target.value)}
+                    className="pl-10"
                   />
                 </div>
                 <div className="flex items-center justify-center relative">
@@ -404,6 +424,7 @@ export default function UserProfile() {
                   <Input
                     value={profileInfo.socialMedia.instagram}
                     onChange={(e) => handleInputChange("socialMedia", "instagram", e.target.value)}
+                    className="pl-10"
                   />
                 </div>
               </div>
@@ -550,11 +571,17 @@ export default function UserProfile() {
                               resume: URL.createObjectURL(file),
                             }))
                           }
+                          handleResumeUpload(e)
                         }}
                       />
                       Upload Resume
                     </label>
                   </Button>
+                  {profileInfo.resume && (
+                    <p className="text-sm text-muted-foreground mt-2 text-green-500">
+                      Uploaded: <span className="font-medium">{profileInfo.resume}</span>
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
