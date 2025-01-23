@@ -21,7 +21,7 @@ interface Response {
     answer: string;
 }
 
-const MockInterviewer = () => {
+const MockInterviewer = ({ questions }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isRecording, setIsRecording] = useState(false);
     const [timeRemaining, setTimeRemaining] = useState(120);
@@ -36,33 +36,33 @@ const MockInterviewer = () => {
 
     const { toast } = useToast();
 
-    const questions = [
-        {
-            id: 1,
-            text: "Tell me about a challenging project you've worked on and how you handled it.",
-            category: "behavioral",
-        },
-        {
-            id: 2,
-            text: "What are your greatest strengths and how do they align with this role?",
-            category: "behavioral",
-        },
-        {
-            id: 3,
-            text: "Where do you see yourself in five years?",
-            category: "behavioral",
-        },
-        {
-            id: 4,
-            text: "Describe a situation where you had to work with a difficult team member. How did you handle it?",
-            category: "behavioral",
-        },
-        {
-            id: 5,
-            text: "What's the most innovative idea you've implemented in your previous role?",
-            category: "behavioral",
-        },
-    ];
+    // const questions = [
+    //     {
+    //         id: 1,
+    //         text: "Tell me about a challenging project you've worked on and how you handled it.",
+    //         category: "behavioral",
+    //     },
+    //     {
+    //         id: 2,
+    //         text: "What are your greatest strengths and how do they align with this role?",
+    //         category: "behavioral",
+    //     },
+    //     {
+    //         id: 3,
+    //         text: "Where do you see yourself in five years?",
+    //         category: "behavioral",
+    //     },
+    //     {
+    //         id: 4,
+    //         text: "Describe a situation where you had to work with a difficult team member. How did you handle it?",
+    //         category: "behavioral",
+    //     },
+    //     {
+    //         id: 5,
+    //         text: "What's the most innovative idea you've implemented in your previous role?",
+    //         category: "behavioral",
+    //     },
+    // ];
 
     useEffect(() => {
         navigator.mediaDevices
@@ -194,6 +194,9 @@ const MockInterviewer = () => {
                 {
                     method: "POST",
                     body: formData, // No Content-Type header! Let browser set it
+                    headers: {
+                        Authorizaton: `Bearer ${localStorage.getItem("accessToken")}`,
+                    },
                 },
             );
 
@@ -302,7 +305,7 @@ const MockInterviewer = () => {
                                 className="w-full"
                             >
                                 <TabsList className="grid w-full grid-cols-5">
-                                    {questions.map((_, index) => (
+                                    {questions?.map((_, index) => (
                                         <TabsTrigger
                                             key={index}
                                             value={`question${index + 1}`}
@@ -314,7 +317,7 @@ const MockInterviewer = () => {
                                         </TabsTrigger>
                                     ))}
                                 </TabsList>
-                                {questions.map((question, index) => (
+                                {questions?.map((question, index) => (
                                     <TabsContent
                                         key={index}
                                         value={`question${index + 1}`}

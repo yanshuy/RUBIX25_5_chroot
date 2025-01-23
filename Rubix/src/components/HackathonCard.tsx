@@ -28,7 +28,7 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
                 <div className="flex items-start justify-between">
                     <div>
                         <h3 className="text-lg font-semibold">
-                            {hackathon.name}
+                            {hackathon.hackathonName}
                         </h3>
                     </div>
                     <div className="flex gap-2">
@@ -85,7 +85,7 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
             <CardFooter className="flex items-center justify-between border-t p-4">
                 <div className="flex gap-2">
                     <Badge variant="secondary">
-                        Starts {startDate(hackathon.start_date)}
+                        Starts {startDate(hackathon.hackathonBeginDate)}
                     </Badge>
                 </div>
                 <Button>Apply now</Button>
