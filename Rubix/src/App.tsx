@@ -57,7 +57,11 @@ function App() {
                         element={<HackathonServer />}
                     />
                     <Route
-                        path="/dashboard/hackathons/:hackathonid/:teamid"
+                        path="/dashboard/hackathons/room/:hackathonid/:teamid"
+                        element={<RoomPage />}
+                    />
+                    <Route
+                        path="/dashboard/hackathons/room/:roomid"
                         element={<RoomPage />}
                     />
                     <Route

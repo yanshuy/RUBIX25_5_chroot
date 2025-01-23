@@ -17,11 +17,7 @@ interface SocketProviderProps {
 }
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
-  const socket = useMemo(() => io("https://plainly-modern-escargot.ngrok-free.app/", {
-    extraHeaders: {
-      "ngrok-skip-browser-warning": "true", 
-    }
-  }), []);
+  const socket = useMemo(() => io("http://localhost:8000"), []);
 
   return (
     <SocketContext.Provider value={socket}>

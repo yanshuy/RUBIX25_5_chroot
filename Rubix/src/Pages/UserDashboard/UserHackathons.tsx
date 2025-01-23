@@ -118,7 +118,7 @@ export default function UserHackathons() {
     const fetchHackathons = async () => {
       const accessToken = localStorage.getItem("accessToken")
       try {
-        const response = await fetch(`${baseUrl}/api/core/hackathons/`, {
+        const response = await fetch(`${baseUrl}/api/core/hackathons/me`, {
           method: "GET",
           headers:{
             "ngrok-skip-browser-warning": "69420",
