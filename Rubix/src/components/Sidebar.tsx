@@ -5,7 +5,7 @@ import Logo from "../assets/logo.png";
 
 const navItems = [
   {
-    path: "/dashboard/profile",
+    path: "/organizer-dashboard/profile",
     label: "Profile",
     icon: (props: IconBaseProps) => <User {...props} />,
   },
