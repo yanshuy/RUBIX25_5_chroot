@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Guidelines from "./sections/Guidelines";
 import MockInterviewer from "./MockInterviewer";
+import { ToastProvider } from "../../components/ui/toast";
 
 export default function Interview() {
     const [isStarted, setIsStarted] = useState(false);
@@ -10,7 +11,9 @@ export default function Interview() {
             {!isStarted ? (
                 <Guidelines onStart={() => setIsStarted(true)} />
             ) : (
-                <MockInterviewer />
+                <ToastProvider>
+                    <MockInterviewer />
+                </ToastProvider>
             )}
         </div>
     );

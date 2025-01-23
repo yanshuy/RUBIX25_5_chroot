@@ -14,6 +14,12 @@ import { useToast } from "../../hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import QuestionReader from "./sections/QuestionReader";
+import { baseUrl } from "../../App";
+
+interface Response {
+    question: string;
+    answer: string;
+}
 
 const MockInterviewer = () => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -22,6 +28,7 @@ const MockInterviewer = () => {
     const [stream, setStream] = useState(null);
     const [isVideoOff, setIsVideoOff] = useState(false);
     const [isCompleted, setIsCompleted] = useState(false);
+    const [responses, setResponses] = useState<Response[]>([]);
 
     const videoRef = useRef(null);
     const mediaRecorderRef = useRef(null);
@@ -106,7 +113,16 @@ const MockInterviewer = () => {
             const audioBlob = new Blob(audioChunksRef.current, {
                 type: "audio/wav",
             });
-            // Store the audio blob (you might want to use a state array to keep all recordings)
+            const currentQuestion = questions[currentQuestionIndex];
+            setResponses((prevResponses) => {
+                return [
+                    ...prevResponses,
+                    {
+                        question: currentQuestion.text,
+                        answer: URL.createObjectURL(audioBlob),
+                    },
+                ];
+            });
             console.log("Recording stopped, audio blob created:", audioBlob);
         };
 
@@ -137,15 +153,6 @@ const MockInterviewer = () => {
         }
     };
 
-    // const toggleAudio = () => {
-    //     if (stream) {
-    //         stream.getAudioTracks().forEach((track) => {
-    //             track.enabled = !track.enabled;
-    //         });
-    //         setIsMuted(!isMuted);
-    //     }
-    // };
-
     const toggleVideo = () => {
         if (stream) {
             stream.getVideoTracks().forEach((track) => {
@@ -155,15 +162,59 @@ const MockInterviewer = () => {
         }
     };
 
-    const sendAudioToBackend = () => {
-        // Here you would implement the logic to send all recorded audio to the backend
-        console.log("Sending audio to backend...");
-        toast({
-            title: "Interview Completed",
-            description: "Your answers have been submitted for review.",
-        });
-    };
+    const sendAudioToBackend = async () => {
+        const formData = new FormData();
+        formData.append("email", "John@kkk.com");
+        formData.append("password", "John");
 
+        // Use for...of instead of forEach to handle async/await properly
+        for (const [index, response] of responses.entries()) {
+            try {
+                const audioBlob = await fetch(response.answer).then((r) =>
+                    r.blob(),
+                );
+                formData.append(
+                    `audioResponse${index + 1}`,
+                    audioBlob,
+                    `audio${index + 1}.webm`,
+                );
+                formData.append(`question${index + 1}`, response.question);
+            } catch (error) {
+                console.error(`Error processing response ${index + 1}:`, error);
+                toast({
+                    title: "Processing Error",
+                    description: `Failed to process question ${index + 1}`,
+                    variant: "destructive",
+                });
+                return;
+            }
+        }
+
+        try {
+            const response = await fetch(`${baseUrl}/api/register/`, {
+                method: "POST",
+                body: formData, // No Content-Type header! Let browser set it
+            });
+
+            if (!response.ok)
+                throw new Error(`HTTP error! status: ${response.status}`);
+
+            const result = await response.json();
+            toast({
+                title: "Interview Submitted",
+                description: "Your answers have been successfully processed.",
+                variant: "success",
+            });
+            return result;
+        } catch (error) {
+            console.error("Submission error:", error);
+            toast({
+                title: "Submission Failed",
+                description: "There was a problem submitting your interview.",
+                variant: "destructive",
+            });
+        }
+    };
     return (
         <div className="flex h-screen flex-col bg-slate-200 p-6">
             <div className="flex h-full gap-6">
@@ -172,6 +223,7 @@ const MockInterviewer = () => {
                         <CardContent className="size-full p-4">
                             <div className="relative h-full w-full overflow-hidden rounded-lg bg-black">
                                 <video
+                                    id="interview-video"
                                     ref={videoRef}
                                     autoPlay
                                     playsInline
