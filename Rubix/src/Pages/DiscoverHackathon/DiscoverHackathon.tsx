@@ -10,6 +10,7 @@ import Loader from "../../components/Loader";
 export interface Hackathon {
     id: string;
     name: string;
+    collegeName: string;
     type: string;
     theme: string;
     registration_status: "open" | "closed";
@@ -19,6 +20,7 @@ export interface Hackathon {
     website?: string;
     social_links: string;
     banner: string;
+    profilePhoto: string;
 }
 
 // const hackathonsArr: Hackathon[] = [

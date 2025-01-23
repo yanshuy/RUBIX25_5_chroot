@@ -4,11 +4,12 @@ import { format } from "date-fns";
 import { TbSocial } from "react-icons/tb";
 
 export function EventHeader({ data }) {
+    console.log(data)
     return (
         <div className="flex flex-col gap-6 p-6">
             <div className="flex gap-4">
                 <img
-                    src={data?.HackathonLogo}
+                    src={data?.profilePhoto}
                     alt="Event banner"
                     width={120}
                     height={80}

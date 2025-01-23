@@ -68,7 +68,7 @@ function App() {
                         element={<Hackathons />}
                     />
                     <Route
-                        path="/dashboard/hackathons/:name"
+                        path="/dashboard/hackathons/:id"
                         element={<HackathonStatus />}
                     />
                     <Route

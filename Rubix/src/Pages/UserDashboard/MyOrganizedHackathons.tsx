@@ -1,109 +1,111 @@
-import { useEffect, useState } from "react"
-import { Plus, Search } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CalendarDays, Users, Trophy } from "lucide-react"
-import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Link } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { Plus, Search, CalendarDays, Users, Trophy } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
+import { baseUrl } from "../../App";
+import { useQuery } from "@tanstack/react-query";
 
-type HackathonStatus = "live" | "draft" | "completed" | "cancelled"
+type HackathonStatus = "live" | "draft" | "completed";
 
 interface OrganizedHackathon {
-  id: string
-  title: string
-  description: string
-  startDate: string
-  endDate: string
-  status: HackathonStatus
-  participants?: number
-  coverImage?: string
-  prizePools?: string
+  id: string;
+  hackathonName: string;
+  about: string;
+  prizePool: number;
+  status: HackathonStatus; // This will be dynamically determined
+  registrationStatus: "open" | "closed";
+  hackathonBeginDate: string;
+  hackathonEndDate: string;
+  totalParticipants: number;
+  coverPhoto: string;
+  profilePhoto: string;
 }
 
+async function getMyHackathons() {
+  const accessToken = localStorage.getItem("accessToken");
+  const response = await fetch(`${baseUrl}/api/core/hackathons/me`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+      "ngrok-skip-browser-warning": "true",
+    },
+  });
 
-// Sample data - replace with API call
-const sampleHackathons: OrganizedHackathon[] = [
-  {
-    id: "1",
-    title: "TechCrunch Hackathon 2024",
-    description: "Join us for 48 hours of innovation and creativity. Build the next big thing in tech!",
-    startDate: "2024-03-15",
-    endDate: "2024-03-17",
-    status: "live",
-    participants: 250,
-    prizePools: "$50,000 in prizes",
-    coverImage: "/placeholder.svg?height=400&width=600",
-  },
-  {
-    id: "2",
-    title: "AI Innovation Challenge",
-    description: "Draft your ideas for the future of artificial intelligence.",
-    startDate: "2024-04-01",
-    endDate: "2024-04-03",
-    status: "draft",
-    coverImage: "/placeholder.svg?height=400&width=600",
-  },
-  {
-    id: "3",
-    title: "Blockchain Summit Hackathon",
-    description: "Create decentralized solutions for real-world problems.",
-    startDate: "2024-02-01",
-    endDate: "2024-02-03",
-    status: "completed",
-    participants: 180,
-    prizePools: "10 ETH + $20,000",
-    coverImage: "/placeholder.svg?height=400&width=600",
-  },
-]
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+
+  return response.json();
+}
+
+function useMyOrganizedHackathons() {
+  return useQuery<OrganizedHackathon[]>({
+    queryFn: getMyHackathons,
+    queryKey: ["hackathons"],
+    refetchOnWindowFocus: false,
+  });
+}
+
+// Helper function to compute the status dynamically
+function computeHackathonStatus(hackathon: OrganizedHackathon): HackathonStatus {
+  if (hackathon.status === "draft") {
+    return "draft"; // Draft hackathons remain drafts
+  }
+
+  // If registration is open, the hackathon is live
+  if (hackathon.registrationStatus === "open") {
+    return "live";
+  }
+
+  // If registration is closed, the hackathon is completed
+  return "completed";
+}
 
 export default function MyOrganizedHackathons() {
-  const [hackathons, setHackathons] = useState<OrganizedHackathon[]>([])
-  const [loading, setLoading] = useState(true)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [activeFilter, setActiveFilter] = useState<"all" | HackathonStatus>("all")
+  const { data: myhackathons, isLoading, isError } = useMyOrganizedHackathons();
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeFilter, setActiveFilter] = useState<"all" | HackathonStatus>("all");
 
-  useEffect(() => {
-    const fetchHackathons = async () => {
-      try {
-        // Simulate API call
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        setHackathons(sampleHackathons)
-      } catch (error) {
-        console.error("Failed to fetch hackathons:", error)
-      } finally {
-        setLoading(false)
-      }
-    }
+  // Filter hackathons based on search query and active filter
+  const filteredHackathons = myhackathons
+    ? myhackathons
+        .filter((hackathon) => {
+          const name = hackathon.hackathonName?.toLowerCase() || "";
+          const description = hackathon.about?.toLowerCase() || "";
+          const query = searchQuery.toLowerCase();
+          return name.includes(query) || description.includes(query);
+        })
+        .filter((hackathon) => {
+          const status = computeHackathonStatus(hackathon);
+          return activeFilter === "all" ? true : status === activeFilter;
+        })
+    : [];
 
-    fetchHackathons()
-  }, [])
-
-  const filteredHackathons = hackathons
-    .filter(
-      (hackathon) =>
-        hackathon.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        hackathon.description.toLowerCase().includes(searchQuery.toLowerCase()),
-    )
-    .filter((hackathon) => (activeFilter === "all" ? true : hackathon.status === activeFilter))
+  if (isError) {
+    return <div className="text-center py-12 text-red-500">Failed to load hackathons.</div>;
+  }
 
   return (
     <div className="container p-10">
       <div className="flex justify-between items-center mb-8">
         <h1 className="text-2xl font-bold">My Organized Hackathons</h1>
         <Link to={`/dashboard/organizehackathons/new`}>
-            <Button className="bg-blue-600 hover:bg-blue-700">
+          <Button className="bg-blue-600 hover:bg-blue-700">
             <Plus className="mr-2 h-4 w-4" />
             Organize a Hackathon
-            </Button>
+          </Button>
         </Link>
       </div>
 
       <div className="flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
           <div className="relative w-full sm:w-96">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2"  size={20} color="grey" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2" size={20} color="grey" />
             <Input
               placeholder="Search hackathons..."
               value={searchQuery}
@@ -126,7 +128,7 @@ export default function MyOrganizedHackathons() {
           </Tabs>
         </div>
 
-        {loading ? (
+        {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[1, 2, 3].map((n) => (
               <div key={n} className="h-[400px] bg-slate-100 animate-pulse rounded-lg" />
@@ -135,7 +137,9 @@ export default function MyOrganizedHackathons() {
         ) : filteredHackathons.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredHackathons.map((hackathon) => (
-              <HackathonCard key={hackathon.id} hackathon={hackathon} />
+              <Link to={`/dashboard/hackathons/${hackathon.id}`} key={hackathon.id}>
+                <HackathonCard key={hackathon.id} hackathon={hackathon} />
+              </Link>
             ))}
           </div>
         ) : (
@@ -145,62 +149,64 @@ export default function MyOrganizedHackathons() {
         )}
       </div>
     </div>
-  )
+  );
 }
 
 interface HackathonCardProps {
-  hackathon: OrganizedHackathon
+  hackathon: OrganizedHackathon;
 }
 
 export function HackathonCard({ hackathon }: HackathonCardProps) {
-  const getStatusColor = (status: OrganizedHackathon["status"]) => {
+  // Compute the status dynamically
+  const status = computeHackathonStatus(hackathon);
+
+  const getStatusColor = (status: HackathonStatus | "unknown") => {
     switch (status) {
       case "live":
-        return "bg-green-100 text-green-800"
+        return "bg-green-100 text-green-800";
       case "draft":
-        return "bg-yellow-100 text-yellow-800"
+        return "bg-yellow-100 text-yellow-800";
       case "completed":
-        return "bg-blue-100 text-blue-800"
-      case "cancelled":
-        return "bg-slate-100 text-slate-800"
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800"; // Default styling for unknown status
     }
-  }
+  };
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
       <div className="relative h-48">
         <img
-          src={hackathon.coverImage || "/placeholder.svg"}
-          alt={hackathon.title}
+          src={hackathon.coverPhoto || "/placeholder.svg"}
+          alt={hackathon.hackathonName}
           className="w-full h-full object-cover"
         />
-        <Badge variant="secondary" className={`absolute top-4 right-4 ${getStatusColor(hackathon.status)}`}>
-          {hackathon.status.toUpperCase()}
+        <Badge variant="secondary" className={`absolute top-4 right-4 ${getStatusColor(status)}`}>
+          {status.toUpperCase()}
         </Badge>
       </div>
       <CardContent className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{hackathon.title}</h3>
-        <p className="text-slate-600 line-clamp-2 mb-4">{hackathon.description}</p>
+        <h3 className="text-xl font-semibold mb-2">{hackathon.hackathonName}</h3>
+        <p className="text-slate-600 line-clamp-2 mb-4">{hackathon.about}</p>
         <div className="flex items-center gap-4 text-sm text-slate-500">
           <div className="flex items-center gap-1">
             <CalendarDays className="h-4 w-4" />
-            <span>{new Date(hackathon.startDate).toLocaleDateString()}</span>
+            <span>{new Date(hackathon.hackathonBeginDate).toLocaleDateString()}</span>
           </div>
-          {hackathon.participants && (
+          {hackathon.totalParticipants && (
             <div className="flex items-center gap-1">
               <Users className="h-4 w-4" />
-              <span>{hackathon.participants} participants</span>
+              <span>{hackathon.totalParticipants} participants</span>
             </div>
           )}
         </div>
       </CardContent>
-      {hackathon.prizePools && (
+      {hackathon.prizePool && (
         <CardFooter className="px-6 py-4 bg-slate-50 flex items-center gap-2">
           <Trophy className="h-4 w-4 text-blue-600" />
-          <span className="text-sm font-medium">{hackathon.prizePools}</span>
+          <span className="text-sm font-medium">₹{hackathon.prizePool} in prizes</span>
         </CardFooter>
       )}
     </Card>
-  )
+  );
 }
-
