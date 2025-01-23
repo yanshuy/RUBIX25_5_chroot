@@ -95,7 +95,7 @@ function App() {
                         element={<SubmittedProjects />}
                     />
                     <Route
-                        path="/organizerdashboard/result"
+                        path="/organizerdashboard/result/:id"
                         element={<Result />}
                     />
                 </Route>
