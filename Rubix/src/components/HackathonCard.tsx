@@ -28,13 +28,16 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
             <Card className="group overflow-hidden">
                 <CardHeader className="border-b p-4">
                     <div className="flex items-start justify-between">
-                        <div>
-                            <div>
-                                <img src={} alt="LogoHackathon" />
+                        <div className="flex items-center gap-4 ">
+                            <div className="h-12 w-12 rounded-full overflow-hidden">
+                                <img src={hackathon.profilePhoto} alt="Logo" className="h-full object-cover"/>
                             </div>
-                            <h3 className="text-lg font-semibold">
-                                {hackathon.hackathonName}
-                            </h3>
+                            <div className="flex flex-col">
+                                <h3 className="text-lg font-semibold">
+                                    {hackathon.hackathonName}
+                                </h3>
+                                <p className="text-sm">{hackathon.collegeName}</p>
+                            </div>
                         </div>
                         <div className="flex gap-2">
                             {hackathon.website && (

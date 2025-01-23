@@ -64,7 +64,7 @@ function App() {
                         element={<Hackathons />}
                     />
                     <Route
-                        path="/dashboard/hackathons/:name"
+                        path="/dashboard/hackathons/:id"
                         element={<HackathonStatus />}
                     />
                     <Route
@@ -76,6 +76,29 @@ function App() {
                         element={<OrganizeHackathonForm />}
                     />
                 </Route>
+                {/* <Route
+                    path="organizer-dashboard"
+                    element={<OrganizerDashboardLayout />}
+                >
+                    <Route index element={<Teams />} />
+                    <Route
+                        path="/organizer-dashboard/Teams"
+                        element={<Teams />}
+                    />
+
+                    <Route
+                        path="/organizer-dashboard/Projects"
+                        element={<SubmittedProjects />}
+                    />
+                    <Route
+                        path="/organizer-dashboard/hackathons/:name"
+                        element={<HackathonStatus />}
+                    />
+                    <Route
+                        path="/organizer-dashboard/organizehackathons"
+                        element={<HackathonRegistrationForm />}
+                    />
+                </Route> */}
             </Routes>
         </QueryClientProvider>
     );
