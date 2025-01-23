@@ -5,7 +5,6 @@ import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useEffect, useState } from "react";
 import { baseUrl } from "../../../App";
-import { m } from "framer-motion";
 
 // Define a more robust interface for form data
 interface FormData {

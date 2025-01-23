@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useTeamData } from "../HackathonServer/HackathonServer";
 import { useParams } from "react-router-dom";
+import { baseUrl } from "../../App";
 
 interface Question {
     id: number;
@@ -164,10 +165,11 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
 
     const submitInterview = async () => {
         try {
-            const response = await fetch("/api/interview", {
+            const response = await fetch(`${baseUrl}/api/core/interview/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
                 body: JSON.stringify({ responses, team_id: data?.teamId }),
             });
