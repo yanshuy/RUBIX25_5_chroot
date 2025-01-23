@@ -32,16 +32,18 @@ const Room: React.FC = () => {
 
   const localVideoRef = useRef<HTMLVideoElement | null>(null);
   const remoteVideoRef = useRef<HTMLVideoElement | null>(null);
+  const screenVideoRef = useRef<HTMLVideoElement | null>(null);
 
   const [searchParams] = useSearchParams();
 
   const emailId = searchParams.get("emailId");
-  const { roomId } = useParams();
+  const { hackathonid, teamid } = useParams<{ hackathonid: string; teamid: string }>();
+  const roomId = `${hackathonid}-${teamid}`;
 
   const handleJoinRoom = useCallback(
     (data: { email: string; room: string }) => {
       const { room } = data;
-      navigate(`/room/${roomId}`);
+      navigate(`/dashboard/hackathons/room/${roomId}`);
     },
     [navigate, roomId],
   );
@@ -153,28 +155,50 @@ const Room: React.FC = () => {
     }
   };
 
-  const handleShareScreen = async () => {
+  const handleShareScreen = async () => { 
     if (!screenSharing) {
-      const screenStream = await navigator.mediaDevices.getDisplayMedia({
-        video: true,
-      });
-      const screenTrack = screenStream.getVideoTracks()[0];
-      const senders = peer.peer.getSenders();
-      const videoSender = senders.find(
-        (sender) => sender.track?.kind === "video",
-      );
-      if (videoSender) {
-        videoSender.replaceTrack(screenTrack);
-      }
-      setScreenSharing(true);
-      screenTrack.onended = () => {
+      try {
+        // Get screen stream
+        const screenStream = await navigator.mediaDevices.getDisplayMedia({
+          video: true,
+          audio: false // Optional: add audio if needed
+        });
+  
+        // Replace the video track in the peer connection
+        const screenTrack = screenStream.getVideoTracks()[0];
+        const senders = peer.peer.getSenders();
+        const videoSender = senders.find(
+          (sender) => sender.track?.kind === "video"
+        );
+  
         if (videoSender) {
-          videoSender.replaceTrack(
-            myStream?.getVideoTracks()[0] || screenTrack,
-          );
+          await videoSender.replaceTrack(screenTrack);
         }
-        setScreenSharing(false);
-      };
+  
+        // Update state to reflect screen sharing
+        setScreenSharing(true);
+  
+        // Handle screen sharing end
+        screenTrack.onended = () => {
+          if (videoSender) {
+            // Restore the original video track
+            const originalTrack = myStream?.getVideoTracks()[0];
+            if (originalTrack) {
+              videoSender.replaceTrack(originalTrack);
+            }
+          }
+          setScreenSharing(false);
+        };
+  
+        // Display the shared screen in a new video element
+        if (screenVideoRef.current) {
+          screenVideoRef.current.srcObject = screenStream;
+        }
+      } catch (error) {
+        console.error("Error sharing screen:", error);
+        // Optionally, show a user-friendly error message
+        // toast.error("Screen sharing failed");
+      }
     }
   };
 
@@ -205,6 +229,17 @@ const Room: React.FC = () => {
       setRemoteStream(remoteStream[0]);
     });
   }, []);
+
+  useEffect(() => {
+    if (screenVideoRef.current && screenSharing && myStream) {
+      const screenTrack = myStream.getVideoTracks().find(track => track.kind === "video");
+      if (screenTrack) {
+        const screenStream = new MediaStream();
+        screenStream.addTrack(screenTrack);
+        screenVideoRef.current.srcObject = screenStream;
+      }
+    }
+  }, [screenSharing, myStream]);
 
   useEffect(() => {
     if (socket) {
@@ -276,42 +311,33 @@ const Room: React.FC = () => {
       </div>
       <div className="flex items-center justify-center gap-10">
         {myStream && (
-          <>
-            <div className="relative h-[23rem] w-[36rem] overflow-hidden rounded-2xl">
-              {/* <ReactPlayer
-              playing
-              muted
-              height="100px"
-              width="200px"
-              url={myStream}
-            /> */}
-              <video
-                ref={localVideoRef}
-                autoPlay
-                muted={isMuted}
-                className="h-[100%] w-[100%] object-cover"
-              />
-            </div>
-          </>
+          <div className="relative h-[23rem] w-[36rem] overflow-hidden rounded-2xl">
+            <video
+              ref={localVideoRef}
+              autoPlay
+              muted={isMuted}
+              className="h-[100%] w-[100%] object-cover"
+            />
+          </div>
         )}
         {remoteStream && (
-          <>
-            <div className="relative h-[23rem] w-[36rem] overflow-hidden rounded-2xl">
-              {/* <ReactPlayer
-              playing
-              muted
-              height="100px"
-              width="200px"
-              url={remoteStream}
-            /> */}
-              <video
-                ref={remoteVideoRef}
-                autoPlay
-                muted={isMuted}
-                className="h-[100%] w-[100%] object-cover"
-              />
-            </div>
-          </>
+          <div className="relative h-[23rem] w-[36rem] overflow-hidden rounded-2xl">
+            <video
+              ref={remoteVideoRef}
+              autoPlay
+              muted={isMuted}
+              className="h-[100%] w-[100%] object-cover"
+            />
+          </div>
+        )}
+        {screenSharing && (
+          <div className="relative h-[23rem] w-[36rem] overflow-hidden rounded-2xl">
+            <video
+              ref={screenVideoRef} // Add a ref for the shared screen video
+              autoPlay
+              className="h-[100%] w-[100%] object-cover"
+            />
+          </div>
         )}
       </div>
       {myStream && (
