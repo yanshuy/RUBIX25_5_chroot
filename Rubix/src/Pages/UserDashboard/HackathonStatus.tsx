@@ -204,7 +204,7 @@ export default function HackathonStatus() {
                 Join Server
               </Button>
             </Link>
-            <Link to={`/hackathon/${id}/submit`}>
+            <Link to={`/project/submission`}>
               <Button 
                 onClick={handleJoinServer}
                 disabled={Date.now() > new Date(hackathon?.hackathonEndDate).getTime()}
