@@ -4,7 +4,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Smile, PlusCircle, Send } from "lucide-react";
-import useAuth from "../../../hook/useAuth";
+import useAuth from "../../../hooks/useAuth";
+import { Content } from "@radix-ui/react-tabs";
 
 interface Message {
     id: number;

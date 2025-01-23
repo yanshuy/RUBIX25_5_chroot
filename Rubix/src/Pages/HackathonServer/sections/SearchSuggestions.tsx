@@ -20,7 +20,8 @@ export default function SearchSuggestions({
     if (!isOpen) return null;
 
     return (
-        <Command className="absolute left-0 right-0 top-full z-50 mt-2 rounded-lg border border-[#1E1F22] bg-[#2B2D31] bg-white shadow-md">
+        <Command className="absolute left-0 right-0 top-full z-50 mt-2 rounded-lg border border-[#1E1F22] bg-[#2B2D31] bg-white 
+        -md">
             <CommandInput placeholder="Type to search..." />
             <CommandList>
                 <CommandEmpty>No results found.</CommandEmpty>

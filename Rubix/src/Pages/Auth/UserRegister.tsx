@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 // import loadingAnimation from "../../assets/Animation - 1726660821372.webm";
 import { baseUrl } from "../../App";
 import registerImage from "../../assets/authImage.png"
-import useAuth from "../../hook/useAuth";
+import useAuth from "../../hooks/useAuth";
 
 
 const UserRegister: React.FC = () => {
@@ -30,7 +30,7 @@ const UserRegister: React.FC = () => {
     setError("");
 
     try {
-      const response = await fetch(`${baseUrl}/api/register/`, {
+      const response = await fetch(`${baseUrl}api/register/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -44,6 +44,8 @@ const UserRegister: React.FC = () => {
             accessToken: data.access,
             refreshToken: data.refresh,
         });
+        console.log(auth);
+        
         navigate("/");
       } else {
         const errorData = await response.json();
