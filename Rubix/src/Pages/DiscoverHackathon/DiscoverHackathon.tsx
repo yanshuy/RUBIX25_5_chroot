@@ -91,8 +91,8 @@ function useHackathons() {
 export default function DiscoverHackathon() {
     const { data: hackathons, isLoading } = useHackathons();
 
-    console.log(hackathons);
     const [filteredhackathons, setFilteredHackathons] = useState<Hackathon[]>();
+    console.log(filteredhackathons);
 
     useEffect(() => {
         if (hackathons) {

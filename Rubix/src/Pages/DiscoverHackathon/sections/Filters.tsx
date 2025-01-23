@@ -70,10 +70,20 @@ export function Filters({
                     <DropdownMenuRadioGroup
                         value="all"
                         onValueChange={(val) => {
-                            console.log(val);
+                            console.log(
+                                val,
+                                hackathons.filter((hackathon) => {
+                                    if (val == "all") return true;
+                                    if (hackathon.theme == undefined)
+                                        return val === "no-restriction";
+                                    return hackathon.theme === val;
+                                }),
+                            );
                             setHackathons(() => {
+                                console.log(hackathons);
                                 return hackathons.filter((hackathon) => {
-                                    if (hackathon.theme === undefined)
+                                    if (val === "all") return true;
+                                    if (hackathon.theme == undefined)
                                         return val === "no-restriction";
                                     return hackathon.theme === val;
                                 });
