@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import useAuth from "./hooks/useAuth";
+
 import MainLayout from "./layout/MainLayout";
 import HackathonInfo from "./Pages/HackathonInfo/HackathonInfo";
 import DashboardLayout from "./layout/DashboardLayout";
@@ -16,7 +16,8 @@ import HackathonStatus from "./Pages/UserDashboard/HackathonStatus";
 export const baseUrl = "https://live-merely-drum.ngrok-free.app";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HackathonRegistrationForm, OrganizeHackathonForm } from "./Pages/UserDashboard/OrganizeHackathonForm";
+import { OrganizeHackathonForm } from "./Pages/UserDashboard/OrganizeHackathonForm";
+import Interview from "./Pages/Interview/Interview";
 import MyOrganizedHackathons from "./Pages/UserDashboard/MyOrganizedHackathons";
 const queryClient = new QueryClient();
 
@@ -50,7 +51,7 @@ function App() {
                         path="/hackathon/server"
                         element={<HackathonServer />}
                     ></Route>
-                    {/* <Route path="/interview" element={<Interview />}></Route> */}
+                    <Route path="/interview" element={<Interview />}></Route>
                 </Route>
                 <Route path="dashboard" element={<DashboardLayout />}>
                     <Route index element={<UserProfile />} />

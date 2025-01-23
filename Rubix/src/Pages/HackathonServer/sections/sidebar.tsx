@@ -43,6 +43,12 @@ export default function Sidebar({
                         "View all hackathon challenges and requirements",
                     unreadCount: 2,
                 },
+                {
+                    id: "schedule",
+                    name: "Schedule",
+                    icon: Calendar,
+                    description: "View event schedule and timeline",
+                },
             ],
         },
         {
@@ -86,29 +92,24 @@ export default function Sidebar({
                 },
             ],
         },
-        {
-            category: "Event",
-            items: [
-                {
-                    id: "schedule",
-                    name: "Schedule",
-                    icon: Calendar,
-                    description: "View event schedule and timeline",
-                },
-                {
-                    id: "submissions",
-                    name: "Submissions",
-                    icon: FileCode,
-                    description: "Submit your project",
-                },
-                {
-                    id: "judging",
-                    name: "Judging",
-                    icon: Award,
-                    description: "Judging criteria and process",
-                },
-            ],
-        },
+        // {
+        //     category: "Event",
+        //     items: [
+
+        //         {
+        //             id: "submissions",
+        //             name: "Submissions",
+        //             icon: FileCode,
+        //             description: "Submit your project",
+        //         },
+        //         {
+        //             id: "judging",
+        //             name: "Judging",
+        //             icon: Award,
+        //             description: "Judging criteria and process",
+        //         },
+        //     ],
+        // },
     ];
 
     return (
