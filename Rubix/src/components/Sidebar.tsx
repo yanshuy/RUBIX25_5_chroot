@@ -12,7 +12,7 @@ import { CodeXml, User } from "lucide-react";
 
 const navItems = [
   {
-    path: "/dashboard/profile",
+    path: "/organizer-dashboard/profile",
     label: "Profile",
     icon: (props: IconBaseProps) => <User {...props} />,
   },

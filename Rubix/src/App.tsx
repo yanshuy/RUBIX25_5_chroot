@@ -13,10 +13,15 @@ import HackathonServer from "./Pages/HackathonServer/HackathonServer";
 import HackathonStatus from "./Pages/UserDashboard/HackathonStatus";
 // import Interview from "./Pages/Interview/Interview";
 
+
 export const baseUrl = "https://live-merely-drum.ngrok-free.app";
+
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HackathonRegistrationForm } from "./Pages/UserDashboard/HackathonRegistrationForm";
+import OrganizerDashboardLayout from "./layout/OrganizerDashboardLayout";
+import Teams from "./Pages/OrganizerDashboard/Teams";
+import SubmittedProjects from "./Pages/OrganizerDashboard/SubmittedProjects";
 const queryClient = new QueryClient();
 
 function App() {
@@ -53,11 +58,47 @@ function App() {
                 </Route>
                 <Route path="dashboard" element={<DashboardLayout />}>
                     <Route index element={<UserProfile />} />
-                    <Route path="/dashboard/profile" element={<UserProfile />} />
-                    <Route path="/dashboard/hackathons" element={<Hackathons />} />
-                    <Route path="/dashboard/hackathons/:name" element={<HackathonStatus />} />
-                    <Route path="/dashboard/organizehackathons" element={<HackathonRegistrationForm />} />
+                    <Route
+                        path="/dashboard/profile"
+                        element={<UserProfile />}
+                    />
+                    <Route
+                        path="/dashboard/hackathons"
+                        element={<Hackathons />}
+                    />
+                    <Route
+                        path="/dashboard/hackathons/:name"
+                        element={<HackathonStatus />}
+                    />
+                    <Route
+                        path="/dashboard/organizehackathons"
+                        element={<HackathonRegistrationForm />}
+                    />
                 </Route>
+                <Route
+                    path="organizer-dashboard"
+                    element={<OrganizerDashboardLayout />}
+                >
+                    <Route index element={<Teams />} />
+                    <Route
+                        path="/organizer-dashboard/Teams"
+                        element={<Teams />}
+                    />
+
+                    <Route
+                        path="/organizer-dashboard/Projects"
+                        element={<SubmittedProjects />}
+                    />
+                    <Route
+                        path="/organizer-dashboard/hackathons/:name"
+                        element={<HackathonStatus />}
+                    />
+                    <Route
+                        path="/organizer-dashboard/organizehackathons"
+                        element={<HackathonRegistrationForm />}
+                    />
+                </Route>
+                
             </Routes>
         </QueryClientProvider>
     );
