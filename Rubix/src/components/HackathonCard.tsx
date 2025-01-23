@@ -6,6 +6,7 @@ import { Instagram, Link2 } from "lucide-react";
 import type { Hackathon } from "../Pages/DiscoverHackathon/DiscoverHackathon";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
+import { useMemo } from "react"; // Import useMemo
 
 interface HackathonCardProps {
     hackathon: Hackathon;
@@ -37,6 +38,14 @@ function getRandomColor(): { bgColor: string; textColor: string } {
 }
 
 export function HackathonCard({ hackathon }: HackathonCardProps) {
+    // Memoize random letters, colors, and participant count
+    const randomValues = useMemo(() => {
+        const letters = [1, 2, 3].map(() => getRandomLetter());
+        const colors = [1, 2, 3].map(() => getRandomColor());
+        const participants = Math.floor(Math.random() * 100);
+        return { letters, colors, participants };
+    }, []); // Empty dependency array ensures this runs only once
+
     return (
         <Card className="group overflow-hidden">
             <CardHeader className="border-b p-4">
@@ -92,19 +101,19 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
                     </div>
                     <div className="flex items-center gap-2">
                         <div className="flex -space-x-2">
-                            {[1, 2, 3].map((i) => {
-                                const { bgColor, textColor } = getRandomColor();
+                            {randomValues.letters.map((letter, i) => {
+                                const { bgColor, textColor } = randomValues.colors[i];
                                 return (
                                     <Avatar key={i}>
                                         <AvatarFallback className={`${bgColor} ${textColor} font-medium text-xl`}>
-                                            {getRandomLetter()}
+                                            {letter}
                                         </AvatarFallback>
                                     </Avatar>
                                 );
                             })}
                         </div>
-                        <span className="text-sm text-emerald-600 font-medium">
-                            +{(Math.random() * 100).toFixed(0)} participating
+                        <span className="text-sm text-slate-900 font-medium">
+                            +{randomValues.participants} participating
                         </span>
                     </div>
                 </div>

@@ -137,7 +137,7 @@ export default function MyOrganizedHackathons() {
         ) : filteredHackathons.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredHackathons.map((hackathon) => (
-              <Link to={`/organizerdashboard/result/${hackathon.id}`} key={hackathon.id}>
+              <Link to={`/organizerdashboard/team/${hackathon.id}`} key={hackathon.id}>
                 <HackathonCard key={hackathon.id} hackathon={hackathon} />
               </Link>
             ))}
