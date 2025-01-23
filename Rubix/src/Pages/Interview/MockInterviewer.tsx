@@ -21,7 +21,7 @@ interface Response {
     answer: string;
 }
 
-const MockInterviewer = () => {
+const MockInterviewer = ({ questions }) => {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [isRecording, setIsRecording] = useState(false);
     const [timeRemaining, setTimeRemaining] = useState(120);
@@ -36,38 +36,39 @@ const MockInterviewer = () => {
 
     const { toast } = useToast();
 
-    const questions = [
-        {
-            id: 1,
-            text: "Tell me about a challenging project you've worked on and how you handled it.",
-            category: "behavioral",
-        },
-        {
-            id: 2,
-            text: "What are your greatest strengths and how do they align with this role?",
-            category: "behavioral",
-        },
-        {
-            id: 3,
-            text: "Where do you see yourself in five years?",
-            category: "behavioral",
-        },
-        {
-            id: 4,
-            text: "Describe a situation where you had to work with a difficult team member. How did you handle it?",
-            category: "behavioral",
-        },
-        {
-            id: 5,
-            text: "What's the most innovative idea you've implemented in your previous role?",
-            category: "behavioral",
-        },
-    ];
+    // const questions = [
+    //     {
+    //         id: 1,
+    //         text: "Tell me about a challenging project you've worked on and how you handled it.",
+    //         category: "behavioral",
+    //     },
+    //     {
+    //         id: 2,
+    //         text: "What are your greatest strengths and how do they align with this role?",
+    //         category: "behavioral",
+    //     },
+    //     {
+    //         id: 3,
+    //         text: "Where do you see yourself in five years?",
+    //         category: "behavioral",
+    //     },
+    //     {
+    //         id: 4,
+    //         text: "Describe a situation where you had to work with a difficult team member. How did you handle it?",
+    //         category: "behavioral",
+    //     },
+    //     {
+    //         id: 5,
+    //         text: "What's the most innovative idea you've implemented in your previous role?",
+    //         category: "behavioral",
+    //     },
+    // ];
 
     useEffect(() => {
         navigator.mediaDevices
             .getUserMedia({
                 video: true,
+                audio: true,
             })
             .then((stream) => {
                 setStream(stream);
@@ -99,7 +100,8 @@ const MockInterviewer = () => {
     const startRecording = () => {
         if (!stream) return;
 
-        const mediaRecorder = new MediaRecorder(stream);
+        const audioStream = stream.getAudioTracks()[0];
+        const mediaRecorder = new MediaRecorder(new MediaStream([audioStream]));
         mediaRecorderRef.current = mediaRecorder;
         audioChunksRef.current = [];
 
@@ -114,22 +116,19 @@ const MockInterviewer = () => {
                 type: "audio/wav",
             });
             const currentQuestion = questions[currentQuestionIndex];
-            setResponses((prevResponses) => {
-                return [
-                    ...prevResponses,
-                    {
-                        question: currentQuestion.text,
-                        answer: URL.createObjectURL(audioBlob),
-                    },
-                ];
-            });
-            console.log("Recording stopped, audio blob created:", audioBlob);
+            setResponses((prevResponses) => [
+                ...prevResponses,
+                {
+                    question: currentQuestion.text,
+                    answer: URL.createObjectURL(audioBlob),
+                },
+            ]);
         };
 
         mediaRecorder.start();
         setIsRecording(true);
         toast({
-            title: "Recording started",
+            title: "Audio Recording started",
             description: "Your answer is now being recorded.",
         });
     };
@@ -174,7 +173,7 @@ const MockInterviewer = () => {
                 formData.append(
                     `audioResponse${index + 1}`,
                     audioBlob,
-                    `audio${index + 1}.webm`,
+                    `audio${index + 1}.wav`,
                 );
                 formData.append(`question${index + 1}`, response.question);
             } catch (error) {
@@ -189,13 +188,13 @@ const MockInterviewer = () => {
         }
 
         try {
-            const response = await fetch(
-                `${baseUrl}/api/core/interview/questions/`,
-                {
-                    method: "POST",
-                    body: formData, // No Content-Type header! Let browser set it
+            const response = await fetch(`${baseUrl}/api/core/interview/`, {
+                method: "POST",
+                body: formData, // No Content-Type header! Let browser set it
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
-            );
+            });
 
             if (!response.ok)
                 throw new Error(`HTTP error! status: ${response.status}`);
@@ -302,7 +301,7 @@ const MockInterviewer = () => {
                                 className="w-full"
                             >
                                 <TabsList className="grid w-full grid-cols-5">
-                                    {questions.map((_, index) => (
+                                    {questions?.map((_, index) => (
                                         <TabsTrigger
                                             key={index}
                                             value={`question${index + 1}`}
@@ -314,7 +313,7 @@ const MockInterviewer = () => {
                                         </TabsTrigger>
                                     ))}
                                 </TabsList>
-                                {questions.map((question, index) => (
+                                {questions?.map((question, index) => (
                                     <TabsContent
                                         key={index}
                                         value={`question${index + 1}`}

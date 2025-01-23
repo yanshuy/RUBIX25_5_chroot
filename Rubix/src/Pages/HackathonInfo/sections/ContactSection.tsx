@@ -41,7 +41,7 @@ export function ContactSection({ data }) {
                         <CardContent className="flex items-start gap-4 p-4">
                             <Avatar className="h-12 w-12">
                                 <AvatarFallback className="bg-blue-100 text-blue-700">
-                                    {member.name}
+                                    {member.name.substring(0, 2).toUpperCase()}
                                 </AvatarFallback>
                             </Avatar>
                             <div className="space-y-1">

@@ -8,6 +8,7 @@ import { ContactSection } from "./sections/ContactSection";
 import { baseUrl } from "../../App";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import Loader from "../../components/Loader";
 
 async function getHackathonData(id: string) {
     const response = await fetch(`${baseUrl}/api/core/hackathons/${id}`, {
@@ -26,7 +27,7 @@ async function getHackathonData(id: string) {
     return response.json();
 }
 
-function useHackathonData(id: string) {
+export function useHackathonData(id: string) {
     return useQuery({
         queryFn: () => getHackathonData(id),
         queryKey: ["hackathon", id],
@@ -36,8 +37,12 @@ function useHackathonData(id: string) {
 
 export default function HackathonInfo() {
     const { id } = useParams();
-    const { data } = useHackathonData(id ?? "1");
-    console.log(data);
+    const { data, isLoading } = useHackathonData(id ?? "1");
+
+    if (isLoading) {
+        return <Loader />;
+    }
+
     return (
         <div className="scroll-smooth">
             <figure className="h-[60vh] w-full">
@@ -57,7 +62,7 @@ export default function HackathonInfo() {
                                 id="timeline"
                                 className="mt-6 rounded-lg bg-white"
                             >
-                                <EventTimeline />
+                                <EventTimeline data={data} />
                             </section>
                             <section
                                 id="contacts"
@@ -69,13 +74,13 @@ export default function HackathonInfo() {
                                 id="prizes"
                                 className="rounded-lg bg-white"
                             >
-                                <PrizesSection />
+                                <PrizesSection data={data} />
                             </section>
                             <section id="faqs" className="rounded-lg bg-white">
                                 <FAQSection />
                             </section>
                         </div>
-                        <EventSidebar />
+                        <EventSidebar data={data} />
                     </div>
                 </div>
             </div>
