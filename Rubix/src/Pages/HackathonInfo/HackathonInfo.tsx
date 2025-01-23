@@ -43,13 +43,13 @@ export default function HackathonInfo() {
             <figure className="h-[60vh] w-full">
                 <img
                     className="size-full object-cover"
-                    src="https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/banner/677756597a0f5_hackathon-technotronics.webp?d=1920x557"
+                    src={data?.coverPhoto}
                     alt="hackathon banner"
                 />
             </figure>
             <div className="min-h-screen bg-slate-100">
                 <div className="mx-auto max-w-7xl bg-white">
-                    <EventHeader />
+                    <EventHeader data={data} />
                     <EventTabs />
                     <div className="flex">
                         <div className="grid flex-1 grid-cols-1 gap-6 border-r bg-slate-100 pr-4">
@@ -63,7 +63,7 @@ export default function HackathonInfo() {
                                 id="contacts"
                                 className="rounded-lg bg-white"
                             >
-                                <ContactSection />
+                                <ContactSection data={data} />
                             </section>
                             <section
                                 id="prizes"

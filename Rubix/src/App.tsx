@@ -18,6 +18,7 @@ export const baseUrl = "https://live-merely-drum.ngrok-free.app";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HackathonRegistrationForm } from "./Pages/UserDashboard/HackathonRegistrationForm";
 import Interview from "./Pages/Interview/Interview";
+import FindTeammates from "./Pages/FindTeammate/TeammateFinder";
 const queryClient = new QueryClient();
 
 function App() {
@@ -51,6 +52,10 @@ function App() {
                         element={<HackathonServer />}
                     ></Route>
                     <Route path="/interview" element={<Interview />}></Route>
+                    <Route
+                        path="/find-teammates"
+                        element={<FindTeammates />}
+                    ></Route>
                 </Route>
                 <Route path="dashboard" element={<DashboardLayout />}>
                     <Route index element={<UserProfile />} />
