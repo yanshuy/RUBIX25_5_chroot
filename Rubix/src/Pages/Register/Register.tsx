@@ -24,22 +24,6 @@ export interface Team {
     maxSize: number;
 }
 
-const initialTeam: Team = {
-    name: "",
-    members: [
-        {
-            id: "1",
-            name: "Yanshuman Yadav",
-            email: "yanshuman@example.com",
-            phone: "+919082474842",
-            college: "Woxsen University",
-            skills: ["React", "Node.js"],
-            status: "verified",
-        },
-    ],
-    maxSize: 5,
-};
-
 export type formData = {
     email: string;
     mobile: string;
@@ -59,7 +43,7 @@ export default function HackathonRegister() {
     });
 
     const [activeTab, setActiveTab] = useState("LDetails");
-    const [team, setTeam] = useState<Team>(initialTeam);
+    const [team, setTeam] = useState<Team>([]);
     function addMember(member: TeamMember) {
         setTeam({ ...team, members: [...team.members, member] });
     }
@@ -101,6 +85,7 @@ export default function HackathonRegister() {
                     formData={formData}
                     setFormData={setFormData}
                     setActiveTab={setActiveTab}
+                    setTeam={setTeam}
                 />
             ) : (
                 <div className="mx-auto max-w-[1350px] py-6">

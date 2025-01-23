@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +20,7 @@ export function TeamForm({
     const [error, setError] = useState("");
     const { id } = useParams();
     const { data, isLoading } = useHackathonData(id ?? "1");
+    console.log(team);
 
     return (
         <div className="space-y-6">
@@ -54,12 +53,12 @@ export function TeamForm({
                         <div className="flex items-center justify-between">
                             <Label>
                                 Team Members ({team.members.length}/
-                                {data?.maxMembers})
+                                {data ? data.maxMembers : "fetching..."})
                             </Label>
                             <span className="text-sm text-muted-foreground">
                                 You can add up to{" "}
-                                {team.maxSize - team.members.length} additional
-                                members
+                                {data?.maxMembers - team.members.length}{" "}
+                                additional members
                             </span>
                         </div>
 
@@ -69,21 +68,21 @@ export function TeamForm({
                                     <CardContent className="flex items-center gap-4 p-4">
                                         <Avatar className="h-12 w-12">
                                             <AvatarFallback className="bg-primary/10">
-                                                {member.name[0]}
+                                                {member.fullName[0]}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div className="flex-1">
                                             <div className="flex items-start justify-between">
                                                 <div>
                                                     <h3 className="font-medium">
-                                                        {member.name}
+                                                        {member.fullName}
                                                     </h3>
                                                     <p className="text-sm text-muted-foreground">
                                                         {member.email}
                                                     </p>
                                                     {member.phone && (
                                                         <p className="text-sm text-muted-foreground">
-                                                            {member.phone}
+                                                            {member.mobile}
                                                         </p>
                                                     )}
                                                 </div>
@@ -102,14 +101,17 @@ export function TeamForm({
                                                 </Badge>
                                             </div>
                                             <div className="mt-2 flex gap-2">
-                                                {member.skills.map((skill) => (
-                                                    <Badge
-                                                        key={skill}
-                                                        variant="outline"
-                                                    >
-                                                        {skill}
-                                                    </Badge>
-                                                ))}
+                                                {member.skills &&
+                                                    member.skills.map(
+                                                        (skill) => (
+                                                            <Badge
+                                                                key={skill}
+                                                                variant="outline"
+                                                            >
+                                                                {skill}
+                                                            </Badge>
+                                                        ),
+                                                    )}
                                             </div>
                                         </div>
                                         <Button variant="ghost" size="icon">
