@@ -15,6 +15,7 @@ import HackathonServer from "./Pages/HackathonServer/HackathonServer";
 export const baseUrl = "https://live-merely-drum.ngrok-free.app";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import Interview from "./Pages/Interview/Interview";
 const queryClient = new QueryClient();
 
 function App() {
@@ -47,7 +48,7 @@ function App() {
                         path="/hackathon/server"
                         element={<HackathonServer />}
                     ></Route>
-                    {/* <Route path="/interview" element={<Interview />}></Route> */}
+                    <Route path="/interview" element={<Interview />}></Route>
                 </Route>
             </Routes>
         </QueryClientProvider>

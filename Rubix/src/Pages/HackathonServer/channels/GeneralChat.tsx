@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Smile, PlusCircle, Send } from "lucide-react";
 import useAuth from "../../../hook/useAuth";
-import { Content } from "@radix-ui/react-tabs";
 
 interface Message {
     id: number;
