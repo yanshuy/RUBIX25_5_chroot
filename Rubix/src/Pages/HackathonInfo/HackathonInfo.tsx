@@ -8,6 +8,7 @@ import { ContactSection } from "./sections/ContactSection";
 import { baseUrl } from "../../App";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import Loader from "../../components/Loader";
 
 async function getHackathonData(id: string) {
     const response = await fetch(`${baseUrl}/api/core/hackathons/${id}`, {
@@ -36,8 +37,12 @@ function useHackathonData(id: string) {
 
 export default function HackathonInfo() {
     const { id } = useParams();
-    const { data } = useHackathonData(id ?? "1");
-    console.log(data);
+    const { data, isLoading } = useHackathonData(id ?? "1");
+
+    if (isLoading) {
+        return <Loader />;
+    }
+
     return (
         <div className="scroll-smooth">
             <figure className="h-[60vh] w-full">

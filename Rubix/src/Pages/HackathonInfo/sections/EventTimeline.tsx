@@ -26,6 +26,7 @@ export function EventTimeline({ data }) {
 
                     <div className="space-y-1 text-sm text-muted-foreground">
                         <p>
+                            Starts:{" "}
                             {data &&
                                 format(
                                     new Date(data.applicationOpenDate),
@@ -34,6 +35,7 @@ export function EventTimeline({ data }) {
                             IST
                         </p>
                         <p>
+                            Ends:{" "}
                             {data &&
                                 format(
                                     new Date(data.applicationCloseDate),

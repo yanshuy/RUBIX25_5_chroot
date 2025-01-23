@@ -1,6 +1,7 @@
-import { Calendar, Heart, Share2 } from "lucide-react";
+import { Calendar, Heart, Instagram, Share2 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
 import { format } from "date-fns";
+import { TbSocial } from "react-icons/tb";
 
 export function EventHeader({ data }) {
     return (
@@ -27,7 +28,7 @@ export function EventHeader({ data }) {
                         <Heart className="h-5 w-5" />
                     </Button>
                     <Button variant="ghost" size="icon">
-                        <Calendar className="h-5 w-5" />
+                        <Instagram className="h-5 w-5" />
                     </Button>
                     <Button variant="ghost" size="icon">
                         <Share2 className="h-5 w-5" />
