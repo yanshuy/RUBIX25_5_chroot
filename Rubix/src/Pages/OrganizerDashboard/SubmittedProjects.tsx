@@ -202,7 +202,7 @@ const SubmittedProjects: React.FC = () => {
     // }
 
     return (
-        <div className="container mx-auto bg-white space-y-6 p-6">
+        <div className="container mx-auto bg-slate-50 space-y-6 p-6">
             <h1 className="mb-6 text-center text-3xl font-bold">
                 Submitted Projects
             </h1>

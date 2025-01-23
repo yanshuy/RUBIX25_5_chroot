@@ -14,17 +14,17 @@ import { CodeXml, Trophy, Folders, Users } from "lucide-react";
 
 const navItems = [
     {
-        path: "/organizer-dashboard/teams",
+        path: "/organizerdashboard/teams",
         label: "Teams",
         icon: (props: IconBaseProps) => <Users {...props} />,
     },
     {
-        path: "/organizer-dashboard/projects",
+        path: "/organizerdashboard/projects",
         label: "Submitted Projects",
         icon: (props: IconBaseProps) => <Folders {...props} />,
     },
     {
-        path: "/organizer-dashboard/organizehackathons",
+        path: "/organizerdashboard/result",
         label: "Results",
         icon: (props: IconBaseProps) => <Trophy {...props} />,
     },

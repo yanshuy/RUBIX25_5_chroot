@@ -179,7 +179,7 @@ export default function Teams() {
     };
     
     return (
-        <div className="container mx-auto pr-8 py-5">
+        <div className="container mx-auto bg-slate-50 px-8 py-5">
             <h1 className="mb-10 text-center text-4xl font-bold text-slate-900">
                 TEAMS
             </h1>
