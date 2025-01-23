@@ -3,16 +3,17 @@ import { Button } from "../../../components/ui/button";
 import { Progress } from "../../../components/ui/progress";
 import { format } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function EventSidebar({ data }) {
+    const {id} = useParams()
     const navigate = useNavigate();
     return (
         <div className="w-80 space-y-6 p-6">
             <Button
                 className="w-full"
                 size="lg"
-                onClick={() => navigate("/hackathon/1/register")}
+                onClick={() => navigate(`/hackathon/${id}/register`)}
             >
                 Register
             </Button>

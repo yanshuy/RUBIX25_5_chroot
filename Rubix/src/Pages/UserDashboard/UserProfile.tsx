@@ -144,6 +144,7 @@ export default function UserProfile() {
         [section]: value,
       }
     })
+    console.log(profileInfo);
   }
 
   const handleResumeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -274,6 +275,7 @@ export default function UserProfile() {
     const loadProfile = async () => { 
       try { 
         const data = await fetchProfile(); 
+        console.log(data)
   
         setProfileInfo((prev) => {
           // Create a deep copy of the previous state
@@ -359,8 +361,8 @@ export default function UserProfile() {
                   <Input
                     id="full_name"
                     className="mt-1.5"
-                    value={profileInfo.personalInfo?.full_name || ""}
-                    onChange={(e) => handleInputChange("personalInfo", "full_name", e.target.value)}
+                    value={profileInfo.personalInfo.full_name}
+                    onChange={(e) => handleInputChange("personalInfo", "full_name", e.currentTarget.value) }
                   />
                 </div>
                 <div>
@@ -459,7 +461,7 @@ export default function UserProfile() {
                   <Input
                     value={profileInfo.socialMedia?.linkedin || ""}
                     onChange={(e) => handleInputChange("socialMedia", "linkedin", e.target.value)}
-                    className="p"
+                    className="pl-10"
                   />
                 </div>
                 <div className="flex items-center justify-center relative">
@@ -467,7 +469,7 @@ export default function UserProfile() {
                   <Input
                     value={profileInfo.socialMedia?.github || ""}
                     onChange={(e) => handleInputChange("socialMedia", "github", e.target.value)}
-                    className="p"
+                    className="pl-10"
                   />
                 </div>
                 <div className="flex items-center justify-center relative">
@@ -475,7 +477,7 @@ export default function UserProfile() {
                   <Input
                     value={profileInfo.socialMedia?.instagram || ""}
                     onChange={(e) => handleInputChange("socialMedia", "instagram", e.target.value)}
-                    className="p"
+                    className="pl-10"
                   />
                 </div>
               </div>
