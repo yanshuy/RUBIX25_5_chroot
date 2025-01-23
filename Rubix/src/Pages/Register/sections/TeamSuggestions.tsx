@@ -5,13 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, Info } from "lucide-react";
 import type { TeamMember } from "../Register";
-import { useParams } from "react-router-dom";
-import { useHackathonData } from "../../HackathonInfo/HackathonInfo";
 
 const suggestedTeammates: TeamMember[] = [
     {
         id: "2",
-        name: "Vinayak Mohanty",
+        fullName: "Vinayak Mohanty",
         email: "vinayak97696@gmail.com",
         college: "Thadomal Shahani Engineering College (TSEC), Mumbai",
         skills: ["UI/UX", "Frontend"],
@@ -19,7 +17,7 @@ const suggestedTeammates: TeamMember[] = [
     },
     {
         id: "3",
-        name: "Devansh Nair",
+        fullName: "Devansh Nair",
         email: "devanshnair.05@gmail.com",
         college: "Thadomal Shahani Engineering College (TSEC), Mumbai",
         skills: ["Backend", "Database"],
@@ -27,7 +25,7 @@ const suggestedTeammates: TeamMember[] = [
     },
     {
         id: "4",
-        name: "Vaibhav Sharma",
+        fullName: "Vaibhav Sharma",
         email: "vaibhavsharmas021@gmail.com",
         college: "Thadomal Shahani Engineering College (TSEC), Mumbai",
         skills: ["Mobile", "Cloud"],
@@ -44,7 +42,7 @@ export function TeammateSuggestions({
 
     const filteredTeammates = suggestedTeammates.filter(
         (teammate) =>
-            teammate.name.toLowerCase().includes(search.toLowerCase()) ||
+            teammate.fullName.toLowerCase().includes(search.toLowerCase()) ||
             (teammate.skills.some((skill) =>
                 skill.toLowerCase().includes(search.toLowerCase()),
             ) &&
@@ -79,14 +77,14 @@ export function TeammateSuggestions({
                             <CardContent className="flex items-center gap-4 p-4">
                                 <Avatar className="h-12 w-12">
                                     <AvatarFallback className="bg-primary/10">
-                                        {teammate.name[0]}
+                                        {teammate.fullName[0]}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1">
                                     <div className="flex items-start justify-between">
                                         <div>
                                             <h3 className="font-medium">
-                                                {teammate.name}
+                                                {teammate.fullName}
                                             </h3>
                                             <p className="text-sm text-muted-foreground">
                                                 {teammate.email}
@@ -103,14 +101,12 @@ export function TeammateSuggestions({
                                             className="rounded-lg bg-slate-800 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
                                             onClick={() => {
                                                 suggestedTeammates.find(
-                                                    (teammate) =>
-                                                        teammate.id ===
-                                                        teammate.id,
+                                                    (tm) =>
+                                                        tm.id === teammate.id,
                                                 )!.status = "pending";
                                                 filteredTeammates.find(
-                                                    (teammate) =>
-                                                        teammate.id ===
-                                                        teammate.id,
+                                                    (tm) =>
+                                                        tm.id === teammate.id,
                                                 )!.status = "pending";
                                                 console.log(teammate);
                                                 addMember(teammate);

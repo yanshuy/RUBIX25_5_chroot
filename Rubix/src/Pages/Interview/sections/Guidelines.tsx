@@ -27,10 +27,7 @@ export default function Guidelines({ onStart }: GuidelinesProps) {
                     <li>
                         Take a moment to think before answering each question.
                     </li>
-                    <li>
-                        If you need a question repeated, simply say "Please
-                        repeat the question."
-                    </li>
+
                     <li>
                         The interview will last approximately 10-15 minutes.
                     </li>

@@ -4,8 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Smile, PlusCircle, Send } from "lucide-react";
-import useAuth from "../../../hooks/useAuth";
-import { Content } from "@radix-ui/react-tabs";
 
 interface Message {
     id: number;
@@ -14,16 +12,14 @@ interface Message {
     timestamp: string;
 }
 
-export default function GeneralChat({ id }: { id: string }) {
-    const { auth } = useAuth();
-    console.log(auth);
+export default function TeamChat({ id }: { id: string }) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [socket, setSocket] = useState<WebSocket | null>(null);
 
     useEffect(() => {
         const ws = new WebSocket(
-            `ws://live-merely-drum.ngrok-free.app/ws/hackathons/${id}/general/`,
+            `ws://live-merely-drum.ngrok-free.app/ws/teams/${id}/?token=${localStorage.getItem("accessToken")}`,
         );
 
         ws.onopen = () => {
@@ -53,7 +49,7 @@ export default function GeneralChat({ id }: { id: string }) {
         return () => {
             ws.close();
         };
-    }, [auth.accessToken]);
+    }, [id]);
 
     const sendMessage = (e: React.FormEvent) => {
         e.preventDefault();

@@ -102,7 +102,7 @@ export default function TeammateFinder() {
                     placeholder="Search by name, role, or skill..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10"
+                    className="w-full border border-slate-400 pl-10"
                 />
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
             </div>

@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Guidelines from "./sections/Guidelines";
-import MockInterviewer from "./MockInterviewer";
-import { ToastProvider } from "../../components/ui/toast";
+
+import { ToastProvider } from "@/components/ui/toast";
 import { useQuery } from "@tanstack/react-query";
 import { baseUrl } from "../../App";
+import InterviewSession from "./InterviewSession";
+import Loader from "../../components/Loader";
 
 async function getQuestions() {
     const at = localStorage.getItem("accessToken");
@@ -34,16 +36,18 @@ function useQuestions() {
 export default function Interview() {
     const [isStarted, setIsStarted] = useState(false);
 
-    const { data: questions } = useQuestions();
+    const { data: questions, isLoading } = useQuestions();
     console.log(questions);
 
     return (
         <div className="w-full">
             {!isStarted ? (
                 <Guidelines onStart={() => setIsStarted(true)} />
+            ) : isLoading ? (
+                <Loader />
             ) : (
                 <ToastProvider>
-                    <MockInterviewer questions={questions} />
+                    <InterviewSession questions={questions} />
                 </ToastProvider>
             )}
         </div>

@@ -13,7 +13,7 @@ export default function TopBar({ activeChannel }: TopBarProps) {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     return (
-        <div className="flex h-[3.8rem] items-center justify-between border-b border-l bg-[white] px-4">
+        <div className="flex h-[3.8rem] items-center justify-between border-b bg-[white] px-4">
             <div className="max-w-xl flex-1">
                 <div className="relative">
                     <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 transform text-muted-foreground" />

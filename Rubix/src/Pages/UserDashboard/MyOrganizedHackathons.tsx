@@ -27,9 +27,7 @@ interface OrganizedHackathon {
 
 async function getMyHackathons() {
   const accessToken = localStorage.getItem("accessToken");
-  console.log(accessToken);
-  
-  const response = await fetch(`${baseUrl}/api/core/hackathons/me/`, {
+  const response = await fetch(`${baseUrl}/api/core/hackathons/participated`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
