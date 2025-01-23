@@ -19,6 +19,7 @@ import MyOrganizedHackathons from "./Pages/UserDashboard/MyOrganizedHackathons";
 import OrganizerDashboardLayout from "./layout/OrganizerDashboardLayout";
 import Teams from "./Pages/OrganizerDashboard/Teams";
 import SubmittedProjects from "./Pages/OrganizerDashboard/SubmittedProjects";
+import Result from "./Pages/OrganizerDashboard/Result";
 const queryClient = new QueryClient();
 
 export const baseUrl = "https://live-merely-drum.ngrok-free.app";
@@ -80,26 +81,22 @@ function App() {
                     />
                 </Route>
                 <Route
-                    path="organizer-dashboard"
+                    path="organizerdashboard"
                     element={<OrganizerDashboardLayout />}
                 >
                     <Route index element={<Teams />} />
                     <Route
-                        path="/organizer-dashboard/Teams"
+                        path="/organizerdashboard/teams"
                         element={<Teams />}
                     />
 
                     <Route
-                        path="/organizer-dashboard/Projects"
+                        path="/organizerdashboard/projects"
                         element={<SubmittedProjects />}
                     />
                     <Route
-                        path="/organizer-dashboard/hackathons/:name"
-                        element={<HackathonStatus />}
-                    />
-                    <Route
-                        path="/organizer-dashboard/organizehackathons"
-                        element={<OrganizeHackathonForm />}
+                        path="/organizerdashboard/result"
+                        element={<Result />}
                     />
                 </Route>
             </Routes>
