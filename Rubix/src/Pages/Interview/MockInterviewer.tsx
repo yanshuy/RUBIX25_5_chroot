@@ -68,6 +68,7 @@ const MockInterviewer = ({ questions }) => {
         navigator.mediaDevices
             .getUserMedia({
                 video: true,
+                audio: true,
             })
             .then((stream) => {
                 setStream(stream);
@@ -95,44 +96,6 @@ const MockInterviewer = ({ questions }) => {
         }
         return () => clearInterval(interval);
     }, [isRecording, timeRemaining]);
-
-    const startRecording = () => {
-        if (!stream) return;
-
-        const mediaRecorder = new MediaRecorder(stream);
-        mediaRecorderRef.current = mediaRecorder;
-        audioChunksRef.current = [];
-
-        mediaRecorder.ondataavailable = (event) => {
-            if (event.data.size > 0) {
-                audioChunksRef.current.push(event.data);
-            }
-        };
-
-        mediaRecorder.onstop = () => {
-            const audioBlob = new Blob(audioChunksRef.current, {
-                type: "audio/wav",
-            });
-            const currentQuestion = questions[currentQuestionIndex];
-            setResponses((prevResponses) => {
-                return [
-                    ...prevResponses,
-                    {
-                        question: currentQuestion.text,
-                        answer: URL.createObjectURL(audioBlob),
-                    },
-                ];
-            });
-            console.log("Recording stopped, audio blob created:", audioBlob);
-        };
-
-        mediaRecorder.start();
-        setIsRecording(true);
-        toast({
-            title: "Recording started",
-            description: "Your answer is now being recorded.",
-        });
-    };
 
     const stopRecording = () => {
         if (mediaRecorderRef.current && isRecording) {
@@ -174,7 +137,7 @@ const MockInterviewer = ({ questions }) => {
                 formData.append(
                     `audioResponse${index + 1}`,
                     audioBlob,
-                    `audio${index + 1}.webm`,
+                    `audio${index + 1}.wav`,
                 );
                 formData.append(`question${index + 1}`, response.question);
             } catch (error) {
