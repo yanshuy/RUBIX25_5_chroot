@@ -1,15 +1,7 @@
 import { IconBaseProps } from "react-icons";
-import { GoHome, GoOrganization } from "react-icons/go";
-import { IoCalendarClearOutline } from "react-icons/io5";
-import { MdOutlineReviews } from "react-icons/md";
-import { PiPhoneCall } from "react-icons/pi";
-import { TbBrandGoogleAnalytics, TbClockCheck } from "react-icons/tb";
 import { Link, NavLink} from "react-router-dom";
-// import {useLocation } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import { CodeXml, List, ListTodo, LucideSquareBottomDashedScissors, User } from "lucide-react";
-import { LuListTodo, LuOrigami } from "react-icons/lu";
-// import Logo1 from "../assets/Logo1.png"
+import { CodeXml, ListTodo, User } from "lucide-react";
+import Logo from "../assets/logo.png";
 
 const navItems = [
   {
@@ -30,40 +22,21 @@ const navItems = [
 ];
 
 const Sidebar = () => {
-  // const location = useLocation();
   const accessToken = document.cookie
     .split("; ")
     .find((row) => row.startsWith("accessToken="))
     ?.split("=")[1];
 
-//   const decoded = jwtDecode(accessToken);
-
-//   console.log(decoded);
 
   return (
     <>
-      {/* useless div below*/}
-      {/* <div
-        className={`sticky top-20 z-50 ml-[228px] ${location.pathname == "/dashboard/home" ? "block" : "hidden"}`}
-      >
-        {/* <p className="absolute w-[65ch] rounded-lg bg-white p-3 shadow-[0px_0px_2px_rgba(0,0,0,0.15)]">
-          <strong>For Devansh:</strong> DashBoard is everything here isko home
-          karna hai idhar ke components nikalke availabilty mai daal diyo,{" "}
-          <br /> <strong>NOT-IMPORTANT:</strong> tune yaha pe div's pe onClick
-          lagaya tha logically links ke hona chahiye na?!
-          <span className="sr-only">
-            yaha matlab ye iska parent div nai iska arrow jisko point karra hai
-            woh
-          </span>
-        </p> */}
       <div className="absolute -left-[22px] top-6 -rotate-90 border-[.7rem] border-transparent border-b-white drop-shadow-[0px_-1px_1px_rgba(0,0,0,0.08)]"></div>
-      {/* </div> */}
-      <div className="sticky top-4 flex h-[calc(100vh-32px)] flex-col justify-between overflow-y-auto px-4">
+      <div className="sticky top-4 flex h-[calc(100vh-32px)] flex-col justify-between overflow-y-auto px-4 w-fit">
         <div>
-          <div className="mb-4 mt-2 h-[3.2rem] cursor-pointer border-b border-slate-300 pb-3 pl-5">
+          <div className="mb-4 mt-2 h-24 cursor-pointer border-b border-slate-300 pb-3 pl-5">
             <Link to={"/"}>
               <img
-                src={""}
+                src={Logo}
                 alt="Logo"
                 className="h-[100%] object-cover"
               />

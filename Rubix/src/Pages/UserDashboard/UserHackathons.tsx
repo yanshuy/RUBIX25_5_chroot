@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState } from "react"
 import { ArrowUpRight, ChevronRight, ExternalLink } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -79,39 +77,54 @@ export default function UserHackathons() {
           return {
             label: "PROFILE NOT SUBMITTED FOR REVIEW",
             className: "bg-orange-500 text-white",
-          }
+          };
         case "TEAM_UNDER_REVIEW":
           return {
             label: "TEAM UNDER REVIEW",
             className: "bg-yellow-400 text-black",
-          }
+          };
         case "PROJECT_SUBMITTED":
           return {
             label: "PROJECT SUBMITTED",
             className: "bg-emerald-500 text-white",
-          }
+          };
         case "NOT_ACCEPTED":
           return {
             label: "NOT ACCEPTED",
             className: "bg-gray-600 text-white",
-          }
+          };
         case "ACCEPTED":
           return {
             label: "ACCEPTED",
             className: "bg-[#D4B982] text-black",
-          }
+          };
+        default:
+          return {
+            label: "UNKNOWN STATUS",
+            className: "bg-gray-400 text-white", // Default styling for unknown status
+          };
       }
-    }
+    };
   
-    const config = getStatusConfig(status)
-  
-    return <span className={`px-3 py-1 rounded-full text-sm font-medium ${config.className}`}>{config.label}</span>
+    const config = getStatusConfig(status);
+    return (
+      <span className={`px-3 py-1 rounded-full text-sm font-medium ${config.className}`}>
+        {config.label}
+      </span>
+    );
   }
 
   useEffect(() => {
     const fetchHackathons = async () => {
+      const accessToken = localStorage.getItem("accessToken")
       try {
-        const response = await fetch(`${baseUrl}/api/hackathons`)
+        const response = await fetch(`${baseUrl}/api/core/hackathons/`, {
+          method: "GET",
+          headers:{
+            "ngrok-skip-browser-warning": "69420",
+            authorization: `Bearer ${accessToken}`, 
+          }
+        })
         if (!response.ok) throw new Error("Failed to fetch hackathons")
         const data = await response.json()
         setHackathons(data)

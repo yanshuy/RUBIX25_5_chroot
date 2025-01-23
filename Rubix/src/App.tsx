@@ -16,6 +16,11 @@ import { OrganizeHackathonForm } from "./Pages/UserDashboard/OrganizeHackathonFo
 import Interview from "./Pages/Interview/Interview";
 
 import MyOrganizedHackathons from "./Pages/UserDashboard/MyOrganizedHackathons";
+import OrganizerDashboardLayout from "./layout/OrganizerDashboardLayout";
+import Teams from "./Pages/OrganizerDashboard/Teams";
+import SubmittedProjects from "./Pages/OrganizerDashboard/SubmittedProjects";
+import Result from "./Pages/OrganizerDashboard/Result";
+import RoomPage from "./Pages/Videocalling/RoomPage";
 import FindTeammates from "./Pages/FindTeammate/FindTeammate";
 const queryClient = new QueryClient();
 
@@ -51,6 +56,10 @@ function App() {
                         path="/hackathon/:id/server"
                         element={<HackathonServer />}
                     />
+                    <Route
+                        path="/dashboard/hackathons/:hackathonid/:teamid"
+                        element={<RoomPage />}
+                    />
                     <Route path="/interview" element={<Interview />}></Route>
                     <Route path="/find-teammates" element={<FindTeammates />} />
                 </Route>
@@ -65,7 +74,7 @@ function App() {
                         element={<Hackathons />}
                     />
                     <Route
-                        path="/dashboard/hackathons/:name"
+                        path="/dashboard/hackathons/:id"
                         element={<HackathonStatus />}
                     />
                     <Route
@@ -75,6 +84,25 @@ function App() {
                     <Route
                         path="/dashboard/organizehackathons/new"
                         element={<OrganizeHackathonForm />}
+                    />
+                </Route>
+                <Route
+                    path="organizerdashboard"
+                    element={<OrganizerDashboardLayout />}
+                >
+                    <Route index element={<Teams />} />
+                    <Route
+                        path="/organizerdashboard/teams/:id"
+                        element={<Teams />}
+                    />
+
+                    <Route
+                        path="/organizerdashboard/projects/:id"
+                        element={<SubmittedProjects />}
+                    />
+                    <Route
+                        path="/organizerdashboard/result/:id"
+                        element={<Result />}
                     />
                 </Route>
             </Routes>
