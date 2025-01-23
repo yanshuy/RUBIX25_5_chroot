@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 export function TeamHeader({
     activeTab,
@@ -10,12 +11,15 @@ export function TeamHeader({
     setActiveTab: (tab: string) => void;
     onUploadDetails: () => void;
 }) {
+
+    const navigate = useNavigate();
+
     return (
         <div className="border-b bg-white">
             <div className="py-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                        <Button variant="ghost" size="icon">
+                        <Button variant="ghost" size="icon" onClick={navigate(-1)}>
                             <ArrowLeft className="h-4 w-4" />
                         </Button>
                         <div>
