@@ -38,19 +38,43 @@ function App() {
                     <Route path="/userLogin" element={<UserLogin />} />
                     <Route path="/userRegister" element={<UserRegister />} />
                     <Route path="/discover" element={<DiscoverHackathon />} />
-                    <Route path="/hackathon/register" element={<HackathonRegister />} />
-                    <Route path="/hackathon/:id/info" element={<HackathonInfo />} />
-                    <Route path="/hackathon/server" element={<HackathonServer />} />
+                    <Route
+                        path="/hackathon/:id/register"
+                        element={<HackathonRegister />}
+                    />
+                    <Route
+                        path="/hackathon/:id/info"
+                        element={<HackathonInfo />}
+                    />
+                    <Route
+                        path="/hackathon/server"
+                        element={<HackathonServer />}
+                    />
                     <Route path="/interview" element={<Interview />}></Route>
                     <Route path="/find-teammates" element={<FindTeammates />} />
                 </Route>
                 <Route path="dashboard" element={<DashboardLayout />}>
                     <Route index element={<UserProfile />} />
-                    <Route path="/dashboard/profile" element={<UserProfile />} />
-                    <Route path="/dashboard/hackathons" element={<Hackathons />} />
-                    <Route path="/dashboard/hackathons/:name" element={<HackathonStatus />} />
-                    <Route path="/dashboard/organizehackathons" element={<MyOrganizedHackathons />} />
-                    <Route path="/dashboard/organizehackathons/new" element={<OrganizeHackathonForm />} />
+                    <Route
+                        path="/dashboard/profile"
+                        element={<UserProfile />}
+                    />
+                    <Route
+                        path="/dashboard/hackathons"
+                        element={<Hackathons />}
+                    />
+                    <Route
+                        path="/dashboard/hackathons/:name"
+                        element={<HackathonStatus />}
+                    />
+                    <Route
+                        path="/dashboard/organizehackathons"
+                        element={<MyOrganizedHackathons />}
+                    />
+                    <Route
+                        path="/dashboard/organizehackathons/new"
+                        element={<OrganizeHackathonForm />}
+                    />
                 </Route>
             </Routes>
         </QueryClientProvider>

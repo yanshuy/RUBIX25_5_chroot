@@ -97,6 +97,42 @@ const MockInterviewer = ({ questions }) => {
         return () => clearInterval(interval);
     }, [isRecording, timeRemaining]);
 
+    const startRecording = () => {
+        if (!stream) return;
+
+        const audioStream = stream.getAudioTracks()[0];
+        const mediaRecorder = new MediaRecorder(new MediaStream([audioStream]));
+        mediaRecorderRef.current = mediaRecorder;
+        audioChunksRef.current = [];
+
+        mediaRecorder.ondataavailable = (event) => {
+            if (event.data.size > 0) {
+                audioChunksRef.current.push(event.data);
+            }
+        };
+
+        mediaRecorder.onstop = () => {
+            const audioBlob = new Blob(audioChunksRef.current, {
+                type: "audio/wav",
+            });
+            const currentQuestion = questions[currentQuestionIndex];
+            setResponses((prevResponses) => [
+                ...prevResponses,
+                {
+                    question: currentQuestion.text,
+                    answer: URL.createObjectURL(audioBlob),
+                },
+            ]);
+        };
+
+        mediaRecorder.start();
+        setIsRecording(true);
+        toast({
+            title: "Audio Recording started",
+            description: "Your answer is now being recorded.",
+        });
+    };
+
     const stopRecording = () => {
         if (mediaRecorderRef.current && isRecording) {
             mediaRecorderRef.current.stop();

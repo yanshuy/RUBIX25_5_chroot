@@ -27,7 +27,7 @@ async function getHackathonData(id: string) {
     return response.json();
 }
 
-function useHackathonData(id: string) {
+export function useHackathonData(id: string) {
     return useQuery({
         queryFn: () => getHackathonData(id),
         queryKey: ["hackathon", id],

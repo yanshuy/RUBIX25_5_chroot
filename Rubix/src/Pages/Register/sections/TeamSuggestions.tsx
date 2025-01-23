@@ -5,6 +5,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, Info } from "lucide-react";
 import type { TeamMember } from "../Register";
+import { useParams } from "react-router-dom";
+import { useHackathonData } from "../../HackathonInfo/HackathonInfo";
 
 const suggestedTeammates: TeamMember[] = [
     {

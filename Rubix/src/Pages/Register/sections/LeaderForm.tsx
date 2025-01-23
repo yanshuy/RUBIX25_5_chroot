@@ -3,25 +3,11 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { baseUrl } from "../../../App";
+import { formData } from "../Register";
 
-type formData = {
-    email: string;
-    mobile: string;
-    firstName: string;
-    lastName: string;
-    gender: string;
-};
-
-const LeaderForm = () => {
-    const [formData, setFormData] = useState<formData>({
-        email: "",
-        mobile: "",
-        firstName: "",
-        lastName: "",
-        gender: "",
-    });
-
+const LeaderForm = ({ formData, setFormData, setActiveTab }) => {
     const [errors, setErrors] = useState<formData>({});
 
     const validateForm = () => {
@@ -42,8 +28,8 @@ const LeaderForm = () => {
         }
 
         // First name validation
-        if (!formData.firstName) {
-            newErrors.firstName = "First name is required";
+        if (!formData.fullName) {
+            newErrors.fullName = "First name is required";
         }
 
         // Gender validation
@@ -60,8 +46,9 @@ const LeaderForm = () => {
 
         if (validateForm()) {
             console.log("Form submitted:", formData);
-            // Add your submit logic here
         }
+
+        setActiveTab("TDetails");
     };
 
     const handleChange = (e) => {
@@ -72,10 +59,29 @@ const LeaderForm = () => {
         }));
     };
 
+    useEffect(() => {
+        fetch(`${baseUrl}/api/users/me/get`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "ngrok-skip-browser-warning": "true",
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setFormData({
+                    email: data.email,
+                    mobile: data.mobile,
+                    fullName: data.fullname,
+                    gender: data.gender,
+                });
+            });
+    }, []);
+
     return (
         <Card className="mx-auto my-8 w-full max-w-2xl">
             <CardHeader>
-                <h2 className="text-2xl font-bold">Player Details</h2>
+                <h2 className="text-2xl font-bold">Leader Details</h2>
             </CardHeader>
             <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -134,31 +140,16 @@ const LeaderForm = () => {
                             id="firstName"
                             name="firstName"
                             type="text"
-                            value={formData.firstName}
+                            value={formData.fullName}
                             onChange={handleChange}
-                            className={errors.firstName ? "border-red-500" : ""}
+                            className={errors.fullName ? "border-red-500" : ""}
                             placeholder="First Name"
                         />
-                        {errors.firstName && (
+                        {errors.fullName && (
                             <p className="text-sm text-red-500">
-                                {errors.firstName}
+                                {errors.fullName}
                             </p>
                         )}
-                    </div>
-
-                    {/* Last Name Field */}
-                    <div className="space-y-2">
-                        <Label htmlFor="lastName">
-                            Last Name (if applicable)
-                        </Label>
-                        <Input
-                            id="lastName"
-                            name="lastName"
-                            type="text"
-                            value={formData.lastName}
-                            onChange={handleChange}
-                            placeholder="Last Name"
-                        />
                     </div>
 
                     {/* Gender Field */}
