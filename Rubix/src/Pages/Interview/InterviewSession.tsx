@@ -8,6 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Mic, MicOff, Video, VideoOff, Send, Volume2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
+import { useTeamData } from "../HackathonServer/HackathonServer";
+import { useParams } from "react-router-dom";
 
 interface Question {
     id: number;
@@ -33,6 +35,8 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
     const videoRef = useRef<HTMLVideoElement>(null);
     const recognitionRef = useRef<SpeechRecognition | null>(null);
     const { toast } = useToast();
+    const params = useParams();
+    const { data } = useTeamData(params.id ?? "1");
 
     // Initialize video stream
     useEffect(() => {
@@ -165,7 +169,7 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ responses }),
+                body: JSON.stringify({ responses, team_id: data?.teamId }),
             });
 
             if (!response.ok) throw new Error("Failed to submit interview");

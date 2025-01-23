@@ -64,7 +64,10 @@ function App() {
                         path="/dashboard/hackathons/room/:roomid"
                         element={<RoomPage />}
                     />
-                    <Route path="/interview" element={<Interview />}></Route>
+                    <Route
+                        path="/hackathon/:id/interview"
+                        element={<Interview />}
+                    ></Route>
                     <Route path="/find-teammates" element={<FindTeammates />} />
                 </Route>
                 <Route path="dashboard" element={<DashboardLayout />}>

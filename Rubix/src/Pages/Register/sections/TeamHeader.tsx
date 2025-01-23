@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export function TeamHeader({
     activeTab,
@@ -11,9 +11,8 @@ export function TeamHeader({
     setActiveTab: (tab: string) => void;
     onUploadDetails: () => void;
 }) {
-
     const navigate = useNavigate();
-
+    const params = useParams();
     return (
         <div className="border-b bg-white">
             <div className="py-4">
@@ -34,7 +33,9 @@ export function TeamHeader({
                     <button
                         className="mr-16 rounded-md bg-slate-800 px-3 py-2 font-semibold text-white"
                         onClick={() => {
+                            console.log("Update Details");
                             onUploadDetails();
+                            navigate(`/hackathon/${params.id}/info`);
                         }}
                     >
                         Update Details
