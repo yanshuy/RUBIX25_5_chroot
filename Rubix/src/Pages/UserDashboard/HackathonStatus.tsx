@@ -204,13 +204,15 @@ export default function HackathonStatus() {
                 Join Server
               </Button>
             </Link>
-            <Button 
-              onClick={handleJoinServer}
-              disabled={Date.now() > new Date(hackathon?.applicationCloseDate).getTime()}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Submit Project
-            </Button>
+            <Link to={`/hackathon/${id}/submit`}>
+              <Button 
+                onClick={handleJoinServer}
+                disabled={Date.now() > new Date(hackathon?.hackathonEndDate).getTime()}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Submit Project
+              </Button>
+            </Link>
             </>
           )}
         </div>
