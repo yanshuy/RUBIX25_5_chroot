@@ -16,7 +16,9 @@ export function EventHeader({ data }) {
                     <h1 className="mb-2 text-2xl font-semibold">
                         Hackathon: {data?.hackathonName}
                     </h1>
-                    <p className="text-muted-foreground">{data?.city}</p>
+                    <p className="text-muted-foreground">
+                        {data?.collegeName} {data?.city}
+                    </p>
                 </div>
                 <div className="flex items-start gap-2">
                     <p className="text-2xl font-semibold">Free</p>

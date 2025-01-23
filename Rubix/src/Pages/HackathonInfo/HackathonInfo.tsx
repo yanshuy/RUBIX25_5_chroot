@@ -69,13 +69,13 @@ export default function HackathonInfo() {
                                 id="prizes"
                                 className="rounded-lg bg-white"
                             >
-                                <PrizesSection />
+                                <PrizesSection data={data} />
                             </section>
                             <section id="faqs" className="rounded-lg bg-white">
                                 <FAQSection />
                             </section>
                         </div>
-                        <EventSidebar />
+                        <EventSidebar data={data} />
                     </div>
                 </div>
             </div>
