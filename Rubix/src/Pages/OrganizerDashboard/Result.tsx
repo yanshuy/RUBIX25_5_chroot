@@ -1,4 +1,4 @@
-import type React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Table,
     TableBody,
@@ -11,56 +11,64 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Medal } from "lucide-react";
+import { baseUrl } from "../../App";
+import { useParams } from "react-router-dom";
 
-// Dummy data
-const results = [
-    {
-        position: 1,
-        teamName: "Team Alpha",
-        domain: "E-commerce",
-        repoLink: "https://github.com/team-alpha",
-        liveLink: "https://team-alpha.com",
-        rating: 98,
-    },
-    {
-        position: 2,
-        teamName: "Team Beta",
-        domain: "FinTech",
-        repoLink: "https://github.com/team-beta",
-        liveLink: "https://team-beta.com",
-        rating: 95,
-    },
-    {
-        position: 3,
-        teamName: "Team Gamma",
-        domain: "HealthTech",
-        repoLink: "https://github.com/team-gamma",
-        liveLink: "https://team-gamma.com",
-        rating: 92,
-    },
-    {
-        position: 4,
-        teamName: "Team Delta",
-        domain: "EdTech",
-        repoLink: "https://github.com/team-delta",
-        liveLink: "https://team-delta.com",
-        rating: 8,
-    },
-    {
-        position: 5,
-        teamName: "Team Epsilon",
-        domain: "AI/ML",
-        repoLink: "https://github.com/team-epsilon",
-        liveLink: "https://team-epsilon.com",
-        rating: 8.5,
-    },
-].sort((a, b) => b.rating - a.rating);
+
+interface Project {
+    id: number;
+    teamName: string;
+    domain: string;
+    repoLink: string;
+    liveLink: string;
+    avgRating: string;
+}
 
 const Result: React.FC = () => {
+    const [results, setResults] = useState<Project[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const param =useParams();
+    const id = param.id;
+
+    const fetchData = async () => {
+        
+        const accessToken = localStorage.getItem("accessToken");
+
+        try {
+            const response = await fetch(
+                `${baseUrl}/api/core/hackathons/${id}/projects/`,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`,
+                        "ngrok-skip-browser-warning": "true",
+                    },
+                },
+            );
+            const data = await response.json();
+            const sortedData = data.sort(
+                (a: Project, b: Project) =>
+                    parseFloat(b.avgRating) - parseFloat(a.avgRating),
+            );
+            setResults(sortedData);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
     return (
-        <Card className="mx-auto w-full px-10 ">
+        <Card className="mx-auto w-full px-10">
             <CardHeader>
-                <CardTitle className="text-center text-4xl mb-2 font-bold text-primary">
+                <CardTitle className="mb-2 text-center text-4xl font-bold text-primary">
                     Results
                 </CardTitle>
             </CardHeader>
@@ -68,25 +76,23 @@ const Result: React.FC = () => {
                 <Table>
                     <TableHeader>
                         <TableRow>
-                            <TableHead className="">
-                                Position
-                            </TableHead>
+                            <TableHead>Position</TableHead>
                             <TableHead>Team Name</TableHead>
                             <TableHead>Domain</TableHead>
-                            <TableHead >Repo Link</TableHead>
+                            <TableHead>Repo Link</TableHead>
                             <TableHead>Live Link</TableHead>
-                            <TableHead >Rating</TableHead>
+                            <TableHead>Rating</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
                         {results.map((result, index) => (
                             <TableRow
-                                key={result.position}
+                                key={result.id}
                                 className={index < 3 ? "font-medium" : ""}
                             >
                                 <TableCell className="font-medium">
                                     <div className="flex items-center gap-2">
-                                        {result.position}
+                                        {index + 1}
                                         {index < 3 && (
                                             <Medal
                                                 className={`h-5 w-5 ${
@@ -105,7 +111,7 @@ const Result: React.FC = () => {
                                 <TableCell>
                                     <Button variant="link" asChild>
                                         <a
-                                        className=" text-left px-0 "
+                                            className="px-0 text-left"
                                             href={result.repoLink}
                                             target="_blank"
                                             rel="noopener noreferrer"
@@ -117,7 +123,7 @@ const Result: React.FC = () => {
                                 <TableCell>
                                     <Button variant="link" asChild>
                                         <a
-                                        className=" text-left px-0 "
+                                            className="px-0 text-left"
                                             href={result.liveLink}
                                             target="_blank"
                                             rel="noopener noreferrer"
@@ -126,8 +132,8 @@ const Result: React.FC = () => {
                                         </a>
                                     </Button>
                                 </TableCell>
-                                <TableCell className=" pl-5">
-                                    {result.rating}
+                                <TableCell className="pl-5">
+                                    {result.avgRating}
                                 </TableCell>
                             </TableRow>
                         ))}

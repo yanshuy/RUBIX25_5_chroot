@@ -27,7 +27,9 @@ interface OrganizedHackathon {
 
 async function getMyHackathons() {
   const accessToken = localStorage.getItem("accessToken");
-  const response = await fetch(`${baseUrl}/api/core/hackathons/me`, {
+  console.log(accessToken);
+  
+  const response = await fetch(`${baseUrl}/api/core/hackathons/me/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -137,7 +139,7 @@ export default function MyOrganizedHackathons() {
         ) : filteredHackathons.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredHackathons.map((hackathon) => (
-              <Link to={`/organizerdashboard/team/${hackathon.id}`} key={hackathon.id}>
+              <Link to={`/organizerdashboard/teams/${hackathon.id}`} key={hackathon.id}>
                 <HackathonCard key={hackathon.id} hackathon={hackathon} />
               </Link>
             ))}

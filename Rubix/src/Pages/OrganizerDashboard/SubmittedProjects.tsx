@@ -21,7 +21,7 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Star } from "lucide-react";
 import { baseUrl } from "../../App";
-import { set } from "date-fns";
+import { useParams } from "react-router-dom";
 
 // Types
 type Project = {
@@ -124,7 +124,7 @@ const SubmittedProjects: React.FC = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [ratings, setRatings] = useState<{ [key: string]: number }>({});
     const [loading, setLoading] = useState(true);
-    
+    const param = useParams();
 
     const filteredProjects = projects.filter(
         (project) =>
@@ -139,22 +139,33 @@ const SubmittedProjects: React.FC = () => {
         }));
     };
 
-    // const fetchData = async () => {
-    //     const accessToken =  localStorage.getItem("accessToken");
-    //     const response = await fetch(baseUrl, {
-    //         headers: {
-    //             Authorization: `Bearer ${accessToken}`,
-    //         },
-    //     });
-    //     const data = await response.json();
-    //     setProjects(data);
-    //     setLoading(false);
-    // }
+    const fetchData = async () => {
+        const id = param.id;
+        console.log(id);
+        console.log(`${baseUrl}/api/core/hackathons/${id}/projects/`);
 
-    // useEffect(() => {
-    // }, [projects]);
+        const accessToken = localStorage.getItem("accessToken");
+        const response = await fetch(
+            `${baseUrl}/api/core/hackathons/${id}/projects/`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    "ngrok-skip-browser-warning": "true",
+                },
+            },
+        );
+        const data = await response.json();
+        setProjects(data);
+        setLoading(false);
+    };
 
-    const handleSubmitRating = async (e:any) => {
+    useEffect(() => {
+        fetchData();
+    }, []);
+
+    const handleSubmitRating = async (e: React.MouseEvent) => {
+        e.preventDefault();
+
         if (selectedProject) {
             const totalRating = Object.values(ratings).reduce(
                 (sum, rating) => sum + rating,
@@ -162,47 +173,53 @@ const SubmittedProjects: React.FC = () => {
             );
             const avgRating = totalRating / ratingParameters.length;
 
-            setProjects((prev) =>
-                prev.map((project) =>
-                    project.id === selectedProject.id
-                        ? { ...project, avgRating }
-                        : project,
-                ),
+            const updatedProject = {
+                ...selectedProject,
+                avgRating,
+            };
+
+            const accessToken = localStorage.getItem("accessToken");
+            const id = param.id;
+
+            const response = await fetch(
+                `${baseUrl}/api/core/hackathons/${id}/projects/${selectedProject.id}/`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${accessToken}`,
+                    },
+                    body: JSON.stringify({ avgRating }),
+                },
             );
 
-            // const accessToken =  localStorage.getItem("accessToken");
-
-            // const formData = projects.map((item)=>item.id===selectedProject.id?{...item,avgRating}:item);
-            // console.log(formData);
-            // const response = await fetch(baseUrl ,{
-            //     method: "PATCH",
-            //     headers: {
-            //         "Content-Type": "application/json",
-            //         Authorization: `Bearer ${accessToken}`,
-            //     },
-            //     body: JSON.stringify(formData),
-            // })
-
-
-            // const data = await response.json();
-            // setProjects(data);
-            setSelectedProject(null);
-            setRatings({});
-            setIsDialogOpen(false);
+            if (response.ok) {
+                setProjects((prev) =>
+                    prev.map((project) =>
+                        project.id === selectedProject.id
+                            ? updatedProject
+                            : project,
+                    ),
+                );
+                setSelectedProject(null);
+                setRatings({});
+                setIsDialogOpen(false);
+            } else {
+                console.error("Failed to update rating");
+            }
         }
-
-        console.log(projects);
-        
     };
 
-
-    // if (loading) {
-    //     return <div className="w-full h-screen text-4xl flex justify-center items-center animate-bounce">Loading <span className="animate-pulse">.....</span></div>;
-        
-    // }
+    if (loading) {
+        return (
+            <div className="flex h-screen w-full items-center justify-center text-4xl">
+                Loading <span className="animate-pulse">.....</span>
+            </div>
+        );
+    }
 
     return (
-        <div className="container mx-auto bg-slate-50 space-y-6 p-6">
+        <div className="container mx-auto space-y-6 bg-slate-50 p-6">
             <h1 className="mb-6 text-center text-3xl font-bold">
                 Submitted Projects
             </h1>
@@ -271,7 +288,11 @@ const SubmittedProjects: React.FC = () => {
                                 {project.avgRating !== null ? (
                                     <div className="flex items-center">
                                         <Star className="mr-1 h-4 w-4 text-yellow-400" />
-                                        {project.avgRating.toFixed(1)}
+                                        {typeof project.avgRating === "number"
+                                            ? project.avgRating.toFixed(1)
+                                            : parseFloat(
+                                                  project.avgRating as string,
+                                              ).toFixed(1)}
                                     </div>
                                 ) : (
                                     <span className="text-gray-500">
