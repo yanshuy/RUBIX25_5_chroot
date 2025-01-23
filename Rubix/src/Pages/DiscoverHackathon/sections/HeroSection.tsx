@@ -36,7 +36,7 @@ export function HeroSection({
                                     e.target.value.toLowerCase();
                                 setHackathons(() =>
                                     hackathons.filter((hackathon) =>
-                                        hackathon.name
+                                        hackathon.hackathonName
                                             .toLowerCase()
                                             .includes(searchQuery),
                                     ),
