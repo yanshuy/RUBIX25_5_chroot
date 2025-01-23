@@ -8,7 +8,7 @@ export function EventHeader({ data }) {
         <div className="flex flex-col gap-6 p-6">
             <div className="flex gap-4">
                 <img
-                    src="https://d8it4huxumps7.cloudfront.net/uploads/images/opportunity/banner/677756597a0f5_hackathon-technotronics.webp?d=1920x557"
+                    src={data?.HackathonLogo}
                     alt="Event banner"
                     width={120}
                     height={80}

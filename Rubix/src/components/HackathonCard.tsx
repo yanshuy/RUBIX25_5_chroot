@@ -29,6 +29,9 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
                 <CardHeader className="border-b p-4">
                     <div className="flex items-start justify-between">
                         <div>
+                            <div>
+                                <img src={} alt="LogoHackathon" />
+                            </div>
                             <h3 className="text-lg font-semibold">
                                 {hackathon.hackathonName}
                             </h3>
