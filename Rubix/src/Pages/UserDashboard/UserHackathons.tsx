@@ -125,72 +125,74 @@ export default function UserHackathons() {
   }, [])
 
   return (
-    <div className="container py-6 space-y-8">
+    <div className="container p-6 space-y-8">
       <div className="flex gap-4 w-full max-w-6xl p-4">
         <HackathonCard 
           title = {"ETHDenver 2025"}
           description = {"Largest and Longest Running #BUILDathon in the World"}
           applicationDeadline = {"Applications close 24th February, 2025"}
         />
-    <div className="relative w-80 h-[280px] rounded-lg overflow-hidden group transition-transform duration-300 hover:scale-105 hover:cursor-pointer">
-      <svg 
-        className="absolute inset-0 w-full h-full" 
-        viewBox="0 0 320 280" 
-        fill="none" 
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <defs>
-          <linearGradient 
-            id="cardGradient" 
-            x1="0%" 
-            y1="0%" 
-            x2="100%" 
-            y2="100%"
-          >
-            <stop offset="0%" stopColor="#22c55e" />
-            <stop offset="100%" stopColor="#2563EB" />
-          </linearGradient>
-          <clipPath id="cardClip">
-            <path d="M0 16C0 7.16344 7.16344 0 16 0H304C312.837 0 320 7.16344 320 16V280H0V16Z" />
-          </clipPath>
-        </defs>
-        
-        <rect 
-          width="320" 
-          height="280" 
-          fill="url(#cardGradient)" 
-          clipPath="url(#cardClip)" 
-        />
-        
-        <path 
-          className="transition-transform duration-700 group-hover:translate-x-6"
-          d="M-40 80C40 50 120 110 200 80C280 50 360 90 440 80V0H-40V80Z" 
-          fill="#22c55e" 
-          fillOpacity="0.2"
-        />
-        <path 
-          className="transition-transform duration-500 group-hover:translate-x-4"
-          d="M-40 60C40 30 120 90 200 60C280 30 360 70 440 60V0H-40V60Z" 
-          fill="white" 
-          fillOpacity="0.1"
-        />
-      </svg>
+        <Link to={"/discover"}>
+          <div className="relative w-80 h-[280px] rounded-lg overflow-hidden group transition-transform duration-300 hover:scale-105 hover:cursor-pointer">
+            <svg 
+              className="absolute inset-0 w-full h-full" 
+              viewBox="0 0 320 280" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <defs>
+                <linearGradient 
+                  id="cardGradient" 
+                  x1="0%" 
+                  y1="0%" 
+                  x2="100%" 
+                  y2="100%"
+                >
+                  <stop offset="0%" stopColor="#22c55e" />
+                  <stop offset="100%" stopColor="#2563EB" />
+                </linearGradient>
+                <clipPath id="cardClip">
+                  <path d="M0 16C0 7.16344 7.16344 0 16 0H304C312.837 0 320 7.16344 320 16V280H0V16Z" />
+                </clipPath>
+              </defs>
+              
+              <rect 
+                width="320" 
+                height="280" 
+                fill="url(#cardGradient)" 
+                clipPath="url(#cardClip)" 
+              />
+              
+              <path 
+                className="transition-transform duration-700 group-hover:translate-x-6"
+                d="M-40 80C40 50 120 110 200 80C280 50 360 90 440 80V0H-40V80Z" 
+                fill="#22c55e" 
+                fillOpacity="0.2"
+              />
+              <path 
+                className="transition-transform duration-500 group-hover:translate-x-4"
+                d="M-40 60C40 30 120 90 200 60C280 30 360 70 440 60V0H-40V60Z" 
+                fill="white" 
+                fillOpacity="0.1"
+              />
+            </svg>
 
-      <div className="relative h-full flex flex-col items-center justify-center p-6">
-        <div className="w-14 h-14 outline outline-white outline-4 rounded-full shadow-lg flex items-center justify-center mb-6 transition-transform duration-300 group-hover:rotate-12">
-          <TbBrandBandcamp color="white" size={37}/>
-        </div>
-        
-        <div className="text-center transition-transform duration-300 group-hover:scale-1">
-          <h3 className="text-3xl font-bold text-white mb-1 tracking-wide">
-            Explore
-          </h3>
-          <p className="text-xl text-white/90 font-medium">
-            Hackathons
-          </p>
-        </div>
-      </div>
-    </div>
+            <div className="relative h-full flex flex-col items-center justify-center p-6">
+              <div className="w-14 h-14 outline outline-white outline-4 rounded-full shadow-lg flex items-center justify-center mb-6 transition-transform duration-300 group-hover:rotate-12">
+                <TbBrandBandcamp color="white" size={37}/>
+              </div>
+              
+              <div className="text-center transition-transform duration-300 group-hover:scale-1">
+                <h3 className="text-3xl font-bold text-white mb-1 tracking-wide">
+                  Explore
+                </h3>
+                <p className="text-xl text-white/90 font-medium">
+                  Hackathons
+                </p>
+              </div>
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* Hackathons List */}

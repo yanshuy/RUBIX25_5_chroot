@@ -16,7 +16,8 @@ import HackathonStatus from "./Pages/UserDashboard/HackathonStatus";
 export const baseUrl = "https://live-merely-drum.ngrok-free.app";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { HackathonRegistrationForm } from "./Pages/UserDashboard/HackathonRegistrationForm";
+import { HackathonRegistrationForm, OrganizeHackathonForm } from "./Pages/UserDashboard/OrganizeHackathonForm";
+import MyOrganizedHackathons from "./Pages/UserDashboard/MyOrganizedHackathons";
 const queryClient = new QueryClient();
 
 function App() {
@@ -56,7 +57,8 @@ function App() {
                     <Route path="/dashboard/profile" element={<UserProfile />} />
                     <Route path="/dashboard/hackathons" element={<Hackathons />} />
                     <Route path="/dashboard/hackathons/:name" element={<HackathonStatus />} />
-                    <Route path="/dashboard/organizehackathons" element={<HackathonRegistrationForm />} />
+                    <Route path="/dashboard/organizehackathons" element={<MyOrganizedHackathons />} />
+                    <Route path="/dashboard/organizehackathons/new" element={<OrganizeHackathonForm />} />
                 </Route>
             </Routes>
         </QueryClientProvider>
