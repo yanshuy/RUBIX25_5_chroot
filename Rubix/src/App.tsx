@@ -94,7 +94,7 @@ function App() {
                         element={<SubmittedProjects />}
                     />
                     <Route
-                        path="/organizer-dashboard/hackathons/:name"
+                        path="/organizer-dashboard/hackathons/:id"
                         element={<HackathonStatus />}
                     />
                     <Route
