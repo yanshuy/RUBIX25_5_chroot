@@ -1,5 +1,6 @@
 import { Calendar, Heart, Share2 } from "lucide-react";
 import { Button } from "../../../components/ui/button";
+import { format } from "date-fns";
 
 export function EventHeader({ data }) {
     return (
@@ -17,7 +18,7 @@ export function EventHeader({ data }) {
                         Hackathon: {data?.hackathonName}
                     </h1>
                     <p className="text-muted-foreground">
-                        {data?.collegeName} {data?.city}
+                        {data?.collegeName}, {data?.city}
                     </p>
                 </div>
                 <div className="flex items-start gap-2">
@@ -36,26 +37,26 @@ export function EventHeader({ data }) {
 
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
-                    <span className="inline-block h-2 w-2 rounded-full bg-blue-500"></span>
-                    Online
-                </div>
-                <div className="flex items-center gap-2">
                     <Calendar className="h-4 w-4" />
-                    Updated On: Jan 21, 2025
+                    Updated On:{" "}
+                    {data
+                        ? format(
+                              new Date(data.applicationOpenDate),
+                              "MMM d, yyyy",
+                          )
+                        : "not mentioned"}
                 </div>
             </div>
 
             <div className="flex gap-2">
-                {["Hackathon", "College Festival", "Coding Challenge"].map(
-                    (tag) => (
-                        <span
-                            key={tag}
-                            className="rounded-full border bg-background px-4 py-1 text-sm transition-colors hover:bg-muted"
-                        >
-                            {tag}
-                        </span>
-                    ),
-                )}
+                {["No Restriction"].map((tag) => (
+                    <span
+                        key={tag}
+                        className="rounded-full border bg-background px-4 py-1 text-sm transition-colors hover:bg-muted"
+                    >
+                        {tag}
+                    </span>
+                ))}
             </div>
         </div>
     );

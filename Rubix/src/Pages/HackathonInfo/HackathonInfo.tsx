@@ -57,7 +57,7 @@ export default function HackathonInfo() {
                                 id="timeline"
                                 className="mt-6 rounded-lg bg-white"
                             >
-                                <EventTimeline />
+                                <EventTimeline data={data} />
                             </section>
                             <section
                                 id="contacts"

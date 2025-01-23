@@ -23,12 +23,14 @@ export function EventSidebar({ data }) {
                     </div>
                     <div className="space-y-1">
                         <div className="flex justify-between text-sm">
-                            <span>588 / 1000</span>
+                            <span>{data?.totalParticipants} / 1500</span>
                             <span className="text-blue-600">
                                 (Limited Slots)
                             </span>
                         </div>
-                        <Progress value={58.8} />
+                        <Progress
+                            value={(data?.totalParticipants / 1500) * 100}
+                        />
                     </div>
                 </div>
 
@@ -74,7 +76,9 @@ export function EventSidebar({ data }) {
                         </div>
                     </div>
                     <div className="font-medium">
-                        {foramtDate(data?.applicationCloseDate)}
+                        {data
+                            ? foramtDate(data.applicationCloseDate)
+                            : "not mentioned"}
                     </div>
                 </div>
 
@@ -98,9 +102,9 @@ export function EventSidebar({ data }) {
     );
 }
 
-function foramtDate(string: string) {
+export function foramtDate(string: string) {
     const date = new Date(string);
     const timeZone = "Asia/Kolkata";
     const zonedDate = toZonedTime(date, timeZone);
-    return format(zonedDate, "dd MMM yy, hh:mm a zzz");
+    return format(zonedDate, "dd MMM yy, hh:mm a");
 }

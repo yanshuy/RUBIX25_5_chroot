@@ -189,16 +189,13 @@ const MockInterviewer = ({ questions }) => {
         }
 
         try {
-            const response = await fetch(
-                `${baseUrl}/api/core/interview/questions/`,
-                {
-                    method: "POST",
-                    body: formData, // No Content-Type header! Let browser set it
-                    headers: {
-                        Authorizaton: `Bearer ${localStorage.getItem("accessToken")}`,
-                    },
+            const response = await fetch(`${baseUrl}/api/core/interview/`, {
+                method: "POST",
+                body: formData, // No Content-Type header! Let browser set it
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
                 },
-            );
+            });
 
             if (!response.ok)
                 throw new Error(`HTTP error! status: ${response.status}`);
