@@ -33,19 +33,10 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <Routes>
-                <Route path="/" element={<MainLayout />}>
-                    <Route path="/" element={<h1>Home</h1>} />
-                    <Route
-                        path="/"
-                        element={
-                            <h1>
-                                register ho gaya bhaiiiiiiiiiiiiiiiiiiiiiiiiiiii
-                            </h1>
-                        }
-                    />
+                <Route path="/" element={<LandingPage />}>
                     <Route path="/chat" element={<h1>chat</h1>} />
-                    <Route path="/userLogin" element={<UserLogin />} />
-                    <Route path="/userRegister" element={<UserRegister />} />
+                    <Route path="/user/login" element={<UserLogin />} />
+                    <Route path="/user/register" element={<UserRegister />} />
                     <Route path="/discover" element={<DiscoverHackathon />} />
                     <Route
                         path="/hackathon/:id/register"
@@ -78,7 +69,6 @@ function App() {
                     ></Route>
 
                     <Route path="/project" element={<ProjectsPage />}></Route>
-                    <Route path="/landing" element={<LandingPage />}></Route>
                 </Route>
                 <Route path="dashboard" element={<DashboardLayout />}>
                     <Route index element={<UserProfile />} />
