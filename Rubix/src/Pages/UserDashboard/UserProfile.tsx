@@ -408,6 +408,7 @@ export default function UserProfile() {
                   <Input
                     value={profileInfo.socialMedia.linkedin}
                     onChange={(e) => handleInputChange("socialMedia", "linkedin", e.target.value)}
+                    className="pl-10"
                   />
                 </div>
                 <div className="flex items-center justify-center relative">
@@ -415,6 +416,7 @@ export default function UserProfile() {
                   <Input
                     value={profileInfo.socialMedia.github}
                     onChange={(e) => handleInputChange("socialMedia", "github", e.target.value)}
+                    className="pl-10"
                   />
                 </div>
                 <div className="flex items-center justify-center relative">
@@ -422,6 +424,7 @@ export default function UserProfile() {
                   <Input
                     value={profileInfo.socialMedia.instagram}
                     onChange={(e) => handleInputChange("socialMedia", "instagram", e.target.value)}
+                    className="pl-10"
                   />
                 </div>
               </div>

@@ -92,24 +92,25 @@ export default function Sidebar({
                 },
             ],
         },
-        // {
-        //     category: "Event",
-        //     items: [
-
-        //         {
-        //             id: "submissions",
-        //             name: "Submissions",
-        //             icon: FileCode,
-        //             description: "Submit your project",
-        //         },
-        //         {
-        //             id: "judging",
-        //             name: "Judging",
-        //             icon: Award,
-        //             description: "Judging criteria and process",
-        //         },
-        //     ],
-        // },
+    ];
+    const adminChannels = [
+        {
+            category: "Admin",
+            items: [
+                // {
+                //     id: "submissions",
+                //     name: "Submissions",
+                //     icon: FileCode,
+                //     description: "Submit your project",
+                // },
+                {
+                    id: "judging",
+                    name: "Judging",
+                    icon: Award,
+                    description: "Judging criteria and process",
+                },
+            ],
+        },
     ];
 
     return (
@@ -153,6 +154,36 @@ export default function Sidebar({
                                             {item.unreadCount}
                                         </span>
                                     )}
+                                </button>
+                            ))}
+                        </div>
+                    ))}
+                    {adminChannels.map((category) => (
+                        <div key={category.category}>
+                            <h2 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-800">
+                                {category.category}
+                            </h2>
+                            {category.items.map((item) => (
+                                <button
+                                    key={item.id}
+                                    onClick={() =>
+                                        setActiveChannel({
+                                            id: item.id,
+                                            name: item.name,
+                                            category: category.category,
+                                            description: item.description,
+                                        })
+                                    }
+                                    className={`mb-1 flex w-full items-center justify-between rounded px-2 py-1.5 text-sm ${
+                                        activeChannel.id === item.id
+                                            ? "bg-primary/10 text-primary"
+                                            : "text-slate-500 hover:bg-primary/5 hover:text-primary"
+                                    }`}
+                                >
+                                    <div className="flex items-center">
+                                        <item.icon className="mr-2 h-4 w-4" />
+                                        {item.name}
+                                    </div>
                                 </button>
                             ))}
                         </div>

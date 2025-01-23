@@ -164,8 +164,6 @@ const MockInterviewer = () => {
 
     const sendAudioToBackend = async () => {
         const formData = new FormData();
-        formData.append("email", "John@kkk.com");
-        formData.append("password", "John");
 
         // Use for...of instead of forEach to handle async/await properly
         for (const [index, response] of responses.entries()) {
@@ -191,10 +189,13 @@ const MockInterviewer = () => {
         }
 
         try {
-            const response = await fetch(`${baseUrl}/api/register/`, {
-                method: "POST",
-                body: formData, // No Content-Type header! Let browser set it
-            });
+            const response = await fetch(
+                `${baseUrl}/api/core/interview/questions/`,
+                {
+                    method: "POST",
+                    body: formData, // No Content-Type header! Let browser set it
+                },
+            );
 
             if (!response.ok)
                 throw new Error(`HTTP error! status: ${response.status}`);
