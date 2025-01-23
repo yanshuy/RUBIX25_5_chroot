@@ -22,6 +22,9 @@ import SubmittedProjects from "./Pages/OrganizerDashboard/SubmittedProjects";
 import Result from "./Pages/OrganizerDashboard/Result";
 import RoomPage from "./Pages/Videocalling/RoomPage";
 import FindTeammates from "./Pages/FindTeammate/FindTeammate";
+import ProjectSubmission from "./Pages/UserDashboard/ProjectSubmission";
+import ProjectsPage from "./Pages/Projects/Project";
+import LandingPage from "./Pages/LandingPage/LandingPage";
 const queryClient = new QueryClient();
 
 export const baseUrl = "https://live-merely-drum.ngrok-free.app";
@@ -69,6 +72,13 @@ function App() {
                         element={<Interview />}
                     ></Route>
                     <Route path="/find-teammates" element={<FindTeammates />} />
+                    <Route
+                        path="/project/submission"
+                        element={<ProjectSubmission />}
+                    ></Route>
+
+                    <Route path="/project" element={<ProjectsPage />}></Route>
+                    <Route path="/landing" element={<LandingPage />}></Route>
                 </Route>
                 <Route path="dashboard" element={<DashboardLayout />}>
                     <Route index element={<UserProfile />} />
