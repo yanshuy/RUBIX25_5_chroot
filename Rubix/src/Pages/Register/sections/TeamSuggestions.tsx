@@ -5,8 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Search, Info } from "lucide-react";
 import type { TeamMember } from "../Register";
-import { useParams } from "react-router-dom";
-import { useHackathonData } from "../../HackathonInfo/HackathonInfo";
 
 const suggestedTeammates: TeamMember[] = [
     {
@@ -103,14 +101,12 @@ export function TeammateSuggestions({
                                             className="rounded-lg bg-slate-800 px-3 py-2 text-xs font-semibold text-white disabled:opacity-50"
                                             onClick={() => {
                                                 suggestedTeammates.find(
-                                                    (teammate) =>
-                                                        teammate.id ===
-                                                        teammate.id,
+                                                    (tm) =>
+                                                        tm.id === teammate.id,
                                                 )!.status = "pending";
                                                 filteredTeammates.find(
-                                                    (teammate) =>
-                                                        teammate.id ===
-                                                        teammate.id,
+                                                    (tm) =>
+                                                        tm.id === teammate.id,
                                                 )!.status = "pending";
                                                 console.log(teammate);
                                                 addMember(teammate);

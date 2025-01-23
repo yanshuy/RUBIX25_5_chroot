@@ -20,6 +20,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({
+    data,
     activeChannel,
     setActiveChannel,
 }: SidebarProps) {
@@ -41,7 +42,6 @@ export default function Sidebar({
                     icon: Trophy,
                     description:
                         "View all hackathon challenges and requirements",
-                    unreadCount: 2,
                 },
                 {
                     id: "schedule",
@@ -114,10 +114,14 @@ export default function Sidebar({
     ];
 
     return (
-        <div className="flex w-64 flex-col bg-white">
+        <div className="flex w-64 flex-col border-r bg-white">
             <div className="border-b p-4">
                 <h1 className="text-xl font-bold text-primary">
-                    HackVirtual 2024
+                    {!data ? (
+                        <div className="h-[28px] w-full rounded-full bg-slate-100"></div>
+                    ) : (
+                        data.hackathonName
+                    )}
                 </h1>
             </div>
             <ScrollArea className="flex-1">

@@ -13,6 +13,10 @@ import TopBar from "./sections/TopBar";
 import MembersList from "./sections/MembersList";
 import Submissions from "./channels/Submissions";
 import Challenges from "./channels/Challenges";
+import { useHackathonData } from "../HackathonInfo/HackathonInfo";
+import { useParams } from "react-router-dom";
+import { baseUrl } from "../../App";
+import { useQuery } from "@tanstack/react-query";
 
 export type Channel = {
     id: string;
@@ -22,6 +26,61 @@ export type Channel = {
     unreadCount?: number;
 };
 
+async function getHackathonTeamId(id: string): Promise<string> {
+    const response = await fetch(
+        baseUrl + `/api/core/teams/my?hackathon_id=${id}`,
+        {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                "ngrok-skip-browser-warning": "69420",
+            },
+        },
+    );
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch team ID");
+    }
+
+    const data = await response.json();
+    return data.id; // Make sure the API returns an object with an 'id' field
+}
+
+async function getTeamDetails(id: string) {
+    const response = await fetch(baseUrl + `/api/core/teams/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "ngrok-skip-browser-warning": "69420",
+        },
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch team details");
+    }
+
+    return response.json();
+}
+
+export function useHackathonTeamId(id: string) {
+    return useQuery({
+        queryKey: ["hackathonTeamId", id],
+        queryFn: () => getHackathonTeamId(id),
+        // Ensure we have a valid ID before fetching
+        enabled: !!id,
+    });
+}
+
+export function useTeamDetails(id: string | undefined) {
+    return useQuery({
+        queryKey: ["teamDetails", id],
+        queryFn: () => {
+            if (!id) throw new Error("No team ID provided");
+            return getTeamDetails(id);
+        },
+        // Only fetch when ID is available
+        enabled: !!id,
+    });
+}
+
 export default function HackathonServer() {
     const [activeChannel, setActiveChannel] = useState<Channel>({
         id: "announcements",
@@ -29,6 +88,11 @@ export default function HackathonServer() {
         category: "Getting Started",
         description: "Important updates and announcements for all participants",
     });
+    const params = useParams();
+    const { data: teamDetails } = useTeamDetails(params.id ?? "1");
+    const { data } = useHackathonData(params.id ?? "1");
+
+    // console.log(teamId, teamDetails);
 
     const renderChannel = () => {
         switch (activeChannel.id) {
@@ -62,11 +126,12 @@ export default function HackathonServer() {
     return (
         <div className="flex h-screen">
             <Sidebar
+                data={data}
                 activeChannel={activeChannel}
                 setActiveChannel={setActiveChannel}
             />
             <div className="flex flex-1 flex-col">
-                <ServerBanner />
+                {/* <ServerBanner /> */}
                 <TopBar activeChannel={activeChannel} />
                 <div className="flex flex-1 overflow-hidden">
                     {renderChannel()}

@@ -4,9 +4,11 @@ import { ArrowLeft } from "lucide-react";
 export function TeamHeader({
     activeTab,
     setActiveTab,
+    onUploadDetails,
 }: {
     activeTab: string;
     setActiveTab: (tab: string) => void;
+    onUploadDetails: () => void;
 }) {
     return (
         <div className="border-b bg-white">
@@ -25,7 +27,14 @@ export function TeamHeader({
                             </p>
                         </div>
                     </div>
-                    <Button className="mr-16">Update Details</Button>
+                    <button
+                        className="mr-16 rounded-md bg-slate-800 px-3 py-2 font-semibold text-white"
+                        onClick={() => {
+                            onUploadDetails();
+                        }}
+                    >
+                        Update Details
+                    </button>
                 </div>
             </div>
 
