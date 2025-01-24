@@ -1,14 +1,21 @@
 import { IconBaseProps } from "react-icons";
 import { Link, NavLink, useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
-import { Users, Folders, Trophy } from "lucide-react";
+import { Users, Github, Folders, Trophy } from "lucide-react";
 import Logo from "../assets/logo.png";
+import TeamCommits from "../Pages/OrganizerDashboard/TeamCommits";
+
 
 const navItems = [
     {
         basePath: "/organizerdashboard/teams",
         label: "Teams",
         icon: (props: IconBaseProps) => <Users {...props} />,
+    },
+    {
+        basePath: "/organizerdashboard/teamscommits",
+        label: "Teams Commits",
+        icon: (props: IconBaseProps) => <Github {...props} />,
     },
     {
         basePath: "/organizerdashboard/projects",
