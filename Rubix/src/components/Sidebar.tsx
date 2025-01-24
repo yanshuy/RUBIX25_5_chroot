@@ -8,7 +8,7 @@ import {
     MountainSnow,
     User,
 } from "lucide-react";
-import Logo from "../assets/logo.png";
+import Logo from "../assets/Logo-removebg-preview.png";
 import { TbLogout2 } from "react-icons/tb";
 
 const navItems = [
@@ -55,7 +55,7 @@ const Sidebar = () => {
             <div className="absolute -left-[22px] top-6 -rotate-90 border-[.7rem] border-transparent border-b-white drop-shadow-[0px_-1px_1px_rgba(0,0,0,0.08)]"></div>
             <div className="sticky top-4 flex h-[calc(100vh-32px)] w-fit flex-col justify-between overflow-y-auto pl-4 pr-2">
                 <div>
-                    <div className="mb-4 mt-2 h-24 cursor-pointer border-b border-slate-300 pb-3 pl-5">
+                    <div className="mb-4 mt-2 h-24 cursor-pointer border-b border-slate-300 pb-3 pl-4">
                         <Link to={"/"}>
                             <img
                                 src={Logo}

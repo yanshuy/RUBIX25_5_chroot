@@ -123,7 +123,6 @@ export default function HackathonServer() {
         <div className="flex h-screen">
             <Sidebar
                 data={data}
-                teamData={teamData}
                 activeChannel={activeChannel}
                 setActiveChannel={setActiveChannel}
             />

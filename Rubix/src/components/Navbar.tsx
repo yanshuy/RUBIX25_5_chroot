@@ -3,7 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { Calendar, LayoutDashboard, LogOut, TrophyIcon } from "lucide-react";
-import Logo from "../assets/logo.png";
+import Logo from "../assets/Logo.png";
+import Logo2 from "../assets/Logo-removebg-preview.png";
 import { baseUrl } from "../App";
 
 export default function Navbar() {
@@ -45,12 +46,12 @@ export default function Navbar() {
         fetchUserDetails();
     }, []);
     return (
-        <header className="fixed top-0 z-50 w-full border-b bg-white/80 px-6 backdrop-blur-sm">
+        <header className="fixed top-0 z-50 w-full border-b bg-white/80 px-6 pb-1 backdrop-blur-sm">
             <div className="flex h-fit items-center justify-between">
                 <div className="h-20 cursor-pointer pl-5">
                     <Link to={"/"}>
                         <img
-                            src={Logo}
+                            src={Logo2}
                             alt="Logo"
                             className="h-[100%] object-cover"
                         />
@@ -94,7 +95,7 @@ export default function Navbar() {
                         </>
                     ) : (
                         <div className="relative">
-                            <div className="flex items-center space-x-2">
+                            <div className="mr-4 flex translate-y-0.5 items-center space-x-2">
                                 <IoPersonCircleSharp
                                     className="cursor-pointer text-[3rem] text-slate-300"
                                     onClick={() =>

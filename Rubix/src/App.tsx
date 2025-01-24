@@ -23,12 +23,13 @@ import Result from "./Pages/OrganizerDashboard/Result";
 import RoomPage from "./Pages/Videocalling/RoomPage";
 import FindTeammates from "./Pages/FindTeammate/FindTeammate";
 import ProjectSubmission from "./Pages/UserDashboard/ProjectSubmission";
-import ProjectsPage from "./Pages/Projects/Project";
+// import ProjectsPage from "./Pages/Projects/Project";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Forum from "./Pages/forums/Forums";
 import TeamCommits from "./Pages/OrganizerDashboard/TeamCommits";
 import Leaderboard from "./Pages/LeaderBoard/LeaderBoard";
 import StatisticsPage from "./Pages/UserDashboard/StatisticsPage";
+import UserPublicProfile from "./Pages/UserPublicProfile/UserPublicProfile";
 
 const queryClient = new QueryClient();
 
@@ -80,6 +81,10 @@ function App() {
 
                     {/* <Route path="/project" element={<ProjectsPage />}></Route> */}
                     <Route path="/forum" element={<Forum />}></Route>
+                    <Route
+                        path="/user/:id"
+                        element={<UserPublicProfile />}
+                    ></Route>
                 </Route>
 
                 <Route path="dashboard" element={<DashboardLayout />}>

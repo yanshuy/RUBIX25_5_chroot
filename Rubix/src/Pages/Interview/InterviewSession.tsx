@@ -78,6 +78,12 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
         return () => clearInterval(interval);
     }, [isRecording, timeRemaining]);
 
+    useEffect(() => {
+        if (questions.length > 0) {
+            speakQuestion(questions[currentQuestionIndex].text);
+        }
+    }, [currentQuestionIndex]);
+
     // Speech recognition setup and handlers
     const startRecording = () => {
         console.log("Starting recording...");
@@ -103,7 +109,6 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
                         interimTranscript += transcript;
                     }
                 }
-                console.log(finalTranscript);
 
                 setTranscript(finalTranscript + interimTranscript);
             };

@@ -19,7 +19,7 @@ export default function TeamChat({ id }: { id: string }) {
 
     useEffect(() => {
         const ws = new WebSocket(
-            `ws://live-merely-drum.ngrok-free.app/ws/teams/${id}/?token=${localStorage.getItem("accessToken")}`,
+            `ws://natural-ape-severely.ngrok-free.app/ws/teams/${id}/?token=${localStorage.getItem("accessToken")}`,
         );
 
         ws.onopen = () => {
@@ -32,7 +32,7 @@ export default function TeamChat({ id }: { id: string }) {
                 setMessages(message.history);
                 return;
             }
-            console.log(message);
+            // console.log(message);
             setMessages((prev) => [...prev, message]);
         };
 
@@ -72,7 +72,7 @@ export default function TeamChat({ id }: { id: string }) {
             <ScrollArea className="min-h-[calc(100vh-8rem)] flex-1 p-4">
                 <div className="space-y-4">
                     {messages.map((message, index) => {
-                        console.log(message);
+                        // console.log("test", message.timestamp);
                         return (
                             <div key={index} className="flex items-start gap-4">
                                 <Avatar>
@@ -86,7 +86,9 @@ export default function TeamChat({ id }: { id: string }) {
                                             {message.user}
                                         </span>
                                         <span className="text-xs text-muted-foreground">
-                                            {message.timestamp}
+                                            {message.timestamp
+                                                ? message.timestamp
+                                                : "Just now"}
                                         </span>
                                     </div>
                                     <p className="mt-1 text-primary/90">
