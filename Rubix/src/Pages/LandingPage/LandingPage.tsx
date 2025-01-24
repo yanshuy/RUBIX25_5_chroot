@@ -130,16 +130,16 @@ export default function LandingPage() {
                     </div>
                     <nav className="hidden space-x-6 md:flex">
                         <Link
-                            to="#features"
+                            to="/"
                             className="text-sm font-medium hover:text-primary"
                         >
-                            Features
+                            Home
                         </Link>
                         <Link
-                            to="#projects"
+                            to="/discover"
                             className="text-sm font-medium hover:text-primary"
                         >
-                            Projects
+                            Explore
                         </Link>
                         <Link
                             to="#schedule"
@@ -148,10 +148,10 @@ export default function LandingPage() {
                             Schedule
                         </Link>
                         <Link
-                            to="#faq"
+                            to="/forum"
                             className="text-sm font-medium hover:text-primary"
                         >
-                            FAQ
+                            Forum
                         </Link>
                     </nav>
                     <div className="flex items-center space-x-4">
