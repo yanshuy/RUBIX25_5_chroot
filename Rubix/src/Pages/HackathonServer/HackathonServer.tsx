@@ -17,6 +17,7 @@ import { useParams } from "react-router-dom";
 import { baseUrl } from "../../App";
 import { useQuery } from "@tanstack/react-query";
 import TeamChat from "./channels/TeamChat";
+import RoomPage from "../Videocalling/RoomPage";
 
 export type Channel = {
     id: string;
@@ -111,6 +112,8 @@ export default function HackathonServer() {
                 return <Judging />;
             case "team":
                 return <TeamChat id={teamData?.teamId} />;
+            case "team-voice":
+                return <RoomPage />;
             default:
                 return <div>Channel not found</div>;
         }

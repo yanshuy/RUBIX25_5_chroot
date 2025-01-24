@@ -1,121 +1,71 @@
-import { useEffect, useState } from "react"
-import { Bell, Plus, Search, Upload, X } from "lucide-react"
-import { LuGithub, LuInstagram } from "react-icons/lu"
-import { IoLogoLinkedin } from "react-icons/io5"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast } from "@/hooks/use-toast"
-import useAuth from "@/hooks/useAuth"
-import Sigmaimg from "@/assets/sigma.png"
-import { baseUrl } from "../../App"
-import { log } from "console"
+import { useEffect, useState } from "react";
+import { Bell, Plus, Search, Upload, X } from "lucide-react";
+import { LuGithub, LuInstagram } from "react-icons/lu";
+import { IoLogoLinkedin } from "react-icons/io5";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "@/hooks/use-toast";
+import useAuth from "@/hooks/useAuth";
+import Sigmaimg from "@/assets/sigma.png";
+import { baseUrl } from "../../App";
 
 interface Education {
-  id: string
-  school: string
-  degree: string
-  graduationYear: string
+  id: string;
+  school: string;
+  degree: string;
+  graduationYear: string;
 }
 
 interface Experience {
-  id: string
-  company: string
-  position: string
-  startDate: string
-  endDate: string
-  description: string
-}
-
-interface SocialMedia {
-  linkedin: string
-  github: string
-  instagram: string
+  id: string;
+  company: string;
+  position: string;
+  startDate: string;
+  endDate: string;
+  description: string;
 }
 
 interface Skill {
-  id: string
-  name: string
+  id: string;
+  name: string;
 }
 
 interface ProfileInfo {
-  profilePhoto: string
-  personalInfo: {
-    full_name: string | null
-    email: string
-    mobile: string
-    role: string
-  }
-  bio: string
-  skills: Skill[]
-  socialMedia: SocialMedia
-  education: Education[]
-  experience: Experience[]
-  resume: File | null
-  resumelink?: string | null
-}
-
-function fillProfile() {
-  return {
-    profilePhoto: "https://example.com/path/to/your/profile/photo.jpg",
-    personalInfo: {
-      full_name: "Devansh Nair",
-      email: "dev@example.com",
-      mobile: "9863324579",
-      role: "Software Engineer",
-    },
-    bio: "Experienced software engineer with a passion for building scalable and efficient web applications. Proficient in JavaScript, Python, and cloud technologies. Always eager to learn and adapt to new challenges.",
-    skills: [],
-    socialMedia: {
-      linkedin: "https://www.linkedin.com/in/devansh-nair/",
-      github: "https://github.com/Devanshnair",
-      instagram: "",
-    },
-    education: [
-      {
-        id: "1",
-        school: "TSEC",
-        degree: "Bachelor of Engineering in Computer Science",
-        graduationYear: "2027",
-      },
-    ],
-    experience: [
-      {
-        id: "1",
-        company: "Tech Corp",
-        position: "Software Engineer",
-        startDate: "2020-06-01",
-        endDate: "2023-05-31",
-        description: "Developed and maintained web applications using React and Node.js. Collaborated with cross-functional teams to deliver high-quality software solutions.",
-      },
-    ],
-    resume: null,
-    resumelink: ""
-  }
+  profilePhoto: string;
+  full_name: string;
+  email: string;
+  mobile: string;
+  role: string;
+  bio: string;
+  skills: Skill[];
+  linkedin: string;
+  github: string;
+  instagram: string;
+  education: Education[];
+  experience: Experience[];
+  resume: File | null;
+  resumelink?: string | null;
 }
 
 export default function UserProfile() {
-  const { auth } = useAuth()
-  const [loading, setLoading] = useState(false)
-  const [newSkill, setNewSkill] = useState("")
+  const { auth } = useAuth();
+  const [loading, setLoading] = useState(false);
+  const [newSkill, setNewSkill] = useState("");
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>({
     profilePhoto: Sigmaimg,
-    personalInfo: {
-      full_name: "",
-      email: "",
-      mobile: "",
-      role: "",
-    },
+    full_name: "",
+    email: "",
+    mobile: "",
+    role: "",
     bio: "",
     skills: [],
-    socialMedia: {
-      linkedin: "",
-      github: "",
-      instagram: "",
-    },
+    linkedin: "",
+    github: "",
+    instagram: "",
     education: [
       {
         id: "1",
@@ -135,10 +85,8 @@ export default function UserProfile() {
       },
     ],
     resume: null,
-    resumelink: ""
-  })
-  // const [profileInfo, setProfileInfo] = useState<ProfileInfo>(fillProfile())
-  
+    resumelink: "",
+  });
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -148,77 +96,65 @@ export default function UserProfile() {
         if (reader.result) {
           setProfileInfo((prev) => ({
             ...prev,
-            profilePhoto: reader.result as string, // Use base64-encoded image
+            profilePhoto: reader.result as string,
           }));
         }
       };
-      reader.readAsDataURL(file); // Read the file as a DataURL (base64-encoded string)
+      reader.readAsDataURL(file);
     }
   };
-  
 
-  const handleInputChange = (section: keyof typeof profileInfo, field: string, value: string, index?: number) => {
+  const handleInputChange = (field: keyof ProfileInfo, value: string, index?: number) => {
     setProfileInfo((prev) => {
-      if (section === "personalInfo" || section === "socialMedia") {
-        return {
-          ...prev,
-          [section]: {
-            ...prev[section],
-            [field]: value,
-          },
-        }
-      }
-      if ((section === "education" || section === "experience") && typeof index === "number") {
-        const items = [...prev[section]]
-        items[index] = {
-          ...items[index],
-          [field]: value,
+      if (field === "education" || field === "experience") {
+        const items = [...prev[field]];
+        if (typeof index === "number") {
+          items[index] = {
+            ...items[index],
+            ...(value as any), // Update specific field in education/experience
+          };
         }
         return {
           ...prev,
-          [section]: items,
-        }
+          [field]: items,
+        };
       }
       return {
         ...prev,
-        [section]: value,
-      }
-    })
-    console.log(profileInfo);
-  }
+        [field]: value,
+      };
+    });
+  };
 
   const handleResumeUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    console.log(file)
     if (file) {
       setProfileInfo((prev) => ({
         ...prev,
-        resume: file, 
+        resume: file,
       }));
-
       toast({
         title: "Resume Uploaded",
         description: `${file.name} has been uploaded successfully.`,
       });
     }
   };
-  
 
   const addSkill = () => {
-    if (!newSkill.trim()) return
+    if (!newSkill.trim()) return;
     setProfileInfo((prev) => ({
       ...prev,
       skills: [...prev.skills, { id: Date.now().toString(), name: newSkill.trim() }],
-    }))
-    setNewSkill("")
-  }
+    }));
+    setNewSkill("");
+  };
 
   const removeSkill = (id: string) => {
     setProfileInfo((prev) => ({
       ...prev,
       skills: prev.skills.filter((skill) => skill.id !== id),
-    }))
-  }
+    }));
+  };
 
   const addEducation = () => {
     setProfileInfo((prev) => ({
@@ -232,8 +168,8 @@ export default function UserProfile() {
           graduationYear: "",
         },
       ],
-    }))
-  }
+    }));
+  };
 
   const addExperience = () => {
     setProfileInfo((prev) => ({
@@ -249,21 +185,19 @@ export default function UserProfile() {
           description: "",
         },
       ],
-    }))
-  }
+    }));
+  };
 
   const handleSubmit = async () => {
     setLoading(true);
     try {
       const formData = new FormData();
-
       const { resume, ...otherProfileInfo } = profileInfo;
       formData.append("profile", JSON.stringify(otherProfileInfo));
       if (resume) {
-        formData.append("resume", resume); // Resume is a File object
+        formData.append("resume", resume);
       }
       await updateProfile(formData);
-  
       toast({
         title: "Success",
         description: "Profile updated successfully",
@@ -278,87 +212,75 @@ export default function UserProfile() {
       setLoading(false);
     }
   };
-  
 
   async function fetchProfile() {
-    const accessToken = localStorage.getItem("accessToken")
+    const accessToken = localStorage.getItem("accessToken");
     const response = await fetch(`${baseUrl}/api/users/me/get`, {
       method: "GET",
-      headers:{
+      headers: {
         "ngrok-skip-browser-warning": "69420",
-        authorization: `Bearer ${accessToken}`, 
-      }
-    })
+        authorization: `Bearer ${accessToken}`,
+      },
+    });
     if (!response.ok) {
-      throw new Error("Failed to fetch profile")
+      throw new Error("Failed to fetch profile");
     }
-    return response.json()
+    return response.json();
   }
-  
+
   async function updateProfile(data: FormData) {
-    console.log(data)
-    const accessToken = localStorage.getItem("accessToken")
+    const accessToken = localStorage.getItem("accessToken");
     const response = await fetch(`${baseUrl}/api/users/me/`, {
       method: "PATCH",
-      headers:{
-        authorization: `Bearer ${accessToken}`, 
+      headers: {
+        authorization: `Bearer ${accessToken}`,
       },
       body: data,
-    })
+    });
     if (!response.ok) {
-      throw new Error("Failed to update profile")
+      throw new Error("Failed to update profile");
     }
-    return response.json()
+    return response.json();
   }
-  
-  useEffect(() => { 
-    const loadProfile = async () => { 
-      try { 
-        const data = await fetchProfile(); 
-        console.log(data)
-  
-        setProfileInfo((prev) => {
-          // Create a deep copy of the previous state
-          const updatedProfileInfo = JSON.parse(JSON.stringify(prev));
-  
-          // Merge the fetched data into the copied state
-          for (const key in data) {
-            if (data.hasOwnProperty(key)) {
-              if (typeof data[key] === 'object' && !Array.isArray(data[key]) && data[key] !== null) {
-                // If the property is an object, merge it recursively
-                updatedProfileInfo[key] = { ...updatedProfileInfo[key], ...data[key] };
-              } else {
-                // Otherwise, overwrite the property
-                updatedProfileInfo[key] = data[key];
-              }
-            }
-          }
-  
-          // Handle the resumelink separately if needed
-          if (data.resume) {
-            updatedProfileInfo.resumelink = data.resume;
-            updatedProfileInfo.resume = null;
-          }
-  
-          return updatedProfileInfo;
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        const data = await fetchProfile();
+        console.log("API Response:", data); // Log the API response
+
+        // Merge fetched data into state
+        setProfileInfo((prev) => ({
+          ...prev,
+          full_name: data.full_name || prev.full_name,
+          email: data.email || prev.email,
+          mobile: data.mobile || prev.mobile,
+          role: data.role || prev.role,
+          bio: data.bio || prev.bio,
+          skills: data.skills || prev.skills,
+          linkedin: data.linkedin || prev.linkedin,
+          github: data.github || prev.github,
+          instagram: data.instagram || prev.instagram,
+          education: data.education || prev.education,
+          experience: data.experience || prev.experience,
+          resumelink: data.resumelink || prev.resumelink,
+        }));
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load profile data",
+          variant: "destructive",
         });
-      } catch (error) { 
-        toast({ 
-          title: "Error", 
-          description: "Failed to load profile data", 
-          variant: "destructive", 
-        }); 
-      } 
-    }; 
-  
-    loadProfile(); 
+      }
+    };
+    loadProfile();
   }, []);
 
   return (
     <div className="container py-6 px-10">
       <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-semibold">Profile</h1>
-        <Bell size={20} className="cursor-pointer mr-1"/>
+        <Bell size={20} className="cursor-pointer mr-1" />
       </div>
 
       <div className="space-y-6 grid grid-cols-2 gap-6">
@@ -401,8 +323,8 @@ export default function UserProfile() {
                   <Input
                     id="full_name"
                     className="mt-1.5"
-                    value={profileInfo.personalInfo.full_name}
-                    onChange={(e) => handleInputChange("personalInfo", "full_name", e.currentTarget.value) }
+                    value={profileInfo.full_name}
+                    onChange={(e) => handleInputChange("full_name", e.target.value)}
                   />
                 </div>
                 <div>
@@ -410,8 +332,8 @@ export default function UserProfile() {
                   <Input
                     id="email"
                     className="mt-1.5"
-                    value={profileInfo.personalInfo?.email || ""}
-                    onChange={(e) => handleInputChange("personalInfo", "email", e.target.value)}
+                    value={profileInfo.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                   />
                 </div>
                 <div>
@@ -419,8 +341,8 @@ export default function UserProfile() {
                   <Input
                     id="mobile"
                     className="mt-1.5"
-                    value={profileInfo.personalInfo?.mobile || ""}
-                    onChange={(e) => handleInputChange("personalInfo", "mobile", e.target.value)}
+                    value={profileInfo.mobile}
+                    onChange={(e) => handleInputChange("mobile", e.target.value)}
                   />
                 </div>
                 <div>
@@ -428,8 +350,8 @@ export default function UserProfile() {
                   <Input
                     id="role"
                     className="mt-1.5"
-                    value={profileInfo.personalInfo?.role || ""}
-                    onChange={(e) => handleInputChange("personalInfo", "role", e.target.value)}
+                    value={profileInfo.role}
+                    onChange={(e) => handleInputChange("role", e.target.value)}
                   />
                 </div>
               </div>
@@ -446,7 +368,7 @@ export default function UserProfile() {
                 id="bio"
                 className="min-h-[100px] resize-none"
                 value={profileInfo.bio}
-                onChange={(e) => handleInputChange("bio", "", e.target.value)}
+                onChange={(e) => handleInputChange("bio", e.target.value)}
               />
             </CardContent>
           </Card>
@@ -502,8 +424,8 @@ export default function UserProfile() {
                   <IoLogoLinkedin size={20} className="absolute left-2" />
                   <Input
                     id="linkedin"
-                    value={profileInfo.socialMedia?.linkedin || ""}
-                    onChange={(e) => handleInputChange("socialMedia", "linkedin", e.target.value)}
+                    value={profileInfo.linkedin}
+                    onChange={(e) => handleInputChange("linkedin", e.target.value)}
                     className="pl-10"
                   />
                 </div>
@@ -511,8 +433,8 @@ export default function UserProfile() {
                   <LuGithub size={20} className="absolute left-2" />
                   <Input
                     id="github"
-                    value={profileInfo.socialMedia?.github || ""}
-                    onChange={(e) => handleInputChange("socialMedia", "github", e.target.value)}
+                    value={profileInfo.github}
+                    onChange={(e) => handleInputChange("github", e.target.value)}
                     className="pl-10"
                   />
                 </div>
@@ -520,8 +442,8 @@ export default function UserProfile() {
                   <LuInstagram size={20} className="absolute left-2" />
                   <Input
                     id="instagram"
-                    value={profileInfo.socialMedia?.instagram || ""}
-                    onChange={(e) => handleInputChange("socialMedia", "instagram", e.target.value)}
+                    value={profileInfo.instagram}
+                    onChange={(e) => handleInputChange("instagram", e.target.value)}
                     className="pl-10"
                   />
                 </div>
@@ -544,7 +466,7 @@ export default function UserProfile() {
                         id={`school-${edu.id}`}
                         placeholder="Enter school name"
                         value={edu.school}
-                        onChange={(e) => handleInputChange("education", "school", e.target.value, index)}
+                        onChange={(e) => handleInputChange("education", e.target.value, index)}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -552,7 +474,7 @@ export default function UserProfile() {
                         <Label htmlFor={`degree-${edu.id}`}>Degree</Label>
                         <Select
                           value={edu.degree}
-                          onValueChange={(value) => handleInputChange("education", "degree", value, index)}
+                          onValueChange={(value) => handleInputChange("education", value, index)}
                         >
                           <SelectTrigger id={`degree-${edu.id}`}>
                             <SelectValue placeholder="Select degree" />
@@ -571,7 +493,7 @@ export default function UserProfile() {
                           type="number"
                           placeholder="YYYY"
                           value={edu.graduationYear}
-                          onChange={(e) => handleInputChange("education", "graduationYear", e.target.value, index)}
+                          onChange={(e) => handleInputChange("education", e.target.value, index)}
                         />
                       </div>
                     </div>
@@ -592,7 +514,7 @@ export default function UserProfile() {
           <CardContent className="p-6">
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Experience</h2>
-              {Array.isArray(profileInfo.education) && profileInfo.education.length > 0 ? (
+              {Array.isArray(profileInfo.experience) && profileInfo.experience.length > 0 ? (
                 profileInfo.experience.map((exp, index) => (
                   <div key={exp.id} className="grid gap-4">
                     <div className="grid gap-2">
@@ -601,7 +523,7 @@ export default function UserProfile() {
                         id={`company-${exp.id}`}
                         placeholder="Enter company name"
                         value={exp.company}
-                        onChange={(e) => handleInputChange("experience", "company", e.target.value, index)}
+                        onChange={(e) => handleInputChange("experience", e.target.value, index)}
                       />
                     </div>
                     <div className="grid gap-2">
@@ -610,7 +532,7 @@ export default function UserProfile() {
                         id={`position-${exp.id}`}
                         placeholder="Enter your position"
                         value={exp.position}
-                        onChange={(e) => handleInputChange("experience", "position", e.target.value, index)}
+                        onChange={(e) => handleInputChange("experience", e.target.value, index)}
                       />
                     </div>
                     <div className="grid grid-cols-2 gap-4">
@@ -620,7 +542,7 @@ export default function UserProfile() {
                           id={`startDate-${exp.id}`}
                           type="month"
                           value={exp.startDate}
-                          onChange={(e) => handleInputChange("experience", "startDate", e.target.value, index)}
+                          onChange={(e) => handleInputChange("experience", e.target.value, index)}
                         />
                       </div>
                       <div className="grid gap-2">
@@ -629,7 +551,7 @@ export default function UserProfile() {
                           id={`endDate-${exp.id}`}
                           type="month"
                           value={exp.endDate}
-                          onChange={(e) => handleInputChange("experience", "endDate", e.target.value, index)}
+                          onChange={(e) => handleInputChange("experience", e.target.value, index)}
                         />
                       </div>
                     </div>
@@ -639,13 +561,13 @@ export default function UserProfile() {
                         id={`description-${exp.id}`}
                         placeholder="Describe your role and achievements..."
                         value={exp.description}
-                        onChange={(e) => handleInputChange("experience", "description", e.target.value, index)}
+                        onChange={(e) => handleInputChange("experience", e.target.value, index)}
                       />
                     </div>
                   </div>
                 ))
               ) : (
-                <div className="text-gray-500">No education added yet.</div>
+                <div className="text-gray-500">No experience added yet.</div>
               )}
               <Button variant="outline" className="w-full" onClick={addExperience}>
                 + Add more experience
@@ -670,36 +592,36 @@ export default function UserProfile() {
                         className="hidden"
                         accept=".pdf,.doc,.docx"
                         onChange={(e) => {
-                          const file = e.target.files?.[0]
+                          const file = e.target.files?.[0];
                           if (file) {
                             setProfileInfo((prev) => ({
                               ...prev,
                               resume: file,
-                            }))
+                            }));
                           }
-                          handleResumeUpload(e)
+                          handleResumeUpload(e);
                         }}
                       />
                       Upload Resume
                     </label>
                   </Button>
-                  {(profileInfo.resume) && (
+                  {profileInfo.resume && (
                     <p className="text-sm text-muted-foreground mt-2 text-green-500">
                       Uploaded: <span className="font-medium">{profileInfo.resume.name}</span>
                     </p>
                   )}
-                  {(profileInfo.resumelink && !profileInfo.resume) && (
-                      <p className="text-sm text-muted-foreground mt-2 text-green-500">
-                        Uploaded: 
-                        <a 
-                          href={profileInfo.resumelink} 
-                          target="_blank" 
-                          rel="noopener noreferrer" 
-                          className="font-medium text-blue-500 hover:underline"
-                        >
-                          {profileInfo.resumelink}
-                        </a>
-                      </p>
+                  {profileInfo.resumelink && !profileInfo.resume && (
+                    <p className="text-sm text-muted-foreground mt-2 text-green-500">
+                      Uploaded:{" "}
+                      <a
+                        href={profileInfo.resumelink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-blue-500 hover:underline"
+                      >
+                        {profileInfo.resumelink}
+                      </a>
+                    </p>
                   )}
                 </div>
               </div>
@@ -714,6 +636,5 @@ export default function UserProfile() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

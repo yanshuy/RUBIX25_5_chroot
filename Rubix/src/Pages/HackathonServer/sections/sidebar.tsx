@@ -232,14 +232,15 @@ export default function Sidebar({
                                         <button
                                             title={item.description}
                                             key={item.id}
-                                            onClick={() =>
+                                            onClick={() =>{
+                                                // if(item.id === "team-voice"){navigate(`/dashboard/hackathons/room/${params.id}/${teamData.teamId}`)}
                                                 setActiveChannel({
                                                     id: item.id,
                                                     name: item.name,
                                                     category: category.category,
                                                     description:
                                                         item.description,
-                                                })
+                                                })}
                                             }
                                             className={`mb-1 flex w-full items-center justify-between rounded px-2 py-1.5 text-sm ${
                                                 activeChannel.id === item.id
