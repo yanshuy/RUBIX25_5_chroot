@@ -57,14 +57,17 @@ export default function Navbar() {
                     </Link>
                 </div>
                 <nav className="hidden space-x-6 md:flex">
-                    <Link to="/" className="font-medium hover:text-primary">
-                        Home
-                    </Link>
                     <Link
                         to="/discover"
                         className="font-medium hover:text-primary"
                     >
                         Explore
+                    </Link>
+                    <Link
+                        to="/leaderboard"
+                        className="font-medium hover:text-primary"
+                    >
+                        leaderboard
                     </Link>
                     <Link
                         to="/find-teammates"

@@ -61,9 +61,9 @@ export default function TeammateFinder() {
                     placeholder="Search by name, role, or skill..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full border border-slate-400 pl-12"
+                    className="h-12 w-full rounded-full border border-slate-400 pl-14"
                 />
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 transform text-gray-400" />
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <AnimatePresence>

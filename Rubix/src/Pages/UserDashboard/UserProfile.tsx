@@ -263,7 +263,7 @@ export default function UserProfile() {
           instagram: data.instagram || prev.instagram,
           education: data.education || prev.education,
           experience: data.experience || prev.experience,
-          resumelink: data.resumelink || prev.resumelink,
+          resumelink: data.resume || prev.resumelink,
         }));
       } catch (error) {
         toast({

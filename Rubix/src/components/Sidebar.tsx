@@ -1,7 +1,8 @@
 import { IconBaseProps } from "react-icons";
 import { Link, NavLink} from "react-router-dom";
-import { CodeXml, ListTodo, User } from "lucide-react";
+import { CodeXml, ListTodo, LogOut, Settings, User } from "lucide-react";
 import Logo from "../assets/logo.png";
+import { TbLogout2 } from "react-icons/tb";
 
 const navItems = [
   {
@@ -18,6 +19,16 @@ const navItems = [
     path: "/dashboard/organizehackathons",
     label: "Organize a Hackathon",  
     icon: (props: IconBaseProps) => <ListTodo {...props} />,
+  },
+  {
+    path: "/",
+    label: "Settings",  
+    icon: (props: IconBaseProps) => <Settings {...props} />,
+  },
+  {
+    path: "/",
+    label: "Logout",  
+    icon: (props: IconBaseProps) => <TbLogout2 {...props} />,
   },
 ];
 
@@ -66,7 +77,7 @@ const Sidebar = () => {
                             className={`m-[1px] h-[1.35rem] w-[1.35rem] ${isActive ? "text-blue-500" : ""}`}
                           />
                         </span>
-                        <span>{item.label}</span>
+                        <span onClick={() => {item.label == "Logout" ? localStorage.removeItem("accessToken") : ""}}>{item.label}</span>
                       </>
                     )}
                     {item.label === "Calendar" && (
