@@ -176,7 +176,7 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
             });
 
             if (!response.ok) throw new Error("Failed to submit interview");
-            if(response.ok) localStorage.setItem("interview", "true");
+            if (response.ok) localStorage.setItem("interview", "true");
             toast({
                 title: "Interview Submitted",
                 description: "Your responses have been saved successfully",
@@ -340,7 +340,10 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
                                 like to submit your responses?
                             </p>
                             <Button
-                                onClick={() => {submitInterview(); navigate(-2)} }
+                                onClick={() => {
+                                    submitInterview();
+                                    navigate(-2);
+                                }}
                                 className="w-full"
                             >
                                 <Send className="mr-2 h-4 w-4" /> Submit
