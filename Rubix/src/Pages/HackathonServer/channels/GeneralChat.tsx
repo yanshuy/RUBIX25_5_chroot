@@ -79,7 +79,7 @@ export default function GeneralChat({ id }: { id: string }) {
                             <div key={index} className="flex items-start gap-4">
                                 <Avatar>
                                     <AvatarFallback className="bg-slate-100">
-                                        {message?.message.substring(0, 2)}
+                                        {message?.user.substring(0, 2)}
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="flex-1">
