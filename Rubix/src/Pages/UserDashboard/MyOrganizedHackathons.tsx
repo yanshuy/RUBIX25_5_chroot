@@ -27,7 +27,7 @@ interface OrganizedHackathon {
 
 async function getMyHackathons() {
   const accessToken = localStorage.getItem("accessToken");
-  const response = await fetch(`${baseUrl}/api/core/hackathons/me`, {
+  const response = await fetch(`${baseUrl}/api/core/hackathons/me/`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -174,39 +174,55 @@ export function HackathonCard({ hackathon }: HackathonCardProps) {
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="relative h-48">
-        <img
-          src={hackathon.coverPhoto || "/placeholder.svg"}
-          alt={hackathon.hackathonName}
-          className="w-full h-full object-cover"
-        />
-        <Badge variant="secondary" className={`absolute top-4 right-4 ${getStatusColor(status)}`}>
-          {status.toUpperCase()}
-        </Badge>
-      </div>
-      <CardContent className="p-6">
-        <h3 className="text-xl font-semibold mb-2">{hackathon.hackathonName}</h3>
-        <p className="text-slate-600 line-clamp-2 mb-4">{hackathon.about}</p>
-        <div className="flex items-center gap-4 text-sm text-slate-500">
-          <div className="flex items-center gap-1">
-            <CalendarDays className="h-4 w-4" />
-            <span>{new Date(hackathon.hackathonBeginDate).toLocaleDateString()}</span>
+      <Card className="overflow-hidden transition-shadow hover:shadow-lg">
+          <div className="relative h-48">
+              <img
+                  src={hackathon.coverPhoto || "/placeholder.svg"}
+                  alt={hackathon.hackathonName}
+                  className="h-full w-full object-cover"
+              />
+              <Badge
+                  variant="secondary"
+                  className={`absolute right-4 top-4 ${getStatusColor(status)}`}
+              >
+                  {status.toUpperCase()}
+              </Badge>
+               
           </div>
-          {hackathon.totalParticipants && (
-            <div className="flex items-center gap-1">
-              <Users className="h-4 w-4" />
-              <span>{hackathon.totalParticipants} participants</span>
-            </div>
+          <CardContent className="p-6">
+              <h3 className="mb-2 text-xl font-semibold">
+                  {hackathon.hackathonName}
+              </h3>
+              <p className="mb-4 line-clamp-2 text-slate-600">
+                  {hackathon.about}
+              </p>
+              <div className="flex items-center gap-4 text-sm text-slate-500">
+                  <div className="flex items-center gap-1">
+                      <CalendarDays className="h-4 w-4" />
+                      <span>
+                          {new Date(
+                              hackathon.hackathonBeginDate,
+                          ).toLocaleDateString()}
+                      </span>
+                  </div>
+                  {hackathon.totalParticipants && (
+                      <div className="flex items-center gap-1">
+                          <Users className="h-4 w-4" />
+                          <span>
+                              {hackathon.totalParticipants} participants
+                          </span>
+                      </div>
+                  )}
+              </div>
+          </CardContent>
+          {hackathon.prizePool && (
+              <CardFooter className="flex items-center gap-2 bg-slate-50 px-6 py-4">
+                  <Trophy className="h-4 w-4 text-blue-600" />
+                  <span className="text-sm font-medium">
+                      ₹{hackathon.prizePool} in prizes
+                  </span>
+              </CardFooter>
           )}
-        </div>
-      </CardContent>
-      {hackathon.prizePool && (
-        <CardFooter className="px-6 py-4 bg-slate-50 flex items-center gap-2">
-          <Trophy className="h-4 w-4 text-blue-600" />
-          <span className="text-sm font-medium">₹{hackathon.prizePool} in prizes</span>
-        </CardFooter>
-      )}
-    </Card>
+      </Card>
   );
 }

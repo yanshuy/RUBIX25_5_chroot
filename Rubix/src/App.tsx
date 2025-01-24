@@ -28,6 +28,8 @@ import LandingPage from "./Pages/LandingPage/LandingPage";
 import Forum from "./Pages/forums/Forums";
 import TeamCommits from "./Pages/OrganizerDashboard/TeamCommits";
 import Leaderboard from "./Pages/LeaderBoard/LeaderBoard";
+import StatisticsPage from "./Pages/UserDashboard/StatisticsPage";
+
 const queryClient = new QueryClient();
 
 export const baseUrl = "https://natural-ape-severely.ngrok-free.app";
@@ -97,6 +99,11 @@ function App() {
                     <Route
                         path="/dashboard/organizehackathons"
                         element={<MyOrganizedHackathons />}
+                    />
+
+                    <Route
+                        path="/dashboard/statistics"
+                        element={<StatisticsPage />}
                     />
                     <Route
                         path="/dashboard/organizehackathons/new"

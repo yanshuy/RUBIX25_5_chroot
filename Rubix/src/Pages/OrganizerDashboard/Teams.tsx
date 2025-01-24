@@ -270,7 +270,7 @@ export default function Teams() {
                                     </TableHead>
                                     <TableHead>Team Name</TableHead>
                                     <TableHead>Team Lead</TableHead>
-                                    <TableHead>Domain Preference</TableHead>
+                                    <TableHead>AI Rating</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead>Actions</TableHead>
                                     <TableHead className="text-right">
@@ -289,7 +289,7 @@ export default function Teams() {
                                             {team.teamLead.name}
                                         </TableCell>
                                         <TableCell>
-                                            {team.domainPreference}
+                                            {team.interview_score}
                                         </TableCell>
                                         <TableCell>
                                             {getStatusBadge(team.status)}
