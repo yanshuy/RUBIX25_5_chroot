@@ -5,7 +5,7 @@ export default function FindTeammates() {
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-100">
             <main className="container mx-auto px-4 py-8">
                 <h1 className="mb-8 text-center text-4xl font-bold">
-                    Find Your Perfect Teammate
+                    Find Your Teammate
                 </h1>
                 <TeammateFinder />
             </main>

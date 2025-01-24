@@ -1,98 +1,57 @@
-"use client";
-
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { User, Code, Server, Palette, Zap, X } from "lucide-react";
+import { User, Mail, Trophy, Github, Linkedin, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "@/components/ui/dialog";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useQuery } from "@tanstack/react-query";
+import Loader from "../../components/Loader";
+import { baseUrl } from "../../App";
 
 interface Teammate {
-    id: number;
-    name: string;
+    email: string;
+    full_name: string;
+    github: string;
+    github_score: number;
+    linkedin: string;
+    resume: string | null;
     role: string;
     skills: string[];
-    avatar: string;
-    matchPercentage: number;
-    resume: string;
 }
 
-const teammates: Teammate[] = [
-    {
-        id: 1,
-        name: "Alice Johnson",
-        role: "Frontend Developer",
-        skills: ["React", "TypeScript", "Tailwind CSS"],
-        avatar: "/placeholder.svg?height=100&width=100",
-        matchPercentage: 95,
-        resume: "Alice is a passionate frontend developer with 5 years of experience...",
-    },
-    {
-        id: 2,
-        name: "Bob Smith",
-        role: "Backend Developer",
-        skills: ["Node.js", "Express", "MongoDB"],
-        avatar: "/placeholder.svg?height=100&width=100",
-        matchPercentage: 88,
-        resume: "Bob is an experienced backend developer specializing in Node.js...",
-    },
-    {
-        id: 3,
-        name: "Charlie Brown",
-        role: "UI/UX Designer",
-        skills: ["Figma", "Adobe XD", "Sketch"],
-        avatar: "/placeholder.svg?height=100&width=100",
-        matchPercentage: 82,
-        resume: "Charlie is a creative UI/UX designer with a keen eye for detail...",
-    },
-    {
-        id: 4,
-        name: "Diana Martinez",
-        role: "Full Stack Developer",
-        skills: ["React", "Node.js", "PostgreSQL"],
-        avatar: "/placeholder.svg?height=100&width=100",
-        matchPercentage: 91,
-        resume: "Diana is a versatile full stack developer with expertise in both frontend and backend...",
-    },
-];
+function getUsers() {
+    return fetch(`${baseUrl}/api/users`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+            "ngrok-skip-browser-warning": "69420",
+        },
+    }).then((res) => res.json());
+}
 
-const roleIcons = {
-    "Frontend Developer": <Code className="h-6 w-6 text-blue-500" />,
-    "Backend Developer": <Server className="h-6 w-6 text-green-500" />,
-    "UI/UX Designer": <Palette className="h-6 w-6 text-purple-500" />,
-    "Full Stack Developer": <Zap className="h-6 w-6 text-yellow-500" />,
-};
+function useUsers() {
+    return useQuery({
+        queryKey: ["users"],
+        queryFn: getUsers,
+    });
+}
 
 export default function TeammateFinder() {
+    const { data, isLoading } = useUsers();
     const [searchTerm, setSearchTerm] = useState("");
-    const [selectedTeammate, setSelectedTeammate] = useState<Teammate | null>(
-        null,
-    );
 
-    const filteredTeammates = teammates.filter(
-        (teammate) =>
-            teammate.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const filteredTeammates = data?.filter(
+        (teammate: Teammate) =>
+            teammate.full_name
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase()) ||
             teammate.role.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            teammate.skills.some((skill) =>
+            teammate.skills.some((skill: string) =>
                 skill.toLowerCase().includes(searchTerm.toLowerCase()),
             ),
     );
+
+    if (isLoading) return <Loader />;
 
     return (
         <div className="space-y-6">
@@ -102,82 +61,113 @@ export default function TeammateFinder() {
                     placeholder="Search by name, role, or skill..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full border border-slate-400 pl-10"
+                    className="w-full border border-slate-400 pl-12"
                 />
                 <User className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400" />
             </div>
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <AnimatePresence>
-                    {filteredTeammates.map((teammate) => (
+                    {filteredTeammates?.map((teammate: Teammate) => (
                         <motion.div
-                            key={teammate.id}
+                            key={teammate.email}
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: -20 }}
                             transition={{ duration: 0.3 }}
+                            className="h-full"
                         >
-                            <Card className="overflow-hidden">
-                                <CardHeader className="pb-2">
-                                    <div className="flex items-center justify-between">
-                                        <CardTitle className="text-xl">
-                                            {teammate.name}
-                                        </CardTitle>
-                                        <Badge variant="secondary">
-                                            {teammate.matchPercentage}% Match
-                                        </Badge>
-                                    </div>
-                                    <CardDescription className="flex items-center">
-                                        {roleIcons[teammate.role]}
-                                        <span className="ml-2">
-                                            {teammate.role}
-                                        </span>
-                                    </CardDescription>
+                            <Card className="h-full w-full max-w-md">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2">
+                                        <User className="h-5 w-5" />
+                                        {teammate.full_name}
+                                    </CardTitle>
+                                    <Badge
+                                        variant="secondary"
+                                        className="w-fit"
+                                    >
+                                        student
+                                    </Badge>
                                 </CardHeader>
-                                <CardContent>
-                                    <div className="flex flex-wrap gap-2">
+                                <CardContent className="space-y-4">
+                                    <div className="space-y-2">
+                                        <div className="flex items-center gap-2">
+                                            <Mail className="h-4 w-4 text-muted-foreground" />
+                                            <span className="text-sm">
+                                                {teammate.email}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Trophy className="h-4 w-4 text-muted-foreground" />
+                                            <span className="text-sm">
+                                                GitHub Score:{" "}
+                                                {teammate.github_score}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-wrap gap-1">
                                         {teammate.skills.map((skill, index) => (
                                             <Badge
                                                 key={index}
                                                 variant="outline"
                                             >
-                                                {skill}
+                                                {skill.replace(/[[\]']/g, "")}
                                             </Badge>
                                         ))}
                                     </div>
-                                </CardContent>
-                                <CardFooter className="flex justify-between">
-                                    <Dialog>
-                                        <DialogTrigger asChild>
+
+                                    <div className="flex gap-2">
+                                        {teammate.github && (
                                             <Button
                                                 variant="outline"
-                                                onClick={() =>
-                                                    setSelectedTeammate(
-                                                        teammate,
-                                                    )
-                                                }
+                                                size="sm"
+                                                asChild
                                             >
-                                                View Resume
+                                                <a
+                                                    href={teammate.github}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <Github className="mr-2 h-4 w-4" />
+                                                    GitHub
+                                                </a>
                                             </Button>
-                                        </DialogTrigger>
-                                        <DialogContent className="sm:max-w-[425px]">
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    {selectedTeammate?.name}
-                                                    &apos;s Resume
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    {selectedTeammate?.role}
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="mt-4">
-                                                <p>
-                                                    {selectedTeammate?.resume}
-                                                </p>
-                                            </div>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <Button>Connect</Button>
-                                </CardFooter>
+                                        )}
+                                        {teammate.linkedin && (
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                asChild
+                                            >
+                                                <a
+                                                    href={teammate.linkedin}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <Linkedin className="mr-2 h-4 w-4" />
+                                                    LinkedIn
+                                                </a>
+                                            </Button>
+                                        )}
+                                        {teammate.resume && (
+                                            <Button
+                                                variant="outline"
+                                                size="sm"
+                                                asChild
+                                            >
+                                                <a
+                                                    href={teammate.resume}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    <FileText className="mr-2 h-4 w-4" />
+                                                    Resume
+                                                </a>
+                                            </Button>
+                                        )}
+                                    </div>
+                                </CardContent>
                             </Card>
                         </motion.div>
                     ))}
