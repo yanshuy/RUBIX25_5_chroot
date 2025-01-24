@@ -28,25 +28,25 @@ export default function Navbar() {
         <nav className="hidden space-x-6 md:flex">
             <Link
                 to="/"
-                className="text-sm font-medium hover:text-primary"
+                className="font-medium hover:text-primary"
             >
                 Home
             </Link>
             <Link
                 to="/discover"
-                className="text-sm font-medium hover:text-primary"
+                className="font-medium hover:text-primary"
             >
                 Explore
             </Link>
             <Link
-                to="#schedule"
-                className="text-sm font-medium hover:text-primary"
+                to="/find-teammates"
+                className="font-medium hover:text-primary"
             >
-                Schedule
+                TeamUp
             </Link>
             <Link
                 to="/forum"
-                className="text-sm font-medium hover:text-primary"
+                className="font-medium hover:text-primary"
             >
                 Forum
             </Link>

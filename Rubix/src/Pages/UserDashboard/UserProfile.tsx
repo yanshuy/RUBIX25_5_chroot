@@ -233,7 +233,7 @@ export default function UserProfile() {
     const response = await fetch(`${baseUrl}/api/users/me/`, {
       method: "PATCH",
       headers: {
-        authorization: `Bearer ${accessToken}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: data,
     });
