@@ -25,6 +25,8 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import { baseUrl } from "../../App";
+import { useNavigate } from "react-router-dom";
 
 const MAX_FILE_SIZE = 5000000; // 5MB
 const ACCEPTED_IMAGE_TYPES = [
@@ -34,13 +36,14 @@ const ACCEPTED_IMAGE_TYPES = [
     "image/webp",
 ];
 
+// Updated schema with all fields marked as optional
 const projectSchema = z.object({
     title: z.string().min(2, {
         message: "Project title must be at least 2 characters.",
-    }),
+    }).optional(), // Mark as optional
     description: z.string().min(50, {
         message: "Project description must be at least 50 characters.",
-    }),
+    }).optional(), // Mark as optional
     githubUrl: z
         .string()
         .url({
@@ -48,25 +51,28 @@ const projectSchema = z.object({
         })
         .refine((url) => url.includes("github.com"), {
             message: "URL must be from GitHub.",
-        }),
+        })
+        .optional(), // Mark as optional
     demoUrl: z
         .string()
         .url({
             message: "Please enter a valid demo URL.",
         })
-        .optional(),
+        .optional(), // Already optional
     techStack: z.string().min(1, {
         message: "Please enter the technologies used.",
-    }),
+    }).optional(), // Mark as optional
     teamMembers: z.string().min(1, {
         message: "Please enter team member details.",
-    }),
+    }).optional(), // Mark as optional
 });
 
 export default function ProjectSubmission() {
     const [images, setImages] = useState<File[]>([]);
     const [uploading, setUploading] = useState(false);
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
+    const [running, setRunning] = useState(false); // State for the "Run" button
+    const navigate = useNavigate();
 
     const form = useForm<z.infer<typeof projectSchema>>({
         resolver: zodResolver(projectSchema),
@@ -117,6 +123,40 @@ export default function ProjectSubmission() {
         setPreviewUrls((prev) => prev.filter((_, i) => i !== index));
     };
 
+    const handleRun = async () => {
+        const githubUrl = form.getValues("githubUrl"); // Extract GitHub URL from the form
+
+        if (!githubUrl) {
+            alert("Please enter a valid GitHub URL.");
+            return;
+        }
+
+        try {
+            setRunning(true); // Set loading state
+            const response = await fetch(`${baseUrl}/api/core/run/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ github_url: `${githubUrl}.git` }), // Send GitHub URL in the body
+            });
+
+            if (!response.ok) {
+                throw new Error("Failed to trigger the run.");
+            }
+
+            const data = await response.json();
+            console.log("Run triggered successfully:", data);
+            alert("Run triggered successfully!");
+        } catch (error) {
+            console.error("Error triggering run:", error);
+            alert("Error triggering run. Please try again.");
+        } finally {
+            setRunning(false); // Reset loading state
+        }
+        setTimeout(()=>{navigate("https://toucan-driven-admittedly.ngrok-free.app/")})
+    };
+
     async function onSubmit(values: z.infer<typeof projectSchema>) {
         try {
             setUploading(true);
@@ -163,6 +203,9 @@ export default function ProjectSubmission() {
                                                 {...field}
                                             />
                                         </FormControl>
+                                        <FormDescription>
+                                            Optional: Provide a title for your project.
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -185,8 +228,8 @@ export default function ProjectSubmission() {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            Include your inspiration, challenges
-                                            faced, and future scope
+                                            Optional: Include your inspiration, challenges
+                                            faced, and future scope.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -210,6 +253,9 @@ export default function ProjectSubmission() {
                                                 />
                                             </div>
                                         </FormControl>
+                                        <FormDescription>
+                                            Optional: Link to your GitHub repository.
+                                        </FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -231,8 +277,8 @@ export default function ProjectSubmission() {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            Link to a live demo or video
-                                            demonstration
+                                            Optional: Link to a live demo or video
+                                            demonstration.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -253,8 +299,8 @@ export default function ProjectSubmission() {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            List the main technologies used in
-                                            your project
+                                            Optional: List the main technologies used in
+                                            your project.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -275,8 +321,8 @@ export default function ProjectSubmission() {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            List all team members and their
-                                            roles
+                                            Optional: List all team members and their
+                                            roles.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -333,6 +379,24 @@ export default function ProjectSubmission() {
                                     )}
                                 </div>
                             </div>
+
+                            {/* Run Button */}
+                            <Button
+                                type="button"
+                                onClick={handleRun}
+                                disabled={running || !form.getValues("githubUrl")}
+                                className="w-full"
+                                size="lg"
+                            >
+                                {running ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Running...
+                                    </>
+                                ) : (
+                                    "Run Project"
+                                )}
+                            </Button>
 
                             {/* Submit Button */}
                             <Button
