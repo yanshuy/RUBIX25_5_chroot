@@ -25,9 +25,10 @@ import {
 import Logo from "../../assets/Logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { IoPersonCircleSharp } from "react-icons/io5";
-import { useState } from "react"; // Import useState for managing dropdown state
+import { useEffect, useState } from "react"; // Import useState for managing dropdown state
 import LandingPageFeature from "../../components/LandingPageFeature";
 import Navbar from "../../components/Navbar";
+import { baseUrl } from "../../App";
 
 const fadeIn = {
     initial: { opacity: 0, y: 20 },
@@ -166,7 +167,7 @@ export default function LandingPage() {
                                 <Button
                                     size="lg"
                                     variant="outline"
-                                    className="h-12 px-8"
+                                    className="ml-6 h-12 px-8"
                                 >
                                     Learn More
                                 </Button>

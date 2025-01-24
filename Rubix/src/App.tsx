@@ -15,6 +15,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { OrganizeHackathonForm } from "./Pages/UserDashboard/OrganizeHackathonForm";
 import Interview from "./Pages/Interview/Interview";
 
+
 import MyOrganizedHackathons from "./Pages/UserDashboard/MyOrganizedHackathons";
 import OrganizerDashboardLayout from "./layout/OrganizerDashboardLayout";
 import Teams from "./Pages/OrganizerDashboard/Teams";
@@ -26,6 +27,7 @@ import ProjectSubmission from "./Pages/UserDashboard/ProjectSubmission";
 import ProjectsPage from "./Pages/Projects/Project";
 import LandingPage from "./Pages/LandingPage/LandingPage";
 import Forum from "./Pages/forums/Forums";
+import TeamCommits from "./Pages/OrganizerDashboard/TeamCommits";
 const queryClient = new QueryClient();
 
 export const baseUrl = "https://live-merely-drum.ngrok-free.app";
@@ -106,11 +108,16 @@ function App() {
                         path="/organizerdashboard/teams/:id"
                         element={<Teams />}
                     />
-
                     <Route
                         path="/organizerdashboard/projects/:id"
                         element={<SubmittedProjects />}
                     />
+
+                    <Route
+                        path="/organizerdashboard/teamscommits/:id"
+                        element={<TeamCommits />}
+                    />
+
                     <Route
                         path="/organizerdashboard/result/:id"
                         element={<Result />}
