@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
     Search,
     TrendingUp,
@@ -211,12 +211,13 @@ const Sidebar: React.FC = () => (
             </h3>
             <ul className="space-y-4">
                 {topContributors.map((contributor) => (
-                    <li key={contributor.id} className="flex items-center">
-                        <img
-                            src={contributor.avatar}
-                            alt={contributor.name}
-                            className="mr-3 h-10 w-10 rounded-full object-cover p-2"
-                        />
+                    <li
+                        key={contributor.id}
+                        className="flex items-center gap-2"
+                    >
+                        <div className="grid size-9 place-items-center rounded-full bg-blue-50">
+                            {contributor.name.substring(0, 2).toUpperCase()}
+                        </div>
                         <div>
                             <div className="font-medium text-gray-700">
                                 {contributor.name}
@@ -298,9 +299,9 @@ export default function Forum() {
                     <div className="ml-1 h-[3.2rem] cursor-pointer p-1">
                         <Link to={"/"}>
                             <img
-                                src="../../src/assets/Logo1.png"
+                                src="../../src/assets/Logo.png"
                                 alt="Logo"
-                                className="h-[100%] object-cover"
+                                className="h-[100%] scale-125 object-cover"
                             />
                         </Link>
                     </div>
@@ -428,7 +429,7 @@ export default function Forum() {
                 onCreateThread={handleCreateThread}
                 categories={categories}
             />
-            <ChatbotButton />
+            {/* <ChatbotButton /> */}
         </div>
     );
 }

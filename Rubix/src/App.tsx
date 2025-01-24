@@ -70,7 +70,8 @@ function App() {
                         element={<ProjectSubmission />}
                     ></Route>
 
-                    <Route path="/project" element={<ProjectsPage />}></Route>
+                    {/* <Route path="/project" element={<ProjectsPage />}></Route> */}
+                    <Route path="/forum" element={<Forum />}></Route>
                 </Route>
 
                 <Route path="dashboard" element={<DashboardLayout />}>
@@ -115,7 +116,6 @@ function App() {
                         element={<Result />}
                     />
                 </Route>
-                <Route path="/forums" element={<Forum />}></Route>
             </Routes>
         </QueryClientProvider>
     );
