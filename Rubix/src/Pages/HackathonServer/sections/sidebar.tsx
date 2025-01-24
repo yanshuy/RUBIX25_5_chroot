@@ -135,6 +135,8 @@ export default function Sidebar({
     const params = useParams();
     const navigate = useNavigate();
 
+    console.log(teamData);
+
     return (
         <div className="flex w-64 flex-col border-r bg-white">
             <div className="flex items-center gap-2 border-b p-4">

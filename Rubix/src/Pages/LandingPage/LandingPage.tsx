@@ -298,7 +298,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Features Section */}
-                <section id="features" className=" px-8 py-24">
+                <section id="features" className="px-8 py-24">
                     <div className="text-center">
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                             Everything You Need to Succeed
@@ -446,7 +446,7 @@ export default function LandingPage() {
 
             {/* Footer */}
             <footer className="border-t bg-slate-50 pl-8">
-                <div className=" py-12">
+                <div className="py-12">
                     <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
                         <div className="space-y-4">
                             <div className="flex items-center space-x-2">

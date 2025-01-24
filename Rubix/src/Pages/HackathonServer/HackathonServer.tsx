@@ -134,8 +134,7 @@ export default function HackathonServer() {
                     <div className="basis-full overflow-y-scroll">
                         {renderChannel()}
                     </div>
-
-                    <MembersList />
+                    {teamData && <MembersList teamData={teamData} />}
                 </div>
             </div>
         </div>
