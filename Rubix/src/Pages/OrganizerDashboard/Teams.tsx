@@ -29,6 +29,7 @@ import {
 import Notification from "../../components/Notification";
 import { baseUrl } from "../../App";
 import { useParams } from "react-router-dom";
+import { Input } from "../../components/ui/input";
 
 // Types
 interface TeamMember {
@@ -109,16 +110,109 @@ export default function Teams() {
     const [activeTab, setActiveTab] = useState("all");
     const [notification, setNotification] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true); // Loading state
+    const [searchTerm, setSearchTerm] = useState(""); // Search term state
+    const [cutOffRating, setCutOffRating] = useState(""); 
     const params = useParams();
     const id = params.id;
 
+    const handleCutOffRating = async () => {
+        const accessToken = localStorage.getItem("accessToken");
+        console.log("Cut off rating:", cutOffRating);
+
+        setTeams(prev=>prev.map((team)=>(
+            team.interview_score<cutOffRating?{...team , status:"Rejected"}:team
+        )))
+
+        teams.map(async (team) => {
+            if (team.interview_score <cutOffRating) {
+                try {
+                    const response = await fetch(
+                        `${baseUrl}/api/core/teams/${team.id}/reject/`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${accessToken}`,
+                                "ngrok-skip-browser-warning": "true",
+                            },
+                        },
+                    );
+
+                    if (!response.ok) {
+                        throw new Error("Failed to shortlist teams");
+                    }
+
+                    const data = await response.json();
+                    console.log("API Response:", data);
+                    setNotification("Teams have been shortlisted");
+                } catch (error) {
+                    console.error("Error shortlisting teams:", error);
+                    setNotification("Failed to shortlist teams");
+                }
+            } else {
+                try {
+                    const response = await fetch(
+                        `${baseUrl}/api/core/teams/${team.id}/reject/`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                Authorization: `Bearer ${accessToken}`,
+                                "ngrok-skip-browser-warning": "true",
+                            },
+                        },
+                    );
+
+                    if (!response.ok) {
+                        throw new Error("Failed to reject teams");
+                    }
+
+                    const data = await response.json();
+                    console.log("API Response:", data);
+                    setNotification("Teams have been rejected");
+                } catch (error) {
+                    console.error("Error rejecting teams:", error);
+                    setNotification("Failed to reject teams");
+                }
+            }
+        });
+        
+    }
+
+    
+
     const filteredTeams = Array.isArray(teams)
         ? teams.filter((team) => {
-              if (activeTab === "all") return true;
-              if (activeTab === "shortlisted") return team.status === "shortlisted";
-              if (activeTab === "Rejected") return team.status === "Rejected";
-              if (activeTab === "pending") return team.status === "pending";
-              return true;
+              if (activeTab === "all" && !searchTerm) return true;
+              if (
+                  activeTab === "shortlisted" &&
+                  team.status === "shortlisted"
+              ) {
+                  return searchTerm
+                      ? team.teamName
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase())
+                      : true;
+              }
+              if (activeTab === "Rejected" && team.status === "Rejected") {
+                  return searchTerm
+                      ? team.teamName
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase())
+                      : true;
+              }
+              if (activeTab === "pending" && team.status === "pending") {
+                  return searchTerm
+                      ? team.teamName
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase())
+                      : true;
+              }
+              return searchTerm
+                  ? team.teamName
+                        .toLowerCase()
+                        .includes(searchTerm.toLowerCase())
+                  : false;
           })
         : [];
 
@@ -250,6 +344,31 @@ export default function Teams() {
             <h1 className="mb-10 text-center text-4xl font-bold text-slate-900">
                 TEAMS
             </h1>
+            <div className="mb-4 flex justify-between">
+                <div className="teamSearch">
+                    <Input
+                        type="text"
+                        placeholder="Search by team name..."
+                        className="min-w-52"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+                <div className="cutoff flex">
+                    <button
+                    onClick={handleCutOffRating}
+                    className="rounded-md bg-slate-900 px-4 py-1 text-white">
+                        Set
+                    </button>
+                    <Input
+                        type="text"
+                        placeholder="Cut off Rating"
+                        className="ml-2 max-w-28"
+                        value={cutOffRating}
+                        onChange={(e) => setCutOffRating(e.target.value)}
+                    />
+                </div>
+            </div>
             <Tabs
                 defaultValue="all"
                 className="w-full"
@@ -258,7 +377,7 @@ export default function Teams() {
                 <TabsList className="mb-3 grid w-full grid-cols-4">
                     <TabsTrigger value="all">All Teams</TabsTrigger>
                     <TabsTrigger value="shortlisted">Shortlisted</TabsTrigger>
-                    <TabsTrigger value="Rejected">Not Rejected</TabsTrigger>
+                    <TabsTrigger value="Rejected">Rejected</TabsTrigger>
                     <TabsTrigger value="pending">Pending Review</TabsTrigger>
                 </TabsList>
 
@@ -415,10 +534,10 @@ export default function Teams() {
                                         </div>
                                         <Button variant="outline" asChild>
                                             <a
-                                                href={
-                                                    `${baseUrl}${selectedTeam?.teamLead
-                                                        .resumeLink}`
-                                                }
+                                                href={`${baseUrl}${
+                                                    selectedTeam?.teamLead
+                                                        .resumeLink
+                                                }`}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                             >
@@ -469,7 +588,7 @@ export default function Teams() {
                                             </div>
                                             <Button variant="outline" asChild>
                                                 <a
-                                                    href={member.resumeLink}
+                                                    href={`${baseUrl}${member.resumeLink}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                 >
