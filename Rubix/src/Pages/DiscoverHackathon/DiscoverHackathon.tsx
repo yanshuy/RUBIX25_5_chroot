@@ -6,6 +6,7 @@ import { SiteHeader } from "./sections/SiteHeader";
 import { useQuery } from "@tanstack/react-query";
 import { baseUrl } from "../../App";
 import Loader from "../../components/Loader";
+import Navbar from "../../components/Navbar";
 
 export interface Hackathon {
     id: string;
@@ -108,8 +109,8 @@ export default function DiscoverHackathon() {
 
     return (
         <div className="min-h-screen">
-            <SiteHeader />
-            <main>
+            <Navbar />
+            <main className="mt-24">
                 <HeroSection
                     hackathons={hackathons}
                     setHackathons={setFilteredHackathons}
