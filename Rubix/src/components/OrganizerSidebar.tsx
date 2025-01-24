@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import { Users, Github, Folders, Trophy } from "lucide-react";
 import Logo from "../assets/logo.png";
 import TeamCommits from "../Pages/OrganizerDashboard/TeamCommits";
+import { baseUrl } from "../App";
 
 
 const navItems = [
@@ -44,11 +45,11 @@ const OrganizerSidebar = () => {
                 <div>
                     <div className="mb-4 mt-2 h-24 cursor-pointer border-b border-slate-300 pb-3 pl-5">
                         <Link to={"/"}>
-                        <img
-                            src={Logo}
-                            alt="Logo"
-                            className="h-[100%] object-cover"
-                        />
+                            <img
+                                src={Logo}
+                                alt="Logo"
+                                className="h-[100%] object-cover"
+                            />
                         </Link>
                     </div>
                     <div className="relative flex flex-col gap-2">
@@ -82,6 +83,14 @@ const OrganizerSidebar = () => {
                                 )}
                             </NavLink>
                         ))}
+
+                        <button className="mt-4 rounded-md bg-black py-2 text-white">
+                            <Link
+                                to={`http://localhost:5173/hackathon/${id}/server`}
+                            >
+                                To Go Server
+                            </Link>
+                        </button>
                     </div>
                 </div>
             </div>
