@@ -43,6 +43,10 @@ function App() {
                     <Route path="/user/register" element={<UserRegister />} />
                     <Route path="/discover" element={<DiscoverHackathon />} />
                     <Route
+                        path="/leaderboard"
+                        element={<Leaderboard />}
+                    ></Route>
+                    <Route
                         path="/hackathon/:id/register"
                         element={<HackathonRegister />}
                     />
@@ -74,10 +78,6 @@ function App() {
 
                     {/* <Route path="/project" element={<ProjectsPage />}></Route> */}
                     <Route path="/forum" element={<Forum />}></Route>
-                    <Route
-                        path="/leaderboard"
-                        element={<Leaderboard />}
-                    ></Route>
                 </Route>
 
                 <Route path="dashboard" element={<DashboardLayout />}>

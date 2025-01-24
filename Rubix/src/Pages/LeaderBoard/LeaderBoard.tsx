@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/card";
 import { Trophy } from "lucide-react";
 import { useLeaderboardData } from "../../hooks/useLeaderBoardData";
+import Navbar from "../../components/Navbar";
 
 export default function Leaderboard() {
     const { leaderboardData, searchTerm, setSearchTerm } = useLeaderboardData();

@@ -67,7 +67,7 @@ export default function Navbar() {
                         to="/leaderboard"
                         className="font-medium hover:text-primary"
                     >
-                        leaderboard
+                        Leaderboard
                     </Link>
                     <Link
                         to="/find-teammates"
