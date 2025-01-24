@@ -7,6 +7,8 @@ import useAuth from "../../hooks/useAuth";
 // import { useLogin } from "../../context/LoginContext";
 // import { baseURL } from "../../App";
 import loginImage from "../../assets/authImage.png"
+import { baseUrl } from "../../App";
+
 
 const UserLogin = () => {
 //   const { isLoggedIn, setIsLoggedIn } = useLogin();
@@ -28,7 +30,7 @@ const UserLogin = () => {
         password,
     };
 
-    const response = await fetch("https://live-merely-drum.ngrok-free.app/api/token/", {
+    const response = await fetch(`${baseUrl}/api/token/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",

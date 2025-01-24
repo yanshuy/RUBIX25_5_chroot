@@ -35,7 +35,8 @@ export function TeamHeader({
                         onClick={() => {
                             console.log("Update Details");
                             onUploadDetails();
-                            navigate(`/hackathon/${params.id}/info`);
+                            // navigate(`/hackathon/${params.id}/info`);
+                            navigate("/");
                         }}
                     >
                         Update Details

@@ -1,6 +1,13 @@
 import { IconBaseProps } from "react-icons";
 import { Link, NavLink } from "react-router-dom";
-import { CodeXml, ListTodo, LogOut, Settings, User } from "lucide-react";
+import {
+    CodeXml,
+    ListTodo,
+    LogOut,
+    Settings,
+    MountainSnow,
+    User,
+} from "lucide-react";
 import Logo from "../assets/logo.png";
 import { TbLogout2 } from "react-icons/tb";
 
@@ -19,6 +26,11 @@ const navItems = [
         path: "/dashboard/organizehackathons",
         label: "Organize a Hackathon",
         icon: (props: IconBaseProps) => <ListTodo {...props} />,
+    },
+    {
+        path: "/dashboard/statistics",
+        label: "Hacker’s Journey",
+        icon: (props: IconBaseProps) => <MountainSnow {...props} />,
     },
     {
         path: "/",

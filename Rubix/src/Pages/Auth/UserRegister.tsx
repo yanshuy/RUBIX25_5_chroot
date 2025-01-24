@@ -10,7 +10,7 @@ import useAuth from "../../hooks/useAuth";
 const UserRegister: React.FC = () => {
   const {auth , setAuth}=useAuth();
   const [formData, setFormData] = useState({
-    name: "",
+    full_name: "",
     email: "",
     password: "",
   });
@@ -28,14 +28,16 @@ const UserRegister: React.FC = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
+    console.log(formData);
+    
 
     try {
-      const response = await fetch(`${baseUrl}api/register/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
+      const response = await fetch(`${baseUrl}/api/users/`, {
+          method: "POST",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
       });
 
       if (response.status === 201) {
@@ -46,7 +48,7 @@ const UserRegister: React.FC = () => {
         });
         console.log(auth);
         
-        navigate("/");
+        navigate("/user/login");
       } else {
         const errorData = await response.json();
         setError(errorData.message || "Registration failed. Please try again.");
@@ -75,9 +77,9 @@ const UserRegister: React.FC = () => {
               </label>
               <input
                 type="text"
-                name="name"
+                name="full_name"
                 placeholder="Full Name"
-                value={formData.name}
+                value={formData.full_name}
                 onChange={handleInputChange}
                 className="rounded-md border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
