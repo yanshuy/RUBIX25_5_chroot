@@ -18,17 +18,21 @@ const members = [
         ],
     },
     {
-        category: "Participants",
-        users: [
-            { name: "Alex Kumar", status: "online", role: "Participant" },
-            { name: "Lisa Park", status: "online", role: "Participant" },
-            { name: "Tom Chen", status: "offline", role: "Participant" },
-            { name: "Maria Garcia", status: "online", role: "Participant" },
-        ],
+        category: "Teammates",
+        users: [],
     },
 ];
 
-export default function MembersList() {
+export default function MembersList({ teamData }) {
+    console.log(teamData);
+
+    members[2].users =
+        teamData?.teamDetails.members.map((member) => ({
+            ...member,
+            status: "online",
+        })) ?? [];
+
+    console.log(members, teamData);
     return (
         <div className="bg-slate-2s00 w-60">
             <ScrollArea className="h-full">
