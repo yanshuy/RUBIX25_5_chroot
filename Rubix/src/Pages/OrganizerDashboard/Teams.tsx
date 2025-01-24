@@ -108,34 +108,55 @@ export default function Teams() {
     const [selectedTeam, setSelectedTeam] = useState<Team | null>(null);
     const [activeTab, setActiveTab] = useState("all");
     const [notification, setNotification] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true); // Loading state
     const params = useParams();
     const id = params.id;
 
-    const filteredTeams = teams.filter((team) => {
-        if (activeTab === "all") return true;
-        if (activeTab === "shortlisted") return team.status === "shortlisted";
-        if (activeTab === "Rejected") return team.status === "Rejected";
-        if (activeTab === "pending") return team.status === "pending";
-        return true;
-    });
+    const filteredTeams = Array.isArray(teams)
+        ? teams.filter((team) => {
+              if (activeTab === "all") return true;
+              if (activeTab === "shortlisted") return team.status === "shortlisted";
+              if (activeTab === "Rejected") return team.status === "Rejected";
+              if (activeTab === "pending") return team.status === "pending";
+              return true;
+          })
+        : [];
 
     const fetchData = async () => {
+        setIsLoading(true);
         const accessToken = localStorage.getItem("accessToken");
-        const response = await fetch(
-            `${baseUrl}/api/core/hackathons/${id}/teams`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`,
-                    "ngrok-skip-browser-warning": "true",
+        try {
+            const response = await fetch(
+                `${baseUrl}/api/core/hackathons/${id}/teams`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${accessToken}`,
+                        "ngrok-skip-browser-warning": "true",
+                    },
                 },
-            },
-        );
-        const data = await response.json();
-        console.log(data);
+            );
 
-        setTeams(data);
+            if (!response.ok) {
+                throw new Error("Failed to fetch teams");
+            }
+
+            const data = await response.json();
+            console.log("API Response:", data);
+
+            if (Array.isArray(data)) {
+                setTeams(data);
+            } else {
+                console.error("API response is not an array:", data);
+                setTeams([]);
+            }
+        } catch (error) {
+            console.error("Error fetching teams:", error);
+            setTeams([]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     useEffect(() => {
