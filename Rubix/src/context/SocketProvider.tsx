@@ -17,7 +17,7 @@ interface SocketProviderProps {
 }
 
 export const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
-  const socket = useMemo(() => io("http://localhost:8000"), []);
+  const socket = useMemo(() => io("https://raahi-socket.onrender.com/"), []);
 
   return (
     <SocketContext.Provider value={socket}>
