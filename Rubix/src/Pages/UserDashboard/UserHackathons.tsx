@@ -164,7 +164,7 @@ export default function UserHackathons() {
         <div className="bg-gray-100 rounded-t-lg">
           <div className="grid grid-cols-12 gap-4 p-4 text-sm text-gray-500">
             <div className="col-span-1">#</div>
-            <div className="col-span-7">Hackathon</div>
+            <div className="col-span-5">Hackathon</div>
             <div className="col-span-4">Status</div>
           </div>
         </div>
@@ -177,9 +177,14 @@ export default function UserHackathons() {
               <Link to={`/dashboard/hackathons/${hackathon.id}`} key={hackathon.id} className="block">
                 <div className="grid grid-cols-12 gap-4 p-4 items-center hover:bg-gray-50 cursor-pointer">
                   <div className="col-span-1 text-gray-500">{index + 1}.</div>
-                  <div className="col-span-7 font-medium">{hackathon.hackathonName}</div>
-                  <div className="col-span-3">
+                  <div className="col-span-5 font-medium">{hackathon.hackathonName}</div>
+                  <div className="col-span-4">
                     <StatusBadge status={hackathon.participationStatus} />
+                  </div>
+                  <div className="col-span-1">
+                    <Link to={`/hackathon/${hackathon.id}/interview`}>
+                      <Button className={hackathon.participationStatus == "pending" ? "" : "hidden"} disabled={localStorage.getItem("interview")}>{localStorage.getItem("interview") ? "Interview Taken" : "Take Interview"}</Button>
+                    </Link>
                   </div>
                   <div className="col-span-1 flex justify-end">
                     <ChevronRight className="h-5 w-5 text-gray-400" />

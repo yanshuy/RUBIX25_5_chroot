@@ -9,7 +9,7 @@ import { Mic, MicOff, Video, VideoOff, Send, Volume2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
 import { useTeamData } from "../HackathonServer/HackathonServer";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { baseUrl } from "../../App";
 
 interface Question {
@@ -38,6 +38,7 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
     const { toast } = useToast();
     const params = useParams();
     const { data } = useTeamData(params.id ?? "1");
+    const navigate = useNavigate();
 
     // Initialize video stream
     useEffect(() => {
@@ -175,7 +176,7 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
             });
 
             if (!response.ok) throw new Error("Failed to submit interview");
-
+            if(response.ok) localStorage.setItem("interview", "true");
             toast({
                 title: "Interview Submitted",
                 description: "Your responses have been saved successfully",
@@ -339,7 +340,7 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
                                 like to submit your responses?
                             </p>
                             <Button
-                                onClick={submitInterview}
+                                onClick={() => {submitInterview(); navigate(-2)} }
                                 className="w-full"
                             >
                                 <Send className="mr-2 h-4 w-4" /> Submit

@@ -83,20 +83,20 @@ export default function Navbar() {
                                 </li>
                                 <li>
                                     <Link
-                                        to="/dashboard/hackathons"
-                                        className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700"
-                                    >
-                                        <TrophyIcon className="mr-2 h-4 w-4" />
-                                        My Hackathons
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link
                                         to="/organizerdashboard"
                                         className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700"
                                     >
                                         <Calendar className="mr-2 h-4 w-4" />
                                         Organizer Dashboard
+                                    </Link>
+                                </li>
+                                <li>
+                                    <Link
+                                        to="/dashboard/hackathons"
+                                        className="flex items-center px-4 py-2 text-sm text-gray-200 hover:bg-gray-700"
+                                    >
+                                        <TrophyIcon className="mr-2 h-4 w-4" />
+                                        My Hackathons
                                     </Link>
                                 </li>
                                 <li>
