@@ -13,6 +13,9 @@ import {
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { Channel } from "../HackathonServer";
+import { IoBackspace, IoExit } from "react-icons/io5";
+import { TbDoorExit } from "react-icons/tb";
+import { useNavigate, useParams } from "react-router-dom";
 
 interface SidebarProps {
     activeChannel: Channel;
@@ -129,9 +132,18 @@ export default function Sidebar({
         },
     ];
 
+    const params = useParams();
+    const navigate = useNavigate();
+
     return (
         <div className="flex w-64 flex-col border-r bg-white">
-            <div className="border-b p-4">
+            <div className="flex items-center gap-2 border-b p-4">
+                <IoExit
+                    className="h-6 w-6 rotate-180 text-primary"
+                    onClick={() =>
+                        navigate(`/dashboard/hackathons/${params.id}`)
+                    }
+                />
                 <h1 className="text-xl font-bold text-primary">
                     {!data ? (
                         <div className="h-[28px] w-full rounded-full bg-slate-100"></div>
@@ -157,7 +169,6 @@ export default function Sidebar({
                                             name: item.name,
                                             category: category.category,
                                             description: item.description,
-                                            unreadCount: item.unreadCount,
                                         })
                                     }
                                     className={`mb-1 flex w-full items-center justify-between rounded px-2 py-1.5 text-sm ${
@@ -213,7 +224,7 @@ export default function Sidebar({
                     {teamData ? (
                         <div>
                             <h2 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-800">
-                                TEAM {teamData.teamDetails.name}
+                                TEAM {teamData.teamDetails.teamName}
                             </h2>
                             {teamChannels.map((category) => (
                                 <div key={category.category}>

@@ -15,15 +15,13 @@ interface Message {
 }
 
 export default function GeneralChat({ id }: { id: string }) {
-    const { auth } = useAuth();
-    console.log(auth);
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [socket, setSocket] = useState<WebSocket | null>(null);
 
     useEffect(() => {
         const ws = new WebSocket(
-            `ws://live-merely-drum.ngrok-free.app/ws/hackathons/${id}/general/`,
+            `ws://live-merely-drum.ngrok-free.app/ws/hackathons/${id}/general/?token=${localStorage.getItem("accessToken")}`,
         );
 
         ws.onopen = () => {
@@ -53,7 +51,7 @@ export default function GeneralChat({ id }: { id: string }) {
         return () => {
             ws.close();
         };
-    }, [auth.accessToken]);
+    }, []);
 
     const sendMessage = (e: React.FormEvent) => {
         e.preventDefault();
