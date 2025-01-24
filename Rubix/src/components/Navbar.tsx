@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "./ui/button";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { Calendar, LayoutDashboard, LogOut, TrophyIcon } from "lucide-react";
-import Logo from "../assets/logo.png";
+import Logo from "../assets/Logo.png";
 import { baseUrl } from "../App";
 
 export default function Navbar() {
