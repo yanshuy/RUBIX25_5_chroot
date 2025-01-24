@@ -44,7 +44,7 @@ interface Team {
     teamName: string;
     teamLead: TeamMember;
     members: TeamMember[];
-    domainPreference: string;
+    interview_score: string;
     status: "shortlisted" | "pending" | "Rejected";
 }
 
@@ -60,6 +60,7 @@ const initialTeams: Team[] = [
             githubLink: "https://github.com/johndoe",
             resumeLink: "/resumes/john-doe.pdf",
         },
+        interview_score: "4.5",
         members: [
             {
                 name: "Jane Smith",
@@ -76,7 +77,6 @@ const initialTeams: Team[] = [
                 resumeLink: "/resumes/mike-johnson.pdf",
             },
         ],
-        domainPreference: "AI/ML",
         status: "shortlisted",
     },
     {
@@ -89,6 +89,7 @@ const initialTeams: Team[] = [
             githubLink: "https://github.com/sarahwilson",
             resumeLink: "/resumes/sarah-wilson.pdf",
         },
+        interview_score: "4.2",
         members: [
             {
                 name: "Tom Brown",
@@ -98,7 +99,6 @@ const initialTeams: Team[] = [
                 resumeLink: "/resumes/tom-brown.pdf",
             },
         ],
-        domainPreference: "Web3",
         status: "pending",
     },
 ];
@@ -169,37 +169,36 @@ export default function Teams() {
     ) => {
         const accessToken = localStorage.getItem("accessToken");
 
-        if (newStatus === "shortlisted") {
-            try {
-                const response = await fetch(
-                    `${baseUrl}/api/core/teams/${teamId}/shortlist/`,
-                    {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/json",
-                            Authorization: `Bearer ${accessToken}`,
-                        },
-                    },
-                );
+        try {
+            let endpoint = "";
+            let method = "POST";
 
-                if (!response.ok) {
-                    throw new Error("Failed to shortlist team");
-                }
-
-                setTeams((prevTeams) =>
-                    prevTeams.map((team) =>
-                        team.id === teamId
-                            ? { ...team, status: newStatus }
-                            : team,
-                    ),
-                );
-
-                setNotification("Team has been shortlisted");
-            } catch (error) {
-                console.error("Error shortlisting team:", error);
-                setNotification("Failed to shortlist team");
+            switch (newStatus) {
+                case "shortlisted":
+                    endpoint = `${baseUrl}/api/core/teams/${teamId}/shortlist/`;
+                    break;
+                case "Rejected":
+                    endpoint = `${baseUrl}/api/core/teams/${teamId}/reject/`;
+                    break;
+                case "pending":
+                    endpoint = `${baseUrl}/api/core/teams/${teamId}/pending/`;
+                    break;
+                default:
+                    throw new Error("Invalid status");
             }
-        } else {
+
+            const response = await fetch(endpoint, {
+                method,
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${accessToken}`,
+                },
+            });
+
+            if (!response.ok) {
+                throw new Error(`Failed to update team status to ${newStatus}`);
+            }
+
             setTeams((prevTeams) =>
                 prevTeams.map((team) =>
                     team.id === teamId ? { ...team, status: newStatus } : team,
@@ -213,6 +212,9 @@ export default function Teams() {
             };
 
             setNotification(statusMessages[newStatus]);
+        } catch (error) {
+            console.error(`Error updating team status to ${newStatus}:`, error);
+            setNotification(`Failed to update team status to ${newStatus}`);
         }
     };
 
@@ -414,8 +416,8 @@ export default function Teams() {
                                         <Button variant="outline" asChild>
                                             <a
                                                 href={
-                                                    selectedTeam?.teamLead
-                                                        .resumeLink
+                                                    `${baseUrl}${selectedTeam?.teamLead
+                                                        .resumeLink}`
                                                 }
                                                 target="_blank"
                                                 rel="noopener noreferrer"

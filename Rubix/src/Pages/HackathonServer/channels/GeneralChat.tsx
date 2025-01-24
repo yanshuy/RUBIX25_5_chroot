@@ -18,40 +18,39 @@ export default function GeneralChat({ id }: { id: string }) {
     const [messages, setMessages] = useState<Message[]>([]);
     const [newMessage, setNewMessage] = useState("");
     const [socket, setSocket] = useState<WebSocket | null>(null);
+https: useEffect(() => {
+    const ws = new WebSocket(
+        `ws://natural-ape-severely.ngrok-free.app/ws/hackathons/${id}/general/?token=${localStorage.getItem("accessToken")}`,
+    );
 
-    useEffect(() => {
-        const ws = new WebSocket(
-            `ws://live-merely-drum.ngrok-free.app/ws/hackathons/${id}/general/?token=${localStorage.getItem("accessToken")}`,
-        );
+    ws.onopen = () => {
+        console.log("Connected to WebSocket");
+    };
 
-        ws.onopen = () => {
-            console.log("Connected to WebSocket");
-        };
+    ws.onmessage = (event) => {
+        const message = JSON.parse(event.data);
+        if (message.history) {
+            setMessages(message.history);
+            return;
+        }
+        console.log(message);
+        setMessages((prev) => [...prev, message]);
+    };
 
-        ws.onmessage = (event) => {
-            const message = JSON.parse(event.data);
-            if (message.history) {
-                setMessages(message.history);
-                return;
-            }
-            console.log(message);
-            setMessages((prev) => [...prev, message]);
-        };
+    ws.onclose = () => {
+        console.log("Disconnected from WebSocket");
+    };
 
-        ws.onclose = () => {
-            console.log("Disconnected from WebSocket");
-        };
+    ws.onerror = (error) => {
+        console.error("WebSocket error:", error);
+    };
 
-        ws.onerror = (error) => {
-            console.error("WebSocket error:", error);
-        };
+    setSocket(ws);
 
-        setSocket(ws);
-
-        return () => {
-            ws.close();
-        };
-    }, []);
+    return () => {
+        ws.close();
+    };
+}, []);
 
     const sendMessage = (e: React.FormEvent) => {
         e.preventDefault();
