@@ -25,6 +25,7 @@ import FindTeammates from "./Pages/FindTeammate/FindTeammate";
 import ProjectSubmission from "./Pages/UserDashboard/ProjectSubmission";
 import ProjectsPage from "./Pages/Projects/Project";
 import LandingPage from "./Pages/LandingPage/LandingPage";
+import Forum from "./Pages/forums/Forums";
 const queryClient = new QueryClient();
 
 export const baseUrl = "https://live-merely-drum.ngrok-free.app";
@@ -70,6 +71,7 @@ function App() {
 
                     <Route path="/project" element={<ProjectsPage />}></Route>
                 </Route>
+
                 <Route path="dashboard" element={<DashboardLayout />}>
                     <Route index element={<UserProfile />} />
                     <Route
@@ -112,6 +114,7 @@ function App() {
                         element={<Result />}
                     />
                 </Route>
+                <Route path="/forums" element={<Forum />}></Route>
             </Routes>
         </QueryClientProvider>
     );
