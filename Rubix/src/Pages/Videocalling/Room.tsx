@@ -276,7 +276,7 @@ const Room: React.FC = () => {
   ]);
 
   return (
-    <div className="flex h-screen w-full flex-col justify-start gap-14 overflow-hidden bg-zinc-900 px-24 py-14">
+    <div className="flex h-screen w-fit flex-col justify-start gap-14 overflow-hidden bg-zinc-900 px-24 py-14">
       <div className="flex items-center justify-between border-b border-neutral-100 pb-10">
         <div className="flex items-center gap-10">
           <div className="flex h-10 w-14 items-center justify-center rounded-xl border-2 border-white bg-blue-800 px-2 py-1">
