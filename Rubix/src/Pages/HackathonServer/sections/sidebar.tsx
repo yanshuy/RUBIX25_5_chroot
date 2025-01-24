@@ -12,10 +12,12 @@ import {
     Calendar,
 } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import type { Channel } from "../HackathonServer";
+import { useTeamData, type Channel } from "../HackathonServer";
 import { IoBackspace, IoExit } from "react-icons/io5";
 import { TbDoorExit } from "react-icons/tb";
 import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { baseUrl } from "../../../App";
 
 interface SidebarProps {
     activeChannel: Channel;
@@ -24,7 +26,6 @@ interface SidebarProps {
 
 export default function Sidebar({
     data,
-    teamData,
     activeChannel,
     setActiveChannel,
 }: SidebarProps) {
@@ -134,8 +135,38 @@ export default function Sidebar({
 
     const params = useParams();
     const navigate = useNavigate();
+    const { data: teamData } = useTeamData(params.id ?? "1");
+    const [userEmail, setUserEmail] = useState();
+    useEffect(() => {
+        const fetchUserDetails = async () => {
+            try {
+                const response = await fetch(`${baseUrl}/api/users/me/get`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+                        "ngrok-skip-browser-warning": "true",
+                    },
+                });
 
-    console.log(teamData);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch user details");
+                }
+
+                const data = await response.json();
+
+                console.log("User details:", data);
+                setUserEmail(data.email);
+            } catch (error) {
+                console.error("Error fetching user details:", error);
+                // Optionally show error toast or message
+            }
+        };
+
+        fetchUserDetails();
+    }, []);
+
+    console.log(userEmail, data);
 
     return (
         <div className="flex w-64 flex-col border-r bg-white">
@@ -183,46 +214,42 @@ export default function Sidebar({
                                         <item.icon className="mr-2 h-4 w-4" />
                                         {item.name}
                                     </div>
-                                    {item.unreadCount && (
-                                        <span className="rounded-full bg-red-500 px-1.5 text-xs text-white">
-                                            {item.unreadCount}
-                                        </span>
-                                    )}
                                 </button>
                             ))}
                         </div>
                     ))}
-                    {adminChannels.map((category) => (
-                        <div key={category.category}>
-                            <h2 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-800">
-                                {category.category}
-                            </h2>
-                            {category.items.map((item) => (
-                                <button
-                                    title={item.description}
-                                    key={item.id}
-                                    onClick={() =>
-                                        setActiveChannel({
-                                            id: item.id,
-                                            name: item.name,
-                                            category: category.category,
-                                            description: item.description,
-                                        })
-                                    }
-                                    className={`mb-1 flex w-full items-center justify-between rounded px-2 py-1.5 text-sm ${
-                                        activeChannel.id === item.id
-                                            ? "bg-primary/10 text-primary"
-                                            : "text-slate-500 hover:bg-primary/5 hover:text-primary"
-                                    }`}
-                                >
-                                    <div className="flex items-center">
-                                        <item.icon className="mr-2 h-4 w-4" />
-                                        {item.name}
-                                    </div>
-                                </button>
-                            ))}
-                        </div>
-                    ))}
+                    {data?.createdByEmail == userEmail &&
+                        adminChannels.map((category) => (
+                            <div key={category.category}>
+                                <h2 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-800">
+                                    {category.category}
+                                </h2>
+                                {category.items.map((item) => (
+                                    <button
+                                        title={item.description}
+                                        key={item.id}
+                                        onClick={() =>
+                                            setActiveChannel({
+                                                id: item.id,
+                                                name: item.name,
+                                                category: category.category,
+                                                description: item.description,
+                                            })
+                                        }
+                                        className={`mb-1 flex w-full items-center justify-between rounded px-2 py-1.5 text-sm ${
+                                            activeChannel.id === item.id
+                                                ? "bg-primary/10 text-primary"
+                                                : "text-slate-500 hover:bg-primary/5 hover:text-primary"
+                                        }`}
+                                    >
+                                        <div className="flex items-center">
+                                            <item.icon className="mr-2 h-4 w-4" />
+                                            {item.name}
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        ))}
                     {teamData ? (
                         <div>
                             <h2 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-slate-800">
@@ -234,7 +261,7 @@ export default function Sidebar({
                                         <button
                                             title={item.description}
                                             key={item.id}
-                                            onClick={() =>{
+                                            onClick={() => {
                                                 // if(item.id === "team-voice"){navigate(`/dashboard/hackathons/room/${params.id}/${teamData.teamId}`)}
                                                 setActiveChannel({
                                                     id: item.id,
@@ -242,8 +269,8 @@ export default function Sidebar({
                                                     category: category.category,
                                                     description:
                                                         item.description,
-                                                })}
-                                            }
+                                                });
+                                            }}
                                             className={`mb-1 flex w-full items-center justify-between rounded px-2 py-1.5 text-sm ${
                                                 activeChannel.id === item.id
                                                     ? "bg-primary/10 text-primary"
