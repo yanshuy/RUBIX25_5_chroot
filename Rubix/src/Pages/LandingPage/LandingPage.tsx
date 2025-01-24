@@ -26,6 +26,7 @@ import Logo from "../../assets/Logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { IoPersonCircleSharp } from "react-icons/io5";
 import { useState } from "react"; // Import useState for managing dropdown state
+import LandingPageFeature from "../../components/LandingPageFeature";
 import Navbar from "../../components/Navbar";
 
 const fadeIn = {
@@ -157,17 +158,19 @@ export default function LandingPage() {
                             animate={{ opacity: 1 }}
                             transition={{ delay: 0.3 }}
                         >
-                            <Button size="lg" className="h-12 px-8">
-                                Start Hacking
-                                <ArrowRight className="ml-2 h-4 w-4" />
-                            </Button>
-                            <Button
-                                size="lg"
-                                variant="outline"
-                                className="h-12 px-8"
-                            >
-                                Learn More
-                            </Button>
+                            <Link to={"discover"}>
+                                <Button size="lg" className="h-12 px-8">
+                                    Start Hacking
+                                    <ArrowRight className="ml-2 h-4 w-4" />
+                                </Button>
+                                <Button
+                                    size="lg"
+                                    variant="outline"
+                                    className="h-12 px-8"
+                                >
+                                    Learn More
+                                </Button>
+                            </Link>
                         </motion.div>
 
                         <motion.div
@@ -238,7 +241,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Featured Projects */}
-                <section id="projects" className="bg-slate-50 py-24">
+                {/* <section id="projects" className="bg-slate-50 py-24">
                     <div className="">
                         <div className="text-center">
                             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -310,7 +313,9 @@ export default function LandingPage() {
                             ))}
                         </div>
                     </div>
-                </section>
+                </section> */}
+
+                <LandingPageFeature />
 
                 {/* CTA Section */}
                 <section className="py-24">
@@ -326,14 +331,16 @@ export default function LandingPage() {
                                     thing.
                                 </p>
                                 <div className="mt-8 flex flex-wrap gap-4">
-                                    <Button
-                                        size="lg"
-                                        variant="secondary"
-                                        className="h-12 px-8"
-                                    >
-                                        Register Now
-                                        <ArrowRight className="ml-2 h-4 w-4" />
-                                    </Button>
+                                    <Link to={"/user/register"}>
+                                        <Button
+                                            size="lg"
+                                            variant="secondary"
+                                            className="h-12 px-8"
+                                        >
+                                            Register Now
+                                            <ArrowRight className="ml-2 h-4 w-4" />
+                                        </Button>
+                                    </Link>
                                 </div>
                             </div>
                             <div className="absolute inset-0 -z-10 overflow-hidden rounded-3xl">
