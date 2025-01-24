@@ -129,7 +129,7 @@ export function OrganizeHackathonForm() {
                     [tabName]: newTabProgress,
                 }),
             );
-        }, 10000),
+        }, 5000),
         [tabProgresses, getValues],
     );
 

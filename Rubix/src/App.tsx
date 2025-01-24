@@ -30,7 +30,7 @@ import TeamCommits from "./Pages/OrganizerDashboard/TeamCommits";
 import Leaderboard from "./Pages/LeaderBoard/LeaderBoard";
 const queryClient = new QueryClient();
 
-export const baseUrl = "https://live-merely-drum.ngrok-free.app";
+export const baseUrl = "https://natural-ape-severely.ngrok-free.app";
 
 function App() {
     return (
