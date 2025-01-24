@@ -55,17 +55,17 @@ export default function TeammateFinder() {
 
     return (
         <div className="space-y-6">
-            <div className="relative">
+            <div className="relative mx-auto max-w-screen-xl">
                 <Input
                     type="text"
                     placeholder="Search by name, role, or skill..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="h-12 w-full rounded-full border border-slate-400 pl-14"
+                    className="h-12 w-full rounded-full border border-slate-400 pl-16"
                 />
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 transform text-gray-400" />
+                <User className="absolute left-5 top-1/2 -translate-y-1/2 transform text-gray-400" />
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto grid max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <AnimatePresence>
                     {filteredTeammates?.map((teammate: Teammate) => (
                         <motion.div
