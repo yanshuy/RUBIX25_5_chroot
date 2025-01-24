@@ -2,6 +2,7 @@ import { IconBaseProps } from "react-icons";
 import { Link, NavLink, useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { Users, Folders, Trophy } from "lucide-react";
+import Logo from "../assets/logo.png";
 
 const navItems = [
     {
@@ -34,13 +35,13 @@ const OrganizerSidebar = () => {
             <div className="absolute -left-[22px] top-6 -rotate-90 border-[.7rem] border-transparent border-b-white drop-shadow-[0px_-1px_1px_rgba(0,0,0,0.08)]"></div>
             <div className="sticky top-7 flex flex-col justify-between overflow-y-auto px-4">
                 <div>
-                    <div className="mb-4 mt-2 h-[3.2rem] cursor-pointer border-b border-slate-300 pb-3 pl-5">
+                    <div className="mb-4 mt-2 h-24 cursor-pointer border-b border-slate-300 pb-3 pl-5">
                         <Link to={"/"}>
-                            <img
-                                src={""}
-                                alt="Logo"
-                                className="h-[100%] object-cover"
-                            />
+                        <img
+                            src={Logo}
+                            alt="Logo"
+                            className="h-[100%] object-cover"
+                        />
                         </Link>
                     </div>
                     <div className="relative flex flex-col gap-2">

@@ -5,21 +5,38 @@ import HackathonPoster from '../../assets/hacksposter.png';
 import { Card } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
 import { Button } from '../../components/ui/button';
-import axios from 'axios';
+import { Link, useParams } from 'react-router-dom';
+import { baseUrl } from '../../App';
 
 interface TeamMember {
-  id: string;
   name: string;
-  isAdmin?: boolean;
+  email: string;
+  phone: string;
 }
 
 interface HackathonData {
-  name: string;
-  startDate: string;
-  endDate: string;
-  venue: string;
-  status: 'pending' | 'accepted' | 'rejected';
-  teamMembers: TeamMember[];
+  id: number;
+  hackathonName: string;
+  about: string;
+  prizePool: number;
+  city: string;
+  collegeName: string;
+  minMembers: number;
+  maxMembers: number;
+  totalParticipants: number;
+  hackathonWebsite: string;
+  applicationOpenDate: string;
+  applicationCloseDate: string;
+  hackathonBeginDate: string;
+  hackathonEndDate: string;
+  theme: string | null;
+  website: string;
+  social_links: string | null;
+  profilePhoto: string;
+  coverPhoto: string;
+  members: TeamMember[];
+  participationStatus: string;
+  registrationStatus: string;
 }
 
 const statusConfig = {
@@ -27,41 +44,59 @@ const statusConfig = {
     label: 'Application under review',
     class: 'bg-yellow-100 text-yellow-800 border-yellow-300'
   },
-  accepted: {
-    label: 'Application Accepted',
+  shortlisted: {
+    label: 'Application Shortlisted',
     class: 'bg-green-100 text-green-800 border-green-300'
   },
   rejected: {
     label: 'Application Rejected',
     class: 'bg-red-100 text-red-800 border-red-300'
-  }
+  },
 };
 
-const dummyData: HackathonData = {
-  name: 'Mumbai Hacks 2025',
-  startDate: '2025-02-10',
-  endDate: '2025-02-12',
-  venue: 'Mumbai Tech Center',
-  status: 'pending',
-  teamMembers: [
-    { id: '1', name: 'Alice Johnson', isAdmin: true },
-    { id: '2', name: 'Bob Smith' },
-    { id: '3', name: 'Charlie Brown' }
-  ]
+// Function to format ISO date to a readable format
+const formatDate = (isoDate: string): string => {
+  const date = new Date(isoDate);
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  });
 };
 
 export default function HackathonStatus() {
-  const { data: hackathon, isLoading, isError } = useQuery<HackathonData>({
-    queryKey: ['hackathon'],
+  const { id } = useParams<{ id: string }>();
+  const accessToken = localStorage.getItem("accessToken");
+
+  const { data: hackathons, isLoading, isError } = useQuery<HackathonData[]>({
+    queryKey: ['hackathons'],
     queryFn: async () => {
-      const { data } = await axios.get('/api/hackathon/status');
-      return data;
+      const response = await fetch(`${baseUrl}/api/core/hackathons/participated/`, {
+        method: "GET",
+        headers: {
+          "ngrok-skip-browser-warning": "69420",
+          authorization: `Bearer ${accessToken}`,
+        },
+      });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
     }
   });
 
+  // Find the hackathon that matches the id from the URL
+  const hackathon = hackathons?.find((h) => h.id === Number(id));
+
   const handleJoinServer = async () => {
     try {
-      const { data } = await axios.post('/api/hackathon/join-server');
+      const response = await fetch('/api/hackathon/join-server', {
+        method: 'POST',
+      });
+      const data = await response.json();
       window.location.href = data.inviteLink;
     } catch (error) {
       console.error('Failed to join server:', error);
@@ -72,16 +107,21 @@ export default function HackathonStatus() {
     return <div className="p-8">Loading...</div>;
   }
 
-  // Use dummy data in case of error
-  const hackathonData = isError ? dummyData : hackathon;
+  if (isError) {
+    return <div className="p-8">Error fetching hackathon data</div>;
+  }
+
+  if (!hackathon) {
+    return <div className="p-8">Hackathon not found</div>;
+  }
 
   return (
     <div className="px-8 py-6">
       <div className="grid grid-cols-2 grid-rows-10 gap-8">
         <Card className="overflow-hidden col-span-1 row-span-4">
           <img 
-            src={HackathonPoster} 
-            alt="Mumbai Hacks Banner" 
+            src={hackathon?.coverPhoto || HackathonPoster} 
+            alt="Hackathon Banner" 
             className="w-full object-cover h-full"
           />
         </Card>
@@ -89,8 +129,10 @@ export default function HackathonStatus() {
         <Card className='p-6 space-y-6 col-span-2 row-start-5 row-span-3'>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <h2 className="text-2xl font-semibold">{hackathonData?.name}</h2>
-              <ExternalLink className="w-5 h-5 text-blue-600 cursor-pointer hover:text-blue-700" />
+              <h2 className="text-2xl font-semibold">{hackathon?.hackathonName}</h2>
+              <a href={hackathon?.hackathonWebsite} target="_blank" rel="noopener noreferrer">
+                <ExternalLink className="w-5 h-5 text-blue-600 cursor-pointer hover:text-blue-700" />
+              </a>
             </div>
           </div>
 
@@ -100,7 +142,9 @@ export default function HackathonStatus() {
                 <Calendar className="w-4 h-4" />
                 <h3>Hackathon Starts</h3>
               </div>
-              <p className="text-gray-900 font-medium">{hackathonData?.startDate}</p>
+              <p className="text-gray-900 font-medium">
+                {formatDate(hackathon?.hackathonBeginDate)}
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -108,7 +152,9 @@ export default function HackathonStatus() {
                 <Calendar className="w-4 h-4" />
                 <h3>Hackathon Ends</h3>
               </div>
-              <p className="text-gray-900 font-medium">{hackathonData?.endDate}</p>
+              <p className="text-gray-900 font-medium">
+                {formatDate(hackathon?.hackathonEndDate)}
+              </p>
             </div>
 
             <div className="col-span-2 space-y-2">
@@ -116,7 +162,7 @@ export default function HackathonStatus() {
                 <MapPin className="w-4 h-4" />
                 <h3>Venue</h3>
               </div>
-              <p className="text-gray-900">{hackathonData?.venue}</p>
+              <p className="text-gray-900">{hackathon?.city}, {hackathon?.collegeName}</p>
             </div>
           </div>
         </Card>
@@ -125,20 +171,14 @@ export default function HackathonStatus() {
           <div className='p-6 space-y-6'>
             <h3 className="font-semibold text-lg">TEAM MEMBERS</h3>
             <div className="space-y-4">
-              {hackathonData &&
-              hackathonData?.teamMembers?.map((member) => (
-                <div key={member.id} className="flex items-center justify-between group hover:bg-gray-50 p-2 rounded-lg transition-colors">
+              {hackathon?.members.map((member, index) => (
+                <div key={index} className="flex items-center justify-between group hover:bg-gray-50 p-2 rounded-lg transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-9 h-9 bg-gray-100 rounded-full flex items-center justify-center group-hover:bg-white transition-colors">
                       <User className="w-5 h-5 text-gray-600" />
                     </div>
                     <span className="text-gray-700 font-medium">{member.name}</span>
                   </div>
-                  {member.isAdmin && (
-                    <Badge variant="secondary" className="bg-blue-50 text-blue-700">
-                      Admin
-                    </Badge>
-                  )}
                 </div>
               ))}
             </div>
@@ -146,21 +186,34 @@ export default function HackathonStatus() {
         </Card>
 
         <div className="row-span-1 flex items-center gap-4">
-        <Badge 
+          <Badge 
             variant="outline" 
             className={`px-4 py-3 h-fit text-base ${
-                statusConfig[hackathonData?.status]?.class || 'bg-gray-100 text-gray-700 border-gray-300'
+              statusConfig[hackathon?.participationStatus]?.class || 'bg-gray-100 text-gray-700 border-gray-300'
             }`}
-            >
-            {statusConfig[hackathonData?.status]?.label || 'Accepted'}
-        </Badge>
-          {hackathonData?.status === 'accepted' && (
-            <Button 
-              onClick={handleJoinServer}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
-            >
-              Join Server
-            </Button>
+          >
+            {statusConfig[hackathon?.participationStatus]?.label || 'Unknown Status'}
+          </Badge>
+          {hackathon?.participationStatus === 'shortlisted' && (
+            <>
+            <Link to={`/hackathon/${id}/server`}>
+              <Button 
+                onClick={handleJoinServer}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Join Server
+              </Button>
+            </Link>
+            <Link to={`/project/submission`}>
+              <Button 
+                onClick={handleJoinServer}
+                disabled={Date.now() > new Date(hackathon?.hackathonEndDate).getTime()}
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+              >
+                Submit Project
+              </Button>
+            </Link>
+            </>
           )}
         </div>
       </div>

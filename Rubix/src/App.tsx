@@ -34,7 +34,8 @@ function App() {
     return (
         <QueryClientProvider client={queryClient}>
             <Routes>
-                <Route path="/" element={<LandingPage />}>
+                <Route path="/" element={<MainLayout />}>
+                    <Route index element={<LandingPage />} />
                     <Route path="/chat" element={<h1>chat</h1>} />
                     <Route path="/user/login" element={<UserLogin />} />
                     <Route path="/user/register" element={<UserRegister />} />
