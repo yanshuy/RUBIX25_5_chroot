@@ -69,7 +69,7 @@ export default function TeamChat({ id }: { id: string }) {
 
     return (
         <div className="flex flex-1 flex-col bg-slate-50">
-            <ScrollArea className="flex-1 p-4">
+            <ScrollArea className="min-h-[calc(100vh-8rem)] flex-1 p-4">
                 <div className="space-y-4">
                     {messages.map((message, index) => {
                         console.log(message);

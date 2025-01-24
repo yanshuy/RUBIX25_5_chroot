@@ -32,7 +32,7 @@ export default function CreateThreadModal({
             category,
             tags,
             createdAt: new Date().toISOString(),
-            author: decoded?.name ?? "Anonymous",
+            author: "Anonymous",
             upvotes: 0,
             downvotes: 0,
             replies: 0,

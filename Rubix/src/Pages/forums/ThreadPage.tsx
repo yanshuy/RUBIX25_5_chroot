@@ -147,7 +147,7 @@ function CommentForm({
         const newComment = {
             id: String(commentsArr.length + 1),
             content: comment,
-            author: ,
+            author: "Anonymous",
             upvotes: 0,
             downvotes: 0,
             createdAt: new Date().toISOString(),
