@@ -136,7 +136,7 @@ const UserRegister: React.FC = () => {
 
             <p className="text-center text-sm">
               Already a member?{" "}
-              <Link to={"/userLogin"} className="text-blue-500 hover:underline">
+              <Link to={"/user/login"} className="text-blue-500 hover:underline">
                 Login
               </Link>
             </p>

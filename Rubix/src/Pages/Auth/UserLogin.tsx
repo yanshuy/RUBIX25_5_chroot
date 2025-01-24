@@ -51,7 +51,7 @@ const UserLogin = () => {
   localStorage.setItem("accessToken", data.access);
   localStorage.setItem("refreshToken", data.refresh);
 
-  navigate("/dashboard");
+  navigate("/");
 }
 
   }
@@ -106,7 +106,7 @@ const UserLogin = () => {
               </button>
               <p>
                 Not a member?
-                <Link to={"/userRegister"}>
+                <Link to={"/user/register"}>
                   {" "}
                   <span className="text-base text-blue-500 hover:underline">
                     Register
