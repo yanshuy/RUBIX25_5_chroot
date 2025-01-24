@@ -18,6 +18,7 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card";
+import Logo from "../../assets/Logo.png";
 import { Link } from "react-router-dom";
 
 const fadeIn = {
@@ -103,11 +104,16 @@ export default function LandingPage() {
         <div className="min-h-screen">
             {/* Navbar */}
             <header className="fixed top-0 z-50 w-full border-b bg-white/80 px-6 backdrop-blur-sm">
-                <div className="container flex h-16 items-center justify-between">
-                    <Link to="/" className="flex items-center space-x-2">
-                        <Code2 className="h-6 w-6" />
-                        <span className="text-xl font-bold">HackHub</span>
-                    </Link>
+                <div className="flex h-fit items-center justify-between">
+                    <div className="mb-4 mt-2 h-20 cursor-pointer pl-5">
+                        <Link to={"/"}>
+                        <img
+                            src={Logo}
+                            alt="Logo"
+                            className="h-[100%] object-cover"
+                        />
+                        </Link>
+                    </div>
                     <nav className="hidden space-x-6 md:flex">
                         <Link
                             to="#features"
@@ -135,20 +141,24 @@ export default function LandingPage() {
                         </Link>
                     </nav>
                     <div className="flex items-center space-x-4">
-                        <Button variant="outline">Log In</Button>
-                        <Button>Register Now</Button>
+                        <Link to={"/user/login"}>
+                            <Button variant="outline">Log In</Button>
+                        </Link>
+                        <Link to={"/user/register"}>
+                            <Button>Register Now</Button>
+                        </Link>
                     </div>
                 </div>
             </header>
 
-            <main className="flex-1">
+            <main className="">
                 {/* Hero Section */}
                 <section className="relative min-h-[calc(100vh)] pt-20">
                     <div className="absolute inset-0 -z-10 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:14px_24px]">
                         <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-secondary/20" />
                     </div>
 
-                    <div className="container relative space-y-10 py-24 text-center">
+                    <div className="relative space-y-10 py-24 text-center">
                         <motion.div
                             className="space-y-4"
                             initial={{ opacity: 0, y: 20 }}
@@ -219,7 +229,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Features Section */}
-                <section id="features" className="container px-8 py-24">
+                <section id="features" className=" px-8 py-24">
                     <div className="text-center">
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                             Everything You Need to Succeed
@@ -260,7 +270,7 @@ export default function LandingPage() {
 
                 {/* Featured Projects */}
                 <section id="projects" className="bg-slate-50 py-24">
-                    <div className="container">
+                    <div className="">
                         <div className="text-center">
                             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
                                 Featured Projects
@@ -335,7 +345,7 @@ export default function LandingPage() {
 
                 {/* CTA Section */}
                 <section className="py-24">
-                    <div className="container">
+                    <div className="">
                         <div className="relative bg-gradient-to-r from-primary to-secondary p-8 md:p-12 lg:p-16">
                             <div className="relative z-10 max-w-3xl text-white">
                                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
@@ -367,7 +377,7 @@ export default function LandingPage() {
 
             {/* Footer */}
             <footer className="border-t bg-slate-50 pl-8">
-                <div className="container py-12">
+                <div className=" py-12">
                     <div className="grid gap-8 sm:grid-cols-2 md:grid-cols-4">
                         <div className="space-y-4">
                             <div className="flex items-center space-x-2">

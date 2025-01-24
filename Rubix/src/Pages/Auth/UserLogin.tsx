@@ -51,7 +51,7 @@ const UserLogin = () => {
   localStorage.setItem("accessToken", data.access);
   localStorage.setItem("refreshToken", data.refresh);
 
-  navigate("/");
+  navigate("/dashboard");
 }
 
   }

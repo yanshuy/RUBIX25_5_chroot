@@ -14,55 +14,93 @@ import Sigmaimg from "@/assets/sigma.png"
 import { baseUrl } from "../../App"
 import { log } from "console"
 
+interface Education {
+  id: string
+  school: string
+  degree: string
+  graduationYear: string
+}
+
+interface Experience {
+  id: string
+  company: string
+  position: string
+  startDate: string
+  endDate: string
+  description: string
+}
+
+interface SocialMedia {
+  linkedin: string
+  github: string
+  instagram: string
+}
+
+interface Skill {
+  id: string
+  name: string
+}
+
+interface ProfileInfo {
+  profilePhoto: string
+  personalInfo: {
+    full_name: string | null
+    email: string
+    mobile: string
+    role: string
+  }
+  bio: string
+  skills: Skill[]
+  socialMedia: SocialMedia
+  education: Education[]
+  experience: Experience[]
+  resume: File | null
+  resumelink?: string | null
+}
+
+function fillProfile() {
+  return {
+    profilePhoto: "https://example.com/path/to/your/profile/photo.jpg",
+    personalInfo: {
+      full_name: "Devansh Nair",
+      email: "dev@example.com",
+      mobile: "9863324579",
+      role: "Software Engineer",
+    },
+    bio: "Experienced software engineer with a passion for building scalable and efficient web applications. Proficient in JavaScript, Python, and cloud technologies. Always eager to learn and adapt to new challenges.",
+    skills: [],
+    socialMedia: {
+      linkedin: "https://www.linkedin.com/in/devansh-nair/",
+      github: "https://github.com/Devanshnair",
+      instagram: "",
+    },
+    education: [
+      {
+        id: "1",
+        school: "TSEC",
+        degree: "Bachelor of Engineering in Computer Science",
+        graduationYear: "2027",
+      },
+    ],
+    experience: [
+      {
+        id: "1",
+        company: "Tech Corp",
+        position: "Software Engineer",
+        startDate: "2020-06-01",
+        endDate: "2023-05-31",
+        description: "Developed and maintained web applications using React and Node.js. Collaborated with cross-functional teams to deliver high-quality software solutions.",
+      },
+    ],
+    resume: null,
+    resumelink: ""
+  }
+}
+
 export default function UserProfile() {
   const { auth } = useAuth()
   const [loading, setLoading] = useState(false)
   const [newSkill, setNewSkill] = useState("")
-
-  interface Education {
-    id: string
-    school: string
-    degree: string
-    graduationYear: string
-  }
-  
-  interface Experience {
-    id: string
-    company: string
-    position: string
-    startDate: string
-    endDate: string
-    description: string
-  }
-  
-  interface SocialMedia {
-    linkedin: string
-    github: string
-    instagram: string
-  }
-  
-  interface Skill {
-    id: string
-    name: string
-  }
-  
-  interface ProfileInfo {
-    profilePhoto: string
-    personalInfo: {
-      full_name: string | null
-      email: string
-      mobile: string
-      role: string
-    }
-    bio: string
-    skills: Skill[]
-    socialMedia: SocialMedia
-    education: Education[]
-    experience: Experience[]
-    resume: File | null
-    resumelink?: string | null
-  }
-  
   const [profileInfo, setProfileInfo] = useState<ProfileInfo>({
     profilePhoto: Sigmaimg,
     personalInfo: {
@@ -99,6 +137,8 @@ export default function UserProfile() {
     resume: null,
     resumelink: ""
   })
+  // const [profileInfo, setProfileInfo] = useState<ProfileInfo>(fillProfile())
+  
 
   const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -403,6 +443,7 @@ export default function UserProfile() {
             <CardContent className="p-6">
               <h2 className="font-medium mb-4">Bio</h2>
               <Textarea
+                id="bio"
                 className="min-h-[100px] resize-none"
                 value={profileInfo.bio}
                 onChange={(e) => handleInputChange("bio", "", e.target.value)}
@@ -436,6 +477,7 @@ export default function UserProfile() {
                   <label className="w-full flex justify-center items-center pr-1 relative">
                     <Search className="absolute left-3" size={20} color="grey" />
                     <Input
+                      id="skills"
                       placeholder="Enter your skills"
                       className="pl-11 w-full"
                       value={newSkill}
@@ -459,6 +501,7 @@ export default function UserProfile() {
                 <div className="flex items-center justify-center relative">
                   <IoLogoLinkedin size={20} className="absolute left-2" />
                   <Input
+                    id="linkedin"
                     value={profileInfo.socialMedia?.linkedin || ""}
                     onChange={(e) => handleInputChange("socialMedia", "linkedin", e.target.value)}
                     className="pl-10"
@@ -467,6 +510,7 @@ export default function UserProfile() {
                 <div className="flex items-center justify-center relative">
                   <LuGithub size={20} className="absolute left-2" />
                   <Input
+                    id="github"
                     value={profileInfo.socialMedia?.github || ""}
                     onChange={(e) => handleInputChange("socialMedia", "github", e.target.value)}
                     className="pl-10"
@@ -475,6 +519,7 @@ export default function UserProfile() {
                 <div className="flex items-center justify-center relative">
                   <LuInstagram size={20} className="absolute left-2" />
                   <Input
+                    id="instagram"
                     value={profileInfo.socialMedia?.instagram || ""}
                     onChange={(e) => handleInputChange("socialMedia", "instagram", e.target.value)}
                     className="pl-10"

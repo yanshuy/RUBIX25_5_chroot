@@ -66,7 +66,7 @@ export default function Timeline() {
 
     return (
         <div className="mx-auto h-[200vh] max-w-5xl px-4 py-8">
-            <h1 className="mb-12 text-center text-3xl font-bold">
+            <h1 className="mb-12 text-3xl font-bold pl-14">
                 Event Timeline
             </h1>
 
