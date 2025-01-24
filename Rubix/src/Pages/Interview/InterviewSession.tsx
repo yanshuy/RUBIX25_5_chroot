@@ -103,7 +103,6 @@ export default function InterviewSession({ questions }: InterviewSessionProps) {
                         interimTranscript += transcript;
                     }
                 }
-                console.log(finalTranscript);
 
                 setTranscript(finalTranscript + interimTranscript);
             };
