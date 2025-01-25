@@ -42,7 +42,7 @@ const Room: React.FC = () => {
   const handleJoinRoom = useCallback(
     (data: { email: string; room: string }) => {
       const { room } = data;
-      navigate(`/hackathons/room/${roomId}`);
+      // navigate(`/hackathons/room/${roomId}`);
     },
     [navigate, roomId],
   );
