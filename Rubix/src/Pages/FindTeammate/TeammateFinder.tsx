@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Mail, Trophy, Github, Linkedin, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,8 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Loader";
 import { baseUrl } from "../../App";
+import { Link } from "react-router-dom";
+import { stat } from "fs";
 
 interface Teammate {
+    id:number;
     email: string;
     full_name: string;
     github: string;
@@ -37,8 +40,15 @@ function useUsers() {
 }
 
 export default function TeammateFinder() {
-    const { data, isLoading } = useUsers();
+    const { data, isLoading, status } = useUsers();
     const [searchTerm, setSearchTerm] = useState("");
+
+    //for checking data, ask vinayak to add id field
+    useEffect(()=>{
+        if(status === "success"){
+            data.map((teammate: Teammate) => console.log(teammate))
+        }
+    },[data, status])
 
     const filteredTeammates = data?.filter(
         (teammate: Teammate) =>
@@ -55,17 +65,17 @@ export default function TeammateFinder() {
 
     return (
         <div className="space-y-6">
-            <div className="relative">
+            <div className="relative mx-auto max-w-screen-xl">
                 <Input
                     type="text"
                     placeholder="Search by name, role, or skill..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="h-12 w-full rounded-full border border-slate-400 pl-14"
+                    className="h-12 w-full rounded-full border border-slate-400 pl-16"
                 />
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 transform text-gray-400" />
+                <User className="absolute left-5 top-1/2 -translate-y-1/2 transform text-gray-400" />
             </div>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="mx-auto grid max-w-screen-xl grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                 <AnimatePresence>
                     {filteredTeammates?.map((teammate: Teammate) => (
                         <motion.div
@@ -78,10 +88,12 @@ export default function TeammateFinder() {
                         >
                             <Card className="h-full w-full max-w-md">
                                 <CardHeader>
+                                    <Link to={`/user/${teammate.id}`}>
                                     <CardTitle className="flex items-center gap-2">
                                         <User className="h-5 w-5" />
                                         {teammate.full_name}
                                     </CardTitle>
+                                    </Link>
                                     <Badge
                                         variant="secondary"
                                         className="w-fit"
