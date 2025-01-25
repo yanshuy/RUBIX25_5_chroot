@@ -84,29 +84,19 @@ export default function ProjectSubmission() {
             return;
         }
 
-        try {
-            setRunning(true);
-            const response = await fetch(`${baseUrl}/api/core/run/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ github_url: `${githubUrl}.git` }),
-            });
+          setRunning(true);
+          const response = await fetch(`${baseUrl}/api/core/run/`, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ github_url: `${githubUrl}.git` }),
+          });
 
-            if (!response.ok) {
-                throw new Error("Failed to trigger the run.");
-            }
-
-            const data = await response.json();
-            console.log("Run triggered successfully:", data);
-            alert("Run triggered successfully!");
-        } catch (error) {
-            console.error("Error triggering run:", error);
-            alert("Error triggering run. Please try again.");
-        } finally {
-            setRunning(false);
-        }
+          const data = await response.json();
+          console.log("Run triggered successfully:", data);
+          setRunning(false);
+          alert("Run triggered successfully!");
         setTimeout(() => {
             window.location.href =
                 "https://toucan-driven-admittedly.ngrok-free.app/";
