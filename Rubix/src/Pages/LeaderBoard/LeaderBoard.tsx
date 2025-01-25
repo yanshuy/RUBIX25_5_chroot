@@ -40,7 +40,8 @@ export default function Leaderboard() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-100 px-4 py-12 sm:px-6 lg:px-8">
+        <div className="min-h-screen bg-slate-100 px-4 py-24 sm:px-6 lg:px-8">
+            <Navbar />
             <Card className="mx-auto max-w-7xl">
                 <CardHeader>
                     <CardTitle className="text-center text-3xl font-bold text-slate-800">
