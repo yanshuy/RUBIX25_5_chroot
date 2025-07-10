@@ -43,7 +43,7 @@ export default function HackathonRegister() {
     });
 
     const [activeTab, setActiveTab] = useState("LDetails");
-    const [team, setTeam] = useState([]);
+    const [team, setTeam] = useState<Team>([]);
     function addMember(member: TeamMember) {
         setTeam({ ...team, members: [...team.members, member] });
     }
@@ -87,8 +87,6 @@ export default function HackathonRegister() {
                     setActiveTab={setActiveTab}
                     setTeam={setTeam}
                 />
-            ) : team.length <= 0 ? (
-                <div>Enter leader details fisrt</div>
             ) : (
                 <div className="mx-auto max-w-[1350px] py-6">
                     <div className="grid gap-12 lg:grid-cols-2">
