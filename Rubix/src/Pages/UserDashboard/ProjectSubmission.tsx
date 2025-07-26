@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { Trash2, Upload, Github, Loader2, RocketIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -28,54 +26,14 @@ import {
 import { baseUrl } from "../../App";
 import { useNavigate } from "react-router-dom";
 
-const MAX_FILE_SIZE = 5000000; // 5MB
-const ACCEPTED_IMAGE_TYPES = [
-    "image/jpeg",
-    "image/jpg",
-    "image/png",
-    "image/webp",
-];
-
-// Updated schema with all fields marked as optional
-const projectSchema = z.object({
-    title: z.string().min(2, {
-        message: "Project title must be at least 2 characters.",
-    }).optional(), // Mark as optional
-    description: z.string().min(50, {
-        message: "Project description must be at least 50 characters.",
-    }).optional(), // Mark as optional
-    githubUrl: z
-        .string()
-        .url({
-            message: "Please enter a valid GitHub URL.",
-        })
-        .refine((url) => url.includes("github.com"), {
-            message: "URL must be from GitHub.",
-        })
-        .optional(), // Mark as optional
-    demoUrl: z
-        .string()
-        .url({
-            message: "Please enter a valid demo URL.",
-        })
-        .optional(), // Already optional
-    techStack: z.string().min(1, {
-        message: "Please enter the technologies used.",
-    }).optional(), // Mark as optional
-    teamMembers: z.string().min(1, {
-        message: "Please enter team member details.",
-    }).optional(), // Mark as optional
-});
-
 export default function ProjectSubmission() {
     const [images, setImages] = useState<File[]>([]);
     const [uploading, setUploading] = useState(false);
     const [previewUrls, setPreviewUrls] = useState<string[]>([]);
-    const [running, setRunning] = useState(false); // State for the "Run" button
+    const [running, setRunning] = useState(false);
     const navigate = useNavigate();
 
-    const form = useForm<z.infer<typeof projectSchema>>({
-        resolver: zodResolver(projectSchema),
+    const form = useForm({
         defaultValues: {
             title: "",
             description: "",
@@ -95,12 +53,8 @@ export default function ProjectSubmission() {
         }
 
         const validFiles = files.filter((file) => {
-            if (file.size > MAX_FILE_SIZE) {
+            if (file.size > 5000000) {
                 alert(`File ${file.name} is too large. Max size is 5MB`);
-                return false;
-            }
-            if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-                alert(`File ${file.name} has unsupported format`);
                 return false;
             }
             return true;
@@ -108,7 +62,6 @@ export default function ProjectSubmission() {
 
         setImages((prev) => [...prev, ...validFiles]);
 
-        // Create preview URLs
         validFiles.forEach((file) => {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -124,43 +77,35 @@ export default function ProjectSubmission() {
     };
 
     const handleRun = async () => {
-        const githubUrl = form.getValues("githubUrl"); // Extract GitHub URL from the form
+        const githubUrl = form.getValues("githubUrl");
 
         if (!githubUrl) {
             alert("Please enter a valid GitHub URL.");
             return;
         }
 
-        try {
-            setRunning(true); // Set loading state
-            const response = await fetch(`${baseUrl}/api/core/run/`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ github_url: `${githubUrl}.git` }), // Send GitHub URL in the body
-            });
+          setRunning(true);
+          const response = await fetch(`${baseUrl}/api/core/run/`, {
+              method: "POST",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ github_url: `${githubUrl}.git` }),
+          });
 
-            if (!response.ok) {
-                throw new Error("Failed to trigger the run.");
-            }
-
-            const data = await response.json();
-            console.log("Run triggered successfully:", data);
-            alert("Run triggered successfully!");
-        } catch (error) {
-            console.error("Error triggering run:", error);
-            alert("Error triggering run. Please try again.");
-        } finally {
-            setRunning(false); // Reset loading state
-        }
-        setTimeout(()=>{navigate("https://toucan-driven-admittedly.ngrok-free.app/")})
+          const data = await response.json();
+          console.log("Run triggered successfully:", data);
+          setRunning(false);
+          alert("Run triggered successfully!");
+        setTimeout(() => {
+            window.location.href =
+                "https://toucan-driven-admittedly.ngrok-free.app/";
+        }, 10000);
     };
 
-    async function onSubmit(values: z.infer<typeof projectSchema>) {
+    async function onSubmit(values: any) {
         try {
             setUploading(true);
-            // Simulate API call
             await new Promise((resolve) => setTimeout(resolve, 2000));
             console.log(values);
             console.log(images);
@@ -204,7 +149,8 @@ export default function ProjectSubmission() {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            Optional: Provide a title for your project.
+                                            Optional: Provide a title for your
+                                            project.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -228,8 +174,8 @@ export default function ProjectSubmission() {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            Optional: Include your inspiration, challenges
-                                            faced, and future scope.
+                                            Optional: Include your inspiration,
+                                            challenges faced, and future scope.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -254,7 +200,8 @@ export default function ProjectSubmission() {
                                             </div>
                                         </FormControl>
                                         <FormDescription>
-                                            Optional: Link to your GitHub repository.
+                                            Optional: Link to your GitHub
+                                            repository.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -277,8 +224,8 @@ export default function ProjectSubmission() {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            Optional: Link to a live demo or video
-                                            demonstration.
+                                            Optional: Link to a live demo or
+                                            video demonstration.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -299,8 +246,8 @@ export default function ProjectSubmission() {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            Optional: List the main technologies used in
-                                            your project.
+                                            Optional: List the main technologies
+                                            used in your project.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -321,8 +268,8 @@ export default function ProjectSubmission() {
                                             />
                                         </FormControl>
                                         <FormDescription>
-                                            Optional: List all team members and their
-                                            roles.
+                                            Optional: List all team members and
+                                            their roles.
                                         </FormDescription>
                                         <FormMessage />
                                     </FormItem>
@@ -384,7 +331,9 @@ export default function ProjectSubmission() {
                             <Button
                                 type="button"
                                 onClick={handleRun}
-                                disabled={running || !form.getValues("githubUrl")}
+                                disabled={
+                                    running || !form.getValues("githubUrl")
+                                }
                                 className="w-full"
                                 size="lg"
                             >

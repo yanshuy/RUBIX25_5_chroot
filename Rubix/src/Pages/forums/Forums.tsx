@@ -19,6 +19,7 @@ import CreateThreadModal from "./CreateThreadModal";
 import { Comment } from "./ThreadPage";
 import { TbClock } from "react-icons/tb";
 import { baseUrl } from "../../App";
+import Navbar from "../../components/Navbar";
 
 type Category = {
     id: string;
@@ -293,39 +294,9 @@ export default function Forum() {
     };
 
     return (
-        <div className="min-h-screen bg-slate-100">
+        <div className="min-h-screen bg-slate-100 py-20">
+            <Navbar />
             <div className="container mx-auto px-4 py-8">
-                <div className="mb-8 flex flex-col items-center justify-between sm:flex-row">
-                    <div className="ml-1 h-[3.2rem] cursor-pointer p-1">
-                        <Link to={"/"}>
-                            <img
-                                src="../../src/assets/Logo.png"
-                                alt="Logo"
-                                className="h-[100%] scale-125 object-cover"
-                            />
-                        </Link>
-                    </div>
-                    <div className="flex items-center space-x-4">
-                        <button
-                            className="relative text-gray-600 transition-colors duration-200 hover:text-blue-600"
-                            onClick={clearNotifications}
-                        >
-                            <Bell className="h-6 w-6" />
-                            {notifications > 0 && (
-                                <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                                    {notifications}
-                                </span>
-                            )}
-                        </button>
-                        <button
-                            className="relative text-gray-600 transition-colors duration-200 hover:text-blue-600"
-                            onClick={toggleActivity}
-                        >
-                            <TbClock className="size-7" />
-                        </button>
-                    </div>
-                </div>
-
                 {isActivityOpen && (
                     <div className="mb-8 rounded-xl bg-white p-6 shadow-md">
                         <h2 className="mb-4 text-xl font-semibold text-slate-800">
@@ -399,13 +370,34 @@ export default function Forum() {
                                 />
                                 <Search className="absolute left-4 top-3 h-5 w-5 text-gray-400" />
                             </div>
-                            <button
-                                onClick={() => setIsCreateThreadModalOpen(true)}
-                                className="flex items-center rounded-full bg-blue-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-blue-700"
-                            >
-                                <PlusCircle className="mr-2 h-5 w-5" />
-                                New Thread
-                            </button>
+                            <div className="mb-8 flex flex-col items-center justify-between sm:flex-row gap-6">
+                                <div className="flex items-center space-x-4">
+                                    <button
+                                        className="relative text-gray-600 transition-colors duration-200 hover:text-blue-600"
+                                        onClick={clearNotifications}
+                                    >
+                                        <Bell className="h-6 w-6" />
+                                        {notifications > 0 && (
+                                            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-xs text-white">
+                                                {notifications}
+                                            </span>
+                                        )}
+                                    </button>
+                                    <button
+                                        className="relative text-gray-600 transition-colors duration-200 hover:text-blue-600"
+                                        onClick={toggleActivity}
+                                    >
+                                        <TbClock className="size-7" />
+                                    </button>
+                                </div>
+                                <button
+                                    onClick={() => setIsCreateThreadModalOpen(true)}
+                                    className="flex items-center rounded-full bg-blue-600 px-4 py-2 text-white transition-colors duration-200 hover:bg-blue-700"
+                                >
+                                    <PlusCircle className="mr-2 h-5 w-5" />
+                                    New Thread
+                                </button>
+                            </div>
                         </div>
 
                         <div className="flex flex-col gap-8 lg:flex-row">

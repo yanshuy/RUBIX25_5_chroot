@@ -131,7 +131,9 @@ export default function HackathonServer() {
                 <TopBar activeChannel={activeChannel} />
                 <div className="flex max-h-[92vh] flex-1">
                     <div className="basis-full overflow-y-scroll">
+                        <div className="flex flex-shrink">
                         {renderChannel()}
+                        </div>
                     </div>
                     {teamData && <MembersList teamData={teamData} />}
                 </div>

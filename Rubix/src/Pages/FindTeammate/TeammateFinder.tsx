@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { User, Mail, Trophy, Github, Linkedin, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,8 +8,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import Loader from "../../components/Loader";
 import { baseUrl } from "../../App";
+import { Link } from "react-router-dom";
+import { stat } from "fs";
 
 interface Teammate {
+    id:number;
     email: string;
     full_name: string;
     github: string;
@@ -37,8 +40,15 @@ function useUsers() {
 }
 
 export default function TeammateFinder() {
-    const { data, isLoading } = useUsers();
+    const { data, isLoading, status } = useUsers();
     const [searchTerm, setSearchTerm] = useState("");
+
+    //for checking data, ask vinayak to add id field
+    useEffect(()=>{
+        if(status === "success"){
+            data.map((teammate: Teammate) => console.log(teammate))
+        }
+    },[data, status])
 
     const filteredTeammates = data?.filter(
         (teammate: Teammate) =>
@@ -78,10 +88,12 @@ export default function TeammateFinder() {
                         >
                             <Card className="h-full w-full max-w-md">
                                 <CardHeader>
+                                    <Link to={`/user/${teammate.id}`}>
                                     <CardTitle className="flex items-center gap-2">
                                         <User className="h-5 w-5" />
                                         {teammate.full_name}
                                     </CardTitle>
+                                    </Link>
                                     <Badge
                                         variant="secondary"
                                         className="w-fit"

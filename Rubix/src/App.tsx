@@ -30,6 +30,7 @@ import TeamCommits from "./Pages/OrganizerDashboard/TeamCommits";
 import Leaderboard from "./Pages/LeaderBoard/LeaderBoard";
 import StatisticsPage from "./Pages/UserDashboard/StatisticsPage";
 import UserPublicProfile from "./Pages/UserPublicProfile/UserPublicProfile";
+import ThreadPage from "./Pages/forums/ThreadPage";
 
 const queryClient = new QueryClient();
 
@@ -62,11 +63,11 @@ function App() {
                         element={<HackathonServer />}
                     />
                     <Route
-                        path="/dashboard/hackathons/room/:hackathonid/:teamid"
+                        path="/hackathons/room/:hackathonid/:teamid"
                         element={<RoomPage />}
                     />
                     <Route
-                        path="/dashboard/hackathons/room/:roomid"
+                        path="/hackathons/room/:roomid"
                         element={<RoomPage />}
                     />
                     <Route
@@ -80,7 +81,8 @@ function App() {
                     ></Route>
 
                     {/* <Route path="/project" element={<ProjectsPage />}></Route> */}
-                    <Route path="/forum" element={<Forum />}></Route>
+                    <Route path="/forum" element={<Forum />} />
+                    <Route path="forum/thread/:id" element={<ThreadPage />} />
                     <Route
                         path="/user/:id"
                         element={<UserPublicProfile />}

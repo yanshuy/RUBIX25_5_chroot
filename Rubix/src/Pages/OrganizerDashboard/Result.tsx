@@ -68,10 +68,13 @@ const Result: React.FC = () => {
     return (
         <Card className="mx-auto w-full px-10">
             <CardHeader>
-                <CardTitle className="mb-2 text-center text-4xl font-bold text-primary">
+                <CardTitle className=" text-center text-4xl font-bold text-primary">
                     Results
                 </CardTitle>
             </CardHeader>
+            <div className="flex justify-end  mb-4">
+                <button className="bg-black text-white px-2 py-2 rounded-lg">Publish Results</button>
+            </div>
             <CardContent>
                 <Table>
                     <TableHeader>
