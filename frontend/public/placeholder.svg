@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400" viewBox="0 0 600 400" fill="none">
+  <rect width="600" height="400" fill="#0F172A"/>
+  <circle cx="300" cy="180" r="48" stroke="#38BDF8" stroke-width="3" stroke-dasharray="6 6" fill="#1E293B"/>
+  <path d="M285 180H315M300 165V195" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"/>
+  <text x="300" y="260" text-anchor="middle" fill="#94A3B8" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500">Rubix Hackathon Platform</text>
+</svg>
