@@ -2,7 +2,7 @@ import { IconBaseProps } from "react-icons";
 import { Link, NavLink, useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { Users, Github, Folders, Trophy } from "lucide-react";
-import Logo from "../assets/logo.png";
+import Logo from "../assets/Logo.png";
 import TeamCommits from "../Pages/OrganizerDashboard/TeamCommits";
 import { baseUrl } from "../App";
 
@@ -31,7 +31,7 @@ const navItems = [
 ];
 
 const OrganizerSidebar = () => {
-    const { id } = useParams(); 
+    const { id } = useParams();
 
     const accessToken = document.cookie
         .split("; ")
